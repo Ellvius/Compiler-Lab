@@ -1,0 +1,4 @@
+sum = total + 10
+1sum = total1 + 10
+sumtotal++
+if(sum = 1x) then x = y
