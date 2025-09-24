@@ -1,7 +1,7 @@
 %{
     #include <stdlib.h>
     #include <stdio.h>
-    #include "expr.h"
+    #include "./exprtree/exprtree.h"
 
     extern FILE *yyin;
 
@@ -30,6 +30,7 @@ program :   expr END            {
                                     printf("Postfix: ");
                                     postfixForm($1);
                                     printf("\n");
+                                    generateCode($1);
                                     exit(0);
                                 }
         ;

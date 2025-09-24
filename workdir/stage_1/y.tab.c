@@ -70,7 +70,7 @@
 
     #include <stdlib.h>
     #include <stdio.h>
-    #include "expr.h"
+    #include "./exprtree/exprtree.h"
 
     extern FILE *yyin;
 
@@ -520,7 +520,7 @@ static const yytype_int8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_int8 yyrline[] =
 {
-       0,    25,    25,    37,    38,    39
+       0,    25,    25,    38,    39,    40
 };
 #endif
 
@@ -1317,31 +1317,32 @@ yyreduce:
                                     printf("Postfix: ");
                                     postfixForm((yyvsp[-1].no));
                                     printf("\n");
+                                    generateCode((yyvsp[-1].no));
                                     exit(0);
                                 }
-#line 1323 "y.tab.c"
+#line 1324 "y.tab.c"
     break;
 
   case 3:
-#line 37 "parser.y"
+#line 38 "parser.y"
                                 {(yyval.no) = makeOperatorNode('+',(yyvsp[-2].no),(yyvsp[0].no));}
-#line 1329 "y.tab.c"
+#line 1330 "y.tab.c"
     break;
 
   case 4:
-#line 38 "parser.y"
+#line 39 "parser.y"
                                 {(yyval.no) = (yyvsp[-1].no);}
-#line 1335 "y.tab.c"
+#line 1336 "y.tab.c"
     break;
 
   case 5:
-#line 39 "parser.y"
+#line 40 "parser.y"
                                 {(yyval.no) = (yyvsp[0].no);}
-#line 1341 "y.tab.c"
+#line 1342 "y.tab.c"
     break;
 
 
-#line 1345 "y.tab.c"
+#line 1346 "y.tab.c"
 
       default: break;
     }
@@ -1573,7 +1574,7 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 42 "parser.y"
+#line 43 "parser.y"
 
 
 int yyerror(char const *s){

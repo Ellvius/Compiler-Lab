@@ -2,5 +2,5 @@
 
 lex lexer.l
 yacc -d parser.y
-gcc lex.yy.c y.tab.c expr.c -o expr
-./expr "${1:-}"
+gcc lex.yy.c y.tab.c ./exprtree/exprtree.c -o expl
+./expl "${1:-}"
