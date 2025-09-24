@@ -11,33 +11,31 @@
 %}
 
 %union{
-    struct tnode *no;
+    struct tnode *node;
 }
 
-%token PLUS
-%token <no> NUM END
-%type <no> expr program
+%token PLUS MINUS MUL DIV
+%token <node> NUM END
+%type <node> E PRGM
 
-%left PLUS
+%left PLUS MINUS
+%left MUL DIV
 
 %%
 
-program :   expr END            {
+PRGM    :   E END           {
                                     $$ = $1;
-                                    printf("Prefix: ");
-                                    prefixForm($1);
-                                    printf("\n");
-                                    printf("Postfix: ");
-                                    postfixForm($1);
-                                    printf("\n");
-                                    generateCode($1);
+                                    codeGen($1);
                                     exit(0);
-                                }
+                            }
         ;
 
-expr    :   expr PLUS expr      {$$ = makeOperatorNode('+',$1,$3);}
-        |   '(' expr ')'        {$$ = $2;}
-        |   NUM                 {$$ = $1;}
+E       :   E PLUS E        {$$ = makeOperatorNode('+',$1,$3);}
+        |   E MINUS E       {$$ = makeOperatorNode('-',$1,$3);}
+        |   E MUL E         {$$ = makeOperatorNode('*',$1,$3);}
+        |   E DIV E         {$$ = makeOperatorNode('/',$1,$3);}
+        |   '(' E ')'       {$$ = $2;}
+        |   NUM             {$$ = $1;}
         ;
 
 %%

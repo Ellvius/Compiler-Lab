@@ -22,28 +22,6 @@ struct tnode* makeOperatorNode(char c,struct tnode *l,struct tnode *r){
     return temp;
 }
 
-void prefixForm(struct tnode *t){
-    if(t->op == NULL){
-        printf("%d ", t->val);
-    }
-    else{
-        printf("%s ", t->op);
-        prefixForm(t->left);
-        prefixForm(t->right);
-    }
-}
-
-void postfixForm(struct tnode *t){
-    if(t->op == NULL){
-        printf("%d ", t->val);
-    }
-    else{
-        postfixForm(t->left);
-        postfixForm(t->right);
-        printf("%s ", t->op);
-    }
-}
-
 
 static int regNum = 0;
 
@@ -64,7 +42,7 @@ int freeReg(void){
     return regNum--;
 }
 
-void generateHeader(FILE* fp){
+void codeGenHeader(FILE* fp){
     fprintf(fp, "0\n2056\n0\n0\n0\n0\n0\n0\n");
 }
 
@@ -96,30 +74,40 @@ void codeGenExit(FILE* fp){
     freeReg();
 }
 
-reg_index codeGen(struct tnode *node, FILE* fp){
+reg_index codeGenOP(struct tnode *node, FILE* fp){
     if(node->op == NULL){
         int r = getReg();
         fprintf(fp,"MOV R%d, %d\n", r, node->val);
         return r;
     }
-    int l = codeGen(node->left, fp);
-    int r = codeGen(node->right, fp);
+    int i = codeGenOP(node->left, fp);
+    int j = codeGenOP(node->right, fp);
 
-    fprintf(fp, "ADD R%d, R%d\n", l, r);
+    switch(*(node->op)){
+        case '+' : fprintf(fp, "ADD R%d, R%d\n", i, j);
+                   break;
+        case '-' : fprintf(fp, "SUB R%d, R%d\n", i, j);
+                   break;
+        case '*' : fprintf(fp, "MUL R%d, R%d\n", i, j);
+                   break;
+        case '/' : fprintf(fp, "DIV R%d, R%d\n", i, j);
+                   break;
+    }
+
     freeReg();
 
-    return l;
+    return i;
 }
 
-int generateCode(struct tnode *node){
+int codeGen(struct tnode *node){
     FILE *fp = fopen("./output.xsm", "w");     // output xsm file
     if(!fp){
         printf("Couldn't create output file\n");
         exit(1);
     }
 
-    generateHeader(fp);
-    int r = codeGen(node, fp);
+    codeGenHeader(fp);
+    int r = codeGenOP(node, fp);
     codeGenWrite(fp, r);
     codeGenExit(fp);
     fclose(fp);

@@ -50,14 +50,20 @@ extern int yydebug;
   enum yytokentype
   {
     PLUS = 258,
-    NUM = 259,
-    END = 260
+    MINUS = 259,
+    MUL = 260,
+    DIV = 261,
+    NUM = 262,
+    END = 263
   };
 #endif
 /* Tokens.  */
 #define PLUS 258
-#define NUM 259
-#define END 260
+#define MINUS 259
+#define MUL 260
+#define DIV 261
+#define NUM 262
+#define END 263
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
@@ -65,9 +71,9 @@ union YYSTYPE
 {
 #line 13 "parser.y"
 
-    struct tnode *no;
+    struct tnode *node;
 
-#line 71 "y.tab.h"
+#line 77 "y.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;

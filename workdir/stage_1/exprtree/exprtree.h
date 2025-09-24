@@ -15,14 +15,11 @@ struct tnode* makeLeafNode(int n);
 /*Make a tnode with operator, left and right branches set*/
 struct tnode* makeOperatorNode(char op,struct tnode *l,struct tnode *r);
 
-void prefixForm(struct tnode *t);
-
-void postfixForm(struct tnode *t);
-
+/*To get free register*/
 reg_index getReg(void);
 
+/*Frees the used register with largest regnum*/
 int freeReg(void);
 
-int generateCode(struct tnode* t);
-
-reg_index codeGen(struct tnode* t, FILE* fp);
+/*Function that generates the output xsm code*/
+int codeGen(struct tnode *node);
