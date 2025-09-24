@@ -30,10 +30,10 @@ PRGM    :   E END           {
                             }
         ;
 
-E       :   E PLUS E        {$$ = makeOperatorNode('+',$1,$3);}
-        |   E MINUS E       {$$ = makeOperatorNode('-',$1,$3);}
-        |   E MUL E         {$$ = makeOperatorNode('*',$1,$3);}
-        |   E DIV E         {$$ = makeOperatorNode('/',$1,$3);}
+E       :   PLUS E E        {$$ = makeOperatorNode('+',$2,$3);}
+        |   MINUS E E       {$$ = makeOperatorNode('-',$2,$3);}
+        |   MUL E E         {$$ = makeOperatorNode('*',$2,$3);}
+        |   DIV E E         {$$ = makeOperatorNode('/',$2,$3);}
         |   '(' E ')'       {$$ = $2;}
         |   NUM             {$$ = $1;}
         ;

@@ -66,7 +66,7 @@
 
 
 /* First part of user prologue.  */
-#line 1 "parser.y"
+#line 1 "prefixparser.y"
 
     #include <stdlib.h>
     #include <stdio.h>
@@ -146,7 +146,7 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 13 "parser.y"
+#line 13 "prefixparser.y"
 
     struct tnode *node;
 
@@ -467,9 +467,9 @@ union yyalloc
 #endif /* !YYCOPY_NEEDED */
 
 /* YYFINAL -- State number of the termination state.  */
-#define YYFINAL  6
+#define YYFINAL  14
 /* YYLAST -- Last index in YYTABLE.  */
-#define YYLAST   22
+#define YYLAST   18
 
 /* YYNTOKENS -- Number of terminals.  */
 #define YYNTOKENS  11
@@ -478,7 +478,7 @@ union yyalloc
 /* YYNRULES -- Number of rules.  */
 #define YYNRULES  8
 /* YYNSTATES -- Number of states.  */
-#define YYNSTATES  17
+#define YYNSTATES  21
 
 #define YYUNDEFTOK  2
 #define YYMAXUTOK   263
@@ -550,7 +550,7 @@ static const yytype_int16 yytoknum[] =
 };
 # endif
 
-#define YYPACT_NINF (-7)
+#define YYPACT_NINF (-4)
 
 #define yypact_value_is_default(Yyn) \
   ((Yyn) == YYPACT_NINF)
@@ -564,8 +564,9 @@ static const yytype_int16 yytoknum[] =
      STATE-NUM.  */
 static const yytype_int8 yypact[] =
 {
-      -6,    -7,    -6,     2,    14,     6,    -7,    -6,    -6,    -6,
-      -6,    -7,    -7,     8,     8,    -7,    -7
+       9,     9,     9,     9,     9,    -4,     9,     4,    -2,     9,
+       9,     9,     9,    -3,    -4,    -4,    -4,    -4,    -4,    -4,
+      -4
 };
 
   /* YYDEFACT[STATE-NUM] -- Default reduction number in state STATE-NUM.
@@ -573,20 +574,21 @@ static const yytype_int8 yypact[] =
      means the default is an error.  */
 static const yytype_int8 yydefact[] =
 {
-       0,     8,     0,     0,     0,     0,     1,     0,     0,     0,
-       0,     2,     7,     3,     4,     5,     6
+       0,     0,     0,     0,     0,     8,     0,     0,     0,     0,
+       0,     0,     0,     0,     1,     2,     3,     4,     5,     6,
+       7
 };
 
   /* YYPGOTO[NTERM-NUM].  */
 static const yytype_int8 yypgoto[] =
 {
-      -7,    -7,    -2
+      -4,    -4,    -1
 };
 
   /* YYDEFGOTO[NTERM-NUM].  */
 static const yytype_int8 yydefgoto[] =
 {
-      -1,     3,     4
+      -1,     7,     8
 };
 
   /* YYTABLE[YYPACT[STATE-NUM]] -- What to do in state STATE-NUM.  If
@@ -594,24 +596,23 @@ static const yytype_int8 yydefgoto[] =
      number is the opposite.  If YYTABLE_NINF, syntax error.  */
 static const yytype_int8 yytable[] =
 {
-       5,     1,     6,     2,     0,    13,    14,    15,    16,     7,
-       8,     9,    10,     9,    10,     0,    12,     7,     8,     9,
-      10,     0,    11
+       9,    10,    11,    12,    14,    13,    15,    20,    16,    17,
+      18,    19,     1,     2,     3,     4,     5,     0,     6
 };
 
 static const yytype_int8 yycheck[] =
 {
-       2,     7,     0,     9,    -1,     7,     8,     9,    10,     3,
-       4,     5,     6,     5,     6,    -1,    10,     3,     4,     5,
-       6,    -1,     8
+       1,     2,     3,     4,     0,     6,     8,    10,     9,    10,
+      11,    12,     3,     4,     5,     6,     7,    -1,     9
 };
 
   /* YYSTOS[STATE-NUM] -- The (internal number of the) accessing
      symbol of state STATE-NUM.  */
 static const yytype_int8 yystos[] =
 {
-       0,     7,     9,    12,    13,    13,     0,     3,     4,     5,
-       6,     8,    10,    13,    13,    13,    13
+       0,     3,     4,     5,     6,     7,     9,    12,    13,    13,
+      13,    13,    13,    13,     0,     8,    13,    13,    13,    13,
+      10
 };
 
   /* YYR1[YYN] -- Symbol number of symbol that rule YYN derives.  */
@@ -1319,53 +1320,53 @@ yyreduce:
   switch (yyn)
     {
   case 2:
-#line 26 "parser.y"
+#line 26 "prefixparser.y"
                             {
                                     (yyval.node) = (yyvsp[-1].node);
                                     codeGen((yyvsp[-1].node));
                                     exit(0);
                             }
-#line 1329 "y.tab.c"
+#line 1330 "y.tab.c"
     break;
 
   case 3:
-#line 33 "parser.y"
-                            {(yyval.node) = makeOperatorNode('+',(yyvsp[-2].node),(yyvsp[0].node));}
-#line 1335 "y.tab.c"
+#line 33 "prefixparser.y"
+                            {(yyval.node) = makeOperatorNode('+',(yyvsp[-1].node),(yyvsp[0].node));}
+#line 1336 "y.tab.c"
     break;
 
   case 4:
-#line 34 "parser.y"
-                            {(yyval.node) = makeOperatorNode('-',(yyvsp[-2].node),(yyvsp[0].node));}
-#line 1341 "y.tab.c"
+#line 34 "prefixparser.y"
+                            {(yyval.node) = makeOperatorNode('-',(yyvsp[-1].node),(yyvsp[0].node));}
+#line 1342 "y.tab.c"
     break;
 
   case 5:
-#line 35 "parser.y"
-                            {(yyval.node) = makeOperatorNode('*',(yyvsp[-2].node),(yyvsp[0].node));}
-#line 1347 "y.tab.c"
+#line 35 "prefixparser.y"
+                            {(yyval.node) = makeOperatorNode('*',(yyvsp[-1].node),(yyvsp[0].node));}
+#line 1348 "y.tab.c"
     break;
 
   case 6:
-#line 36 "parser.y"
-                            {(yyval.node) = makeOperatorNode('/',(yyvsp[-2].node),(yyvsp[0].node));}
-#line 1353 "y.tab.c"
+#line 36 "prefixparser.y"
+                            {(yyval.node) = makeOperatorNode('/',(yyvsp[-1].node),(yyvsp[0].node));}
+#line 1354 "y.tab.c"
     break;
 
   case 7:
-#line 37 "parser.y"
+#line 37 "prefixparser.y"
                             {(yyval.node) = (yyvsp[-1].node);}
-#line 1359 "y.tab.c"
+#line 1360 "y.tab.c"
     break;
 
   case 8:
-#line 38 "parser.y"
+#line 38 "prefixparser.y"
                             {(yyval.node) = (yyvsp[0].node);}
-#line 1365 "y.tab.c"
+#line 1366 "y.tab.c"
     break;
 
 
-#line 1369 "y.tab.c"
+#line 1370 "y.tab.c"
 
       default: break;
     }
@@ -1597,11 +1598,11 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 41 "parser.y"
+#line 41 "prefixparser.y"
 
 
 int yyerror(char const *s){
-    printf("yyerror %s",s);
+    printf("yyerror %s\n",s);
 }
 
 
