@@ -2,7 +2,7 @@
 
 # To generate the output xsm code
 lex lexer.l
-yacc -d parser.y
+yacc -d prefixparser.y
 gcc lex.yy.c y.tab.c ./exprtree/exprtree.c -o expl
 ./expl "${1:-}"
 
