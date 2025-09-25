@@ -3,7 +3,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include "exprtree.h"
+#include "../exprtree/exprtree.h"
 
 int evaluateOperation(tnode* node);
 

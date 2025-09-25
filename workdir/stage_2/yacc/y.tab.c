@@ -70,8 +70,8 @@
 
     #include <stdlib.h>
     #include <stdio.h>
-    #include "exprtree.h"
-    #include "codeGen.h"
+    #include "../exprtree/exprtree.h"
+    #include "../codeGen/codeGen.h"
 
     extern FILE *yyin;
 

@@ -3,7 +3,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include "exprtree.h"
+#include "../exprtree/exprtree.h"
 
 #define SP 4122
 #define reg_index int

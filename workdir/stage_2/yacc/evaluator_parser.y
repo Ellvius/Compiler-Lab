@@ -1,8 +1,8 @@
 %{
     #include <stdlib.h>
     #include <stdio.h>
-    #include "exprtree.h"
-    #include "evaluator.h"
+    #include "../exprtree/exprtree.h"
+    #include "../evaluator/evaluator.h"
 
     extern FILE *yyin;
 

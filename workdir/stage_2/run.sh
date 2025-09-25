@@ -1,9 +1,12 @@
 #!/bin/bash
 
 # To generate the output xsm code
+cd lex
 lex lexer.l
+cd ../yacc
 yacc -d parser.y
-gcc lex.yy.c y.tab.c exprtree.c codeGen.c -o expl
+cd ..
+gcc lex/lex.yy.c yacc/y.tab.c exprtree/exprtree.c codeGen/codeGen.c -o expl
 ./expl "${1:-}"
 
 # To run the output xsm code

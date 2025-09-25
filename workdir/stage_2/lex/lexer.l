@@ -1,8 +1,8 @@
 %{
     #include <stdlib.h>
     #include <stdio.h>
-    #include "y.tab.h"
-    #include "exprtree.h"
+    #include "../yacc/y.tab.h"
+    #include "../exprtree/exprtree.h"
     int yyerror(const char *s);
 
     int val;
