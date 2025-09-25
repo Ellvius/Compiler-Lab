@@ -841,7 +841,7 @@ YY_RULE_SETUP
 case 16:
 YY_RULE_SETUP
 #line 30 "lexer.l"
-{ val = atoi(yytext); yylval.node = makeLeafNode(val, TYPE_NONE, NULL); return NUM;}
+{ val = atoi(yytext); yylval.node = makeLeafNode(val, TYPE_INT, NULL); return NUM;}
 	YY_BREAK
 case 17:
 YY_RULE_SETUP

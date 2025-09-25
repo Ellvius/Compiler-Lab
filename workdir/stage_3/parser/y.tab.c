@@ -1437,7 +1437,7 @@ yyreduce:
 
   case 4:
 #line 47 "parser.y"
-                                        {(yyval.node) = makeOperatorNode(NODE_CONN, (yyvsp[-1].node), (yyvsp[0].node));}
+                                        {(yyval.node) = makeConnNode((yyvsp[-1].node), (yyvsp[0].node));}
 #line 1442 "y.tab.c"
     break;
 
@@ -1497,43 +1497,43 @@ yyreduce:
 
   case 14:
 #line 65 "parser.y"
-                                        {(yyval.node) = makeOperatorNode(NODE_READ, (yyvsp[-2].node), NULL);}
+                                        {(yyval.node) = makeReadNode((yyvsp[-2].node));}
 #line 1502 "y.tab.c"
     break;
 
   case 15:
 #line 68 "parser.y"
-                                        {(yyval.node) = makeOperatorNode(NODE_WRITE, (yyvsp[-2].node), NULL);}
+                                        {(yyval.node) = makeWriteNode((yyvsp[-2].node));}
 #line 1508 "y.tab.c"
     break;
 
   case 16:
 #line 71 "parser.y"
-                                        {(yyval.node) = makeOperatorNode(NODE_ASSGN, (yyvsp[-3].node), (yyvsp[-1].node));}
+                                        {(yyval.node) = makeAssgnNode((yyvsp[-3].node), (yyvsp[-1].node));}
 #line 1514 "y.tab.c"
     break;
 
   case 17:
 #line 74 "parser.y"
-                                        {(yyval.node) = makeOperatorNode(NODE_ADD, (yyvsp[-2].node), (yyvsp[0].node));}
+                                        {(yyval.node) = makeArithOPNode(NODE_ADD, (yyvsp[-2].node), (yyvsp[0].node));}
 #line 1520 "y.tab.c"
     break;
 
   case 18:
 #line 75 "parser.y"
-                                        {(yyval.node) = makeOperatorNode(NODE_SUB, (yyvsp[-2].node), (yyvsp[0].node));}
+                                        {(yyval.node) = makeArithOPNode(NODE_SUB, (yyvsp[-2].node), (yyvsp[0].node));}
 #line 1526 "y.tab.c"
     break;
 
   case 19:
 #line 76 "parser.y"
-                                        {(yyval.node) = makeOperatorNode(NODE_MUL, (yyvsp[-2].node), (yyvsp[0].node));}
+                                        {(yyval.node) = makeArithOPNode(NODE_MUL, (yyvsp[-2].node), (yyvsp[0].node));}
 #line 1532 "y.tab.c"
     break;
 
   case 20:
 #line 77 "parser.y"
-                                        {(yyval.node) = makeOperatorNode(NODE_DIV, (yyvsp[-2].node), (yyvsp[0].node));}
+                                        {(yyval.node) = makeArithOPNode(NODE_DIV, (yyvsp[-2].node), (yyvsp[0].node));}
 #line 1538 "y.tab.c"
     break;
 
@@ -1545,37 +1545,37 @@ yyreduce:
 
   case 22:
 #line 79 "parser.y"
-                                        {(yyval.node) = makeOperatorNode(NODE_LT, (yyvsp[-2].node), (yyvsp[0].node));}
+                                        {(yyval.node) = makeRelOPNode(NODE_LT, (yyvsp[-2].node), (yyvsp[0].node));}
 #line 1550 "y.tab.c"
     break;
 
   case 23:
 #line 80 "parser.y"
-                                        {(yyval.node) = makeOperatorNode(NODE_GT, (yyvsp[-2].node), (yyvsp[0].node));}
+                                        {(yyval.node) = makeRelOPNode(NODE_GT, (yyvsp[-2].node), (yyvsp[0].node));}
 #line 1556 "y.tab.c"
     break;
 
   case 24:
 #line 81 "parser.y"
-                                        {(yyval.node) = makeOperatorNode(NODE_LE, (yyvsp[-2].node), (yyvsp[0].node));}
+                                        {(yyval.node) = makeRelOPNode(NODE_LE, (yyvsp[-2].node), (yyvsp[0].node));}
 #line 1562 "y.tab.c"
     break;
 
   case 25:
 #line 82 "parser.y"
-                                        {(yyval.node) = makeOperatorNode(NODE_GE, (yyvsp[-2].node), (yyvsp[0].node));}
+                                        {(yyval.node) = makeRelOPNode(NODE_GE, (yyvsp[-2].node), (yyvsp[0].node));}
 #line 1568 "y.tab.c"
     break;
 
   case 26:
 #line 83 "parser.y"
-                                        {(yyval.node) = makeOperatorNode(NODE_NE, (yyvsp[-2].node), (yyvsp[0].node));}
+                                        {(yyval.node) = makeRelOPNode(NODE_NE, (yyvsp[-2].node), (yyvsp[0].node));}
 #line 1574 "y.tab.c"
     break;
 
   case 27:
 #line 84 "parser.y"
-                                        {(yyval.node) = makeOperatorNode(NODE_EQ, (yyvsp[-2].node), (yyvsp[0].node));}
+                                        {(yyval.node) = makeRelOPNode(NODE_EQ, (yyvsp[-2].node), (yyvsp[0].node));}
 #line 1580 "y.tab.c"
     break;
 

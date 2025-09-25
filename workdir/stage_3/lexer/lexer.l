@@ -27,7 +27,7 @@
 "<"         { return LT; }
 ">"         { return GT; }
 
-[0-9]+      { val = atoi(yytext); yylval.node = makeLeafNode(val, TYPE_NONE, NULL); return NUM;}
+[0-9]+      { val = atoi(yytext); yylval.node = makeLeafNode(val, TYPE_INT, NULL); return NUM;}
 [a-z]       { yylval.node = makeLeafNode(0, TYPE_INT, strdup(yytext)); return ID;}
 
 "+"         { return PLUS; }

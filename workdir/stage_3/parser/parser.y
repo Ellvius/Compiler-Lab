@@ -44,7 +44,7 @@ Program     :   START_BLOCK Slist END_BLOCK EOS     {
                                                     }  
             ;
 
-Slist       :   Slist Stmt              {$$ = makeOperatorNode(NODE_CONN, $1, $2);}
+Slist       :   Slist Stmt              {$$ = makeConnNode($1, $2);}
             |   Stmt                    {$$ = $1;}
             ;
 
@@ -62,26 +62,26 @@ IfStmt      :   IF '(' Expr ')' THEN Slist ELSE Slist ENDIF EOS     {$$ = makeIf
 WhileStmt   :   WHILE '(' Expr ')' DO Slist ENDWHILE EOS            {$$ = makeWhileNode($3, $6);}
             ;
 
-InputStmt   :   READ '(' ID ')' EOS     {$$ = makeOperatorNode(NODE_READ, $3, NULL);}
+InputStmt   :   READ '(' ID ')' EOS     {$$ = makeReadNode($3);}
             ;
 
-OutputStmt  :   WRITE '(' Expr ')' EOS  {$$ = makeOperatorNode(NODE_WRITE, $3, NULL);}
+OutputStmt  :   WRITE '(' Expr ')' EOS  {$$ = makeWriteNode($3);}
             ;
 
-AsgStmt     :   ID ASSGN Expr EOS       {$$ = makeOperatorNode(NODE_ASSGN, $1, $3);}
+AsgStmt     :   ID ASSGN Expr EOS       {$$ = makeAssgnNode($1, $3);}
             ;
 
-Expr        :   Expr PLUS Expr          {$$ = makeOperatorNode(NODE_ADD, $1, $3);}
-            |   Expr MINUS Expr         {$$ = makeOperatorNode(NODE_SUB, $1, $3);}
-            |   Expr MUL Expr           {$$ = makeOperatorNode(NODE_MUL, $1, $3);}
-            |   Expr DIV Expr           {$$ = makeOperatorNode(NODE_DIV, $1, $3);}
+Expr        :   Expr PLUS Expr          {$$ = makeArithOPNode(NODE_ADD, $1, $3);}
+            |   Expr MINUS Expr         {$$ = makeArithOPNode(NODE_SUB, $1, $3);}
+            |   Expr MUL Expr           {$$ = makeArithOPNode(NODE_MUL, $1, $3);}
+            |   Expr DIV Expr           {$$ = makeArithOPNode(NODE_DIV, $1, $3);}
             |   '(' Expr ')'            {$$ = $2;}
-            |   Expr LT Expr            {$$ = makeOperatorNode(NODE_LT, $1, $3);}
-            |   Expr GT Expr            {$$ = makeOperatorNode(NODE_GT, $1, $3);}
-            |   Expr LE Expr            {$$ = makeOperatorNode(NODE_LE, $1, $3);}
-            |   Expr GE Expr            {$$ = makeOperatorNode(NODE_GE, $1, $3);}
-            |   Expr NE Expr            {$$ = makeOperatorNode(NODE_NE, $1, $3);}
-            |   Expr EQ Expr            {$$ = makeOperatorNode(NODE_EQ, $1, $3);}
+            |   Expr LT Expr            {$$ = makeRelOPNode(NODE_LT, $1, $3);}
+            |   Expr GT Expr            {$$ = makeRelOPNode(NODE_GT, $1, $3);}
+            |   Expr LE Expr            {$$ = makeRelOPNode(NODE_LE, $1, $3);}
+            |   Expr GE Expr            {$$ = makeRelOPNode(NODE_GE, $1, $3);}
+            |   Expr NE Expr            {$$ = makeRelOPNode(NODE_NE, $1, $3);}
+            |   Expr EQ Expr            {$$ = makeRelOPNode(NODE_EQ, $1, $3);}
             |   NUM                     {$$ = $1;}
             |   ID                      {$$ = $1;}
             ;

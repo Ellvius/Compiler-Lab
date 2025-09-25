@@ -46,7 +46,17 @@ tnode* createTree(int n, var_type vtype, char* vname, node_type ntype, tnode *l,
 tnode* makeLeafNode(int n, var_type vtype, char* vname);
 
 /*Make non leaf nodes (conn, read, write, assign .. etc)*/
-tnode* makeOperatorNode(node_type ntype,tnode *l,tnode *r);
+tnode* makeArithOPNode(node_type ntype, tnode* l, tnode* r);
+
+tnode* makeRelOPNode(node_type ntype, tnode* l, tnode* r);
+
+tnode* makeAssgnNode(tnode* l, tnode* r);
+
+tnode* makeReadNode(tnode* l);
+
+tnode* makeWriteNode(tnode* l);
+
+tnode* makeConnNode(tnode* l, tnode* r);
 
 tnode* makeWhileNode(tnode *l, tnode* r);
 
