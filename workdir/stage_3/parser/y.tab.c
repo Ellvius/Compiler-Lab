@@ -66,12 +66,12 @@
 
 
 /* First part of user prologue.  */
-#line 1 "eval_parser.y"
+#line 1 "parser.y"
 
     #include <stdlib.h>
     #include <stdio.h>
     #include "../exprtree/exprtree.h"
-    #include "../evaluator/evaluator.h"
+    #include "../codeGen/codeGen.h"
 
     extern FILE *yyin;
 
@@ -185,7 +185,7 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 14 "eval_parser.y"
+#line 14 "parser.y"
 
     struct tnode *node;
 
@@ -1417,17 +1417,17 @@ yyreduce:
   switch (yyn)
     {
   case 2:
-#line 36 "eval_parser.y"
+#line 36 "parser.y"
                                                     {
                                                         (yyval.node) = (yyvsp[-2].node);
-                                                        evaluateAST((yyvsp[-2].node));
+                                                        codeGen((yyvsp[-2].node));
                                                         exit(0);
                                                     }
 #line 1427 "y.tab.c"
     break;
 
   case 3:
-#line 41 "eval_parser.y"
+#line 41 "parser.y"
                                                     {
                                                         fprintf(stdout, "Empty program\n");
                                                         exit(0);
@@ -1436,157 +1436,157 @@ yyreduce:
     break;
 
   case 4:
-#line 47 "eval_parser.y"
+#line 47 "parser.y"
                                         {(yyval.node) = makeConnNode((yyvsp[-1].node), (yyvsp[0].node));}
 #line 1442 "y.tab.c"
     break;
 
   case 5:
-#line 48 "eval_parser.y"
+#line 48 "parser.y"
                                         {(yyval.node) = (yyvsp[0].node);}
 #line 1448 "y.tab.c"
     break;
 
   case 6:
-#line 51 "eval_parser.y"
+#line 51 "parser.y"
                                         {(yyval.node) = (yyvsp[0].node);}
 #line 1454 "y.tab.c"
     break;
 
   case 7:
-#line 52 "eval_parser.y"
+#line 52 "parser.y"
                                         {(yyval.node) = (yyvsp[0].node);}
 #line 1460 "y.tab.c"
     break;
 
   case 8:
-#line 53 "eval_parser.y"
+#line 53 "parser.y"
                                         {(yyval.node) = (yyvsp[0].node);}
 #line 1466 "y.tab.c"
     break;
 
   case 9:
-#line 54 "eval_parser.y"
+#line 54 "parser.y"
                                         {(yyval.node) = (yyvsp[0].node);}
 #line 1472 "y.tab.c"
     break;
 
   case 10:
-#line 55 "eval_parser.y"
+#line 55 "parser.y"
                                         {(yyval.node) = (yyvsp[0].node);}
 #line 1478 "y.tab.c"
     break;
 
   case 11:
-#line 58 "eval_parser.y"
+#line 58 "parser.y"
                                                                     {(yyval.node) = makeIfElseNode((yyvsp[-7].node), (yyvsp[-4].node), (yyvsp[-2].node));}
 #line 1484 "y.tab.c"
     break;
 
   case 12:
-#line 59 "eval_parser.y"
+#line 59 "parser.y"
                                                                     {(yyval.node) = makeIfElseNode((yyvsp[-5].node), (yyvsp[-2].node), NULL);}
 #line 1490 "y.tab.c"
     break;
 
   case 13:
-#line 62 "eval_parser.y"
+#line 62 "parser.y"
                                                                     {(yyval.node) = makeWhileNode((yyvsp[-5].node), (yyvsp[-2].node));}
 #line 1496 "y.tab.c"
     break;
 
   case 14:
-#line 65 "eval_parser.y"
+#line 65 "parser.y"
                                         {(yyval.node) = makeReadNode((yyvsp[-2].node));}
 #line 1502 "y.tab.c"
     break;
 
   case 15:
-#line 68 "eval_parser.y"
+#line 68 "parser.y"
                                         {(yyval.node) = makeWriteNode((yyvsp[-2].node));}
 #line 1508 "y.tab.c"
     break;
 
   case 16:
-#line 71 "eval_parser.y"
+#line 71 "parser.y"
                                         {(yyval.node) = makeAssgnNode((yyvsp[-3].node), (yyvsp[-1].node));}
 #line 1514 "y.tab.c"
     break;
 
   case 17:
-#line 74 "eval_parser.y"
+#line 74 "parser.y"
                                         {(yyval.node) = makeArithOPNode(NODE_ADD, (yyvsp[-2].node), (yyvsp[0].node));}
 #line 1520 "y.tab.c"
     break;
 
   case 18:
-#line 75 "eval_parser.y"
+#line 75 "parser.y"
                                         {(yyval.node) = makeArithOPNode(NODE_SUB, (yyvsp[-2].node), (yyvsp[0].node));}
 #line 1526 "y.tab.c"
     break;
 
   case 19:
-#line 76 "eval_parser.y"
+#line 76 "parser.y"
                                         {(yyval.node) = makeArithOPNode(NODE_MUL, (yyvsp[-2].node), (yyvsp[0].node));}
 #line 1532 "y.tab.c"
     break;
 
   case 20:
-#line 77 "eval_parser.y"
+#line 77 "parser.y"
                                         {(yyval.node) = makeArithOPNode(NODE_DIV, (yyvsp[-2].node), (yyvsp[0].node));}
 #line 1538 "y.tab.c"
     break;
 
   case 21:
-#line 78 "eval_parser.y"
+#line 78 "parser.y"
                                         {(yyval.node) = (yyvsp[-1].node);}
 #line 1544 "y.tab.c"
     break;
 
   case 22:
-#line 79 "eval_parser.y"
+#line 79 "parser.y"
                                         {(yyval.node) = makeRelOPNode(NODE_LT, (yyvsp[-2].node), (yyvsp[0].node));}
 #line 1550 "y.tab.c"
     break;
 
   case 23:
-#line 80 "eval_parser.y"
+#line 80 "parser.y"
                                         {(yyval.node) = makeRelOPNode(NODE_GT, (yyvsp[-2].node), (yyvsp[0].node));}
 #line 1556 "y.tab.c"
     break;
 
   case 24:
-#line 81 "eval_parser.y"
+#line 81 "parser.y"
                                         {(yyval.node) = makeRelOPNode(NODE_LE, (yyvsp[-2].node), (yyvsp[0].node));}
 #line 1562 "y.tab.c"
     break;
 
   case 25:
-#line 82 "eval_parser.y"
+#line 82 "parser.y"
                                         {(yyval.node) = makeRelOPNode(NODE_GE, (yyvsp[-2].node), (yyvsp[0].node));}
 #line 1568 "y.tab.c"
     break;
 
   case 26:
-#line 83 "eval_parser.y"
+#line 83 "parser.y"
                                         {(yyval.node) = makeRelOPNode(NODE_NE, (yyvsp[-2].node), (yyvsp[0].node));}
 #line 1574 "y.tab.c"
     break;
 
   case 27:
-#line 84 "eval_parser.y"
+#line 84 "parser.y"
                                         {(yyval.node) = makeRelOPNode(NODE_EQ, (yyvsp[-2].node), (yyvsp[0].node));}
 #line 1580 "y.tab.c"
     break;
 
   case 28:
-#line 85 "eval_parser.y"
+#line 85 "parser.y"
                                         {(yyval.node) = (yyvsp[0].node);}
 #line 1586 "y.tab.c"
     break;
 
   case 29:
-#line 86 "eval_parser.y"
+#line 86 "parser.y"
                                         {(yyval.node) = (yyvsp[0].node);}
 #line 1592 "y.tab.c"
     break;
@@ -1824,7 +1824,7 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 89 "eval_parser.y"
+#line 89 "parser.y"
 
 
 int yyerror(char const *s){
