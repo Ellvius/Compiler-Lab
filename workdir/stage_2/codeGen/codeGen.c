@@ -79,6 +79,7 @@ reg_index codeGenOP(tnode *node, FILE* fp){
             fprintf(fp, "MOV [%d], R%d\n", symbolTable[i], j);
             freeReg();      // to free up the left (here actually right is freed) subtree reg
             symbolTable[i] = -1;
+            i = -1;
             break;
         case NODE_CONN:
             if(i != -1 && j != -1)
@@ -103,25 +104,28 @@ reg_index codeGenRead(tnode* node, FILE* fp){
         fprintf(fp, "PUSH R%d\n", i);
     }
 
-    fprintf(fp, "MOV R0,\"Read\"\n");
-    fprintf(fp, "PUSH R0\n");
-    fprintf(fp, "MOV R0, -1\n");
-    fprintf(fp, "PUSH R0\n");
-    fprintf(fp, "MOV R0, %d\n", loc);
-    fprintf(fp, "PUSH R0\n");
-    fprintf(fp, "PUSH R0\n");
-    fprintf(fp, "PUSH R0\n");
+    int i = getReg();
+
+    fprintf(fp, "MOV R%d,\"Read\"\n", i);
+    fprintf(fp, "PUSH R%d\n", i);
+    fprintf(fp, "MOV R%d, -1\n", i);
+    fprintf(fp, "PUSH R%d\n", i);
+    fprintf(fp, "MOV R%d, %d\n", i, loc);
+    fprintf(fp, "PUSH R%d\n", i);
+    fprintf(fp, "PUSH R%d\n", i);
+    fprintf(fp, "PUSH R%d\n", i);
     fprintf(fp, "CALL 0\n");
     fprintf(fp, "POP R%d\n", r);
-    fprintf(fp, "POP R0\n");
-    fprintf(fp, "POP R0\n");
-    fprintf(fp, "POP R0\n");
-    fprintf(fp, "POP R0\n");
+    fprintf(fp, "POP R%d\n", i);
+    fprintf(fp, "POP R%d\n", i);
+    fprintf(fp, "POP R%d\n", i);
+    fprintf(fp, "POP R%d\n", i);
 
     for(int i = r-1; i >= 0; i--){
         fprintf(fp, "POP R%d\n", i);
     }
 
+    freeReg();
     return r;
 }
 
@@ -131,25 +135,25 @@ reg_index codeGenWrite(tnode* node, FILE* fp){
     for(int i = 0; i < r; i++){
         fprintf(fp, "PUSH R%d\n", i);
     }
-
-    fprintf(fp, "MOV R0,\"Write\"\n");
-    fprintf(fp, "PUSH R0\n");
-    fprintf(fp, "MOV R0, -2\n");
-    fprintf(fp, "PUSH R0\n");
+    int i = getReg();
+    fprintf(fp, "MOV R%d,\"Write\"\n", i);
+    fprintf(fp, "PUSH R%d\n", i);
+    fprintf(fp, "MOV R%d, -2\n", i);
+    fprintf(fp, "PUSH R%d\n", i);
     fprintf(fp, "PUSH R%d\n", r);
-    fprintf(fp, "PUSH R0\n");
-    fprintf(fp, "PUSH R0\n");
+    fprintf(fp, "PUSH R%d\n", i);
+    fprintf(fp, "PUSH R%d\n", i);
     fprintf(fp, "CALL 0\n");
     fprintf(fp, "POP R%d\n", r);
-    fprintf(fp, "POP R0\n");
-    fprintf(fp, "POP R0\n");
-    fprintf(fp, "POP R0\n");
-    fprintf(fp, "POP R0\n");
+    fprintf(fp, "POP R%d\n", i);
+    fprintf(fp, "POP R%d\n", i);
+    fprintf(fp, "POP R%d\n", i);
+    fprintf(fp, "POP R%d\n", i);
 
     for(int i = r-1; i >= 0; i--){
         fprintf(fp, "POP R%d\n", i);
     }
-
+    freeReg();
     return r;
 }
 

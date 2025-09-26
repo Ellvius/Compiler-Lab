@@ -4,7 +4,7 @@
 cd lex
 lex lexer.l
 cd ../yacc
-yacc -d evaluator_parser.y
+yacc -d evaluator.y
 cd ..
 gcc -g lex/lex.yy.c yacc/y.tab.c exprtree/exprtree.c evaluator/evaluator.c -o expl
 ./expl "${1:-}"
