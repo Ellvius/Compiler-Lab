@@ -1,0 +1,262 @@
+#include "codeGen.h"
+
+static int regNum = 0;
+static int symbolTable[20];
+static int lnum = 0;
+
+reg_index getReg(void){
+    if(regNum==19){
+        fprintf(stderr, "\nRegisters exhausted\n"); 
+        exit(1);
+    }
+    return regNum++;
+}
+
+
+int freeReg(void){
+    if(regNum == 0){
+        fprintf(stderr,"\nNo registers to be freed\n");
+        exit(1);
+    }
+    return regNum--;
+}
+
+int getLabel(void){
+    return lnum++;
+}
+
+void codeGenHeader(FILE* fp){
+    fprintf(fp, "0\n2056\n0\n0\n0\n0\n0\n0\n");
+    fprintf(fp, "MOV SP, %d\n", SP);
+}
+
+
+void codeGenExit(FILE* fp){
+    fprintf(fp, "MOV R0,\"Exit\"\n");
+    fprintf(fp, "PUSH R0\n");
+    fprintf(fp, "PUSH R0\n");
+    fprintf(fp, "PUSH R0\n");
+    fprintf(fp, "PUSH R0\n");
+    fprintf(fp, "PUSH R0\n");
+    fprintf(fp, "CALL 0\n");
+    freeReg();
+}
+
+
+reg_index codeGenID(tnode* node, FILE* fp){
+    char varname = *(node->varname);
+    int loc = varname - 'a' + SP;
+
+    int r = getReg();
+    symbolTable[r] = loc;
+
+    fprintf(fp, "MOV R%d, [%d]\n", r, loc);
+    return r;
+}
+
+
+reg_index codeGenNUM(tnode *node, FILE* fp){
+    int r = getReg();
+    fprintf(fp, "MOV R%d, %d\n", r, node->val);
+    return r;
+}
+
+
+reg_index codeGenIfElse(tnode* node, FILE* fp){
+    int label_1 = getLabel();
+
+    int r = codeGenNODE(node->left, fp);        // code for if condition
+    fprintf(fp, "JZ R%d, _L%d\n", r, label_1);
+    codeGenNODE(node->middle, fp);
+
+    int label_2 = -1;
+    if(node->right){
+        label_2 = getLabel();
+        fprintf(fp, "JMP _L%d\n", label_2);
+    }
+
+    fprintf(fp, "_L%d:\n", label_1);
+
+    if(node->right){
+        codeGenNODE(node->right, fp);
+        fprintf(fp, "_L%d:\n", label_2);
+    }
+
+    freeReg();
+    return -1;
+}
+
+
+reg_index codeGenWhile(tnode* node, FILE* fp){
+    int label_1 = getLabel();
+    int label_2 = getLabel();
+
+    fprintf(fp, "_L%d:\n", label_1);
+    int r = codeGenNODE(node->left, fp);        // code for while condition
+    fprintf(fp, "JZ R%d, _L%d\n", r, label_2);
+    codeGenNODE(node->right, fp);                   // code for while statements
+    fprintf(fp, "JMP _L%d\n", label_1);
+    fprintf(fp, "_L%d:\n", label_2);
+    freeReg();
+    return -1;
+}
+
+
+reg_index codeGenOP(tnode *node, FILE* fp){
+    int i = codeGenNODE(node->left, fp);
+    int j = codeGenNODE(node->right, fp);
+
+    switch(node->nodetype){
+        case NODE_ADD : 
+            fprintf(fp, "ADD R%d, R%d\n", i, j);
+            break;
+        case NODE_SUB : 
+            fprintf(fp, "SUB R%d, R%d\n", i, j);
+            break;
+        case NODE_MUL : 
+            fprintf(fp, "MUL R%d, R%d\n", i, j);
+            break;
+        case NODE_DIV: 
+            fprintf(fp, "DIV R%d, R%d\n", i, j);
+            break;
+
+        case NODE_LT: 
+            fprintf(fp, "LT R%d, R%d\n", i, j);
+            break;
+        case NODE_GT: 
+            fprintf(fp, "GT R%d, R%d\n", i, j);
+            break;
+        case NODE_LE: 
+            fprintf(fp, "LE R%d, R%d\n", i, j);
+            break;
+        case NODE_GE: 
+            fprintf(fp, "GE R%d, R%d\n", i, j);
+            break;
+        case NODE_NE: 
+            fprintf(fp, "NE R%d, R%d\n", i, j);
+            break;
+        case NODE_EQ:
+            fprintf(fp, "EQ R%d, R%d\n", i, j);
+            break;
+
+        case NODE_ASSGN:
+            fprintf(fp, "MOV [%d], R%d\n", symbolTable[i], j);
+            freeReg();      // to free up the left (here actually right is freed) subtree reg
+            symbolTable[i] = -1;
+            break;
+
+        case NODE_CONN:
+            if(i != -1 && j != -1)
+                freeReg();  // to free up the left stmt also
+            return -1;            
+    }
+
+    freeReg();
+
+    return i;
+}
+
+
+reg_index codeGenRead(tnode* node, FILE* fp){
+    // left node has the var
+    tnode* var = node->left;
+    char varname = *(var->varname);
+    int loc = varname - 'a' + SP;
+    int r = getReg();
+
+    for(int i = 0; i < r; i++){
+        fprintf(fp, "PUSH R%d\n", i);
+    }
+
+    fprintf(fp, "MOV R0,\"Read\"\n");
+    fprintf(fp, "PUSH R0\n");
+    fprintf(fp, "MOV R0, -1\n");
+    fprintf(fp, "PUSH R0\n");
+    fprintf(fp, "MOV R0, %d\n", loc);
+    fprintf(fp, "PUSH R0\n");
+    fprintf(fp, "PUSH R0\n");
+    fprintf(fp, "PUSH R0\n");
+    fprintf(fp, "CALL 0\n");
+    fprintf(fp, "POP R%d\n", r);
+    fprintf(fp, "POP R0\n");
+    fprintf(fp, "POP R0\n");
+    fprintf(fp, "POP R0\n");
+    fprintf(fp, "POP R0\n");
+
+    for(int i = r-1; i >= 0; i--){
+        fprintf(fp, "POP R%d\n", i);
+    }
+
+    return r;
+}
+
+reg_index codeGenWrite(tnode* node, FILE* fp){
+    int r = codeGenNODE(node->left, fp);
+
+    for(int i = 0; i < r; i++){
+        fprintf(fp, "PUSH R%d\n", i);
+    }
+
+    fprintf(fp, "MOV R0,\"Write\"\n");
+    fprintf(fp, "PUSH R0\n");
+    fprintf(fp, "MOV R0, -2\n");
+    fprintf(fp, "PUSH R0\n");
+    fprintf(fp, "PUSH R%d\n", r);
+    fprintf(fp, "PUSH R0\n");
+    fprintf(fp, "PUSH R0\n");
+    fprintf(fp, "CALL 0\n");
+    fprintf(fp, "POP R%d\n", r);
+    fprintf(fp, "POP R0\n");
+    fprintf(fp, "POP R0\n");
+    fprintf(fp, "POP R0\n");
+    fprintf(fp, "POP R0\n");
+
+    for(int i = r-1; i >= 0; i--){
+        fprintf(fp, "POP R%d\n", i);
+    }
+
+    return r;
+}
+
+
+int codeGenNODE(tnode* node, FILE* fp){
+    switch(node->nodetype){
+        case NODE_LEAF:
+            if(node->varname == NULL)  
+                return codeGenNUM(node, fp);
+            else    
+                return codeGenID(node, fp);
+
+        case NODE_READ:
+            return codeGenRead(node, fp);
+
+        case NODE_WRITE:
+            return codeGenWrite(node,fp);
+
+        case NODE_IFELSE:
+            return codeGenIfElse(node, fp);
+
+        case NODE_WHILE:
+            return codeGenWhile(node, fp);
+
+        default:
+            return codeGenOP(node, fp);
+    }
+    return -1;
+}
+
+
+int codeGen(tnode *node){
+    FILE *fp = fopen("./label_output.xsm", "w");     // output xsm file
+    if(!fp){
+        printf("Couldn't create output file\n");
+        exit(1);
+    }
+
+    codeGenHeader(fp);    // Header section
+    codeGenNODE(node, fp);
+    codeGenExit(fp);    // Exit system call
+
+    fclose(fp);
+    return 0;
+}

@@ -35,7 +35,7 @@
 
 Program     :   START_BLOCK Slist END_BLOCK EOS     {
                                                         $$ = $2;
-                                                        // codeGen($2);
+                                                        codeGen($2);
                                                         exit(0);
                                                     }
             |   START_BLOCK END_BLOCK EOS           {
