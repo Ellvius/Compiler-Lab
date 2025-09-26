@@ -11,4 +11,6 @@ int evaluateCode(tnode *node);
 
 int evaluateAST(tnode *root);
 
+void inorder(tnode* node);
+
 #endif

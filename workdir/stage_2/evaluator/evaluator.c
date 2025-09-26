@@ -91,3 +91,46 @@ int evaluateAST(tnode *root) {
     evaluateCode(root);
     printf("Program exited.\n");
 }
+
+void inorder(tnode* node){
+    if(node == NULL){
+        return;
+    }
+    
+    inorder(node->left);
+    switch(node->nodetype){
+        case NODE_CONN:
+            printf("con ");
+            break;
+        case NODE_LEAF:
+            if(node->vartype == TYPE_NONE){
+                printf("num ");
+            }
+            else {
+                printf("id ");
+            }
+            break;
+        case NODE_READ:
+            printf("read ");
+            break;
+        case NODE_WRITE:
+            printf("write ");
+            break;
+        case NODE_ASSGN:
+            printf("= ");
+            break;
+        case NODE_ADD:
+            printf("+ ");
+            break;
+        case NODE_SUB:
+            printf("- ");
+            break;
+        case NODE_MUL:
+            printf("* ");
+            break;
+        case NODE_DIV:
+            printf("/ ");
+            break;
+    }
+    inorder(node->right);
+}
