@@ -5,7 +5,7 @@
 #include <stdlib.h>
 #include "../exprtree/exprtree.h"
 
-#define SP 4122
+#define SP 4096
 #define reg_index int
 
 reg_index getReg(void);
