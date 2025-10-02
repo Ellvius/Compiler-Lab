@@ -35,7 +35,6 @@ void codeGenExit(FILE* fp){
     fprintf(fp, "PUSH R0\n");
     fprintf(fp, "PUSH R0\n");
     fprintf(fp, "CALL 0\n");
-    freeReg();
 }
 
 
@@ -82,9 +81,11 @@ reg_index codeGenOP(tnode *node, FILE* fp){
             i = -1;
             break;
         case NODE_CONN:
-            if(i != -1 && j != -1)
+            if(i != -1)
                 freeReg();  // to free up the left stmt also
-            return -1;            
+            if(j != -1)
+                freeReg();
+            return -1;             
     }
 
     freeReg();
