@@ -18,12 +18,14 @@
 %token START_BLOCK END_BLOCK READ WRITE 
 %token IF THEN ELSE ENDIF
 %token WHILE DO ENDWHILE
+%token BREAK CONTINUE
 %token PLUS MINUS MUL DIV
 %token LT GT LE GE NE EQ
 %token ASSGN EOS
 %token <node> NUM ID
 %type <node> Expr Program Slist Stmt
 %type <node> InputStmt OutputStmt AsgStmt IfStmt WhileStmt
+%type <node> BreakStmt ContinueStmt
 
 %right ASSGN
 %left PLUS MINUS
@@ -53,6 +55,8 @@ Stmt        :   IfStmt                  {$$ = $1;}
             |   InputStmt               {$$ = $1;}
             |   OutputStmt              {$$ = $1;}
             |   AsgStmt                 {$$ = $1;}
+            |   BreakStmt               {$$ = $1;}
+            |   ContinueStmt            {$$ = $1;}
             ;
 
 IfStmt      :   IF '(' Expr ')' THEN Slist ELSE Slist ENDIF EOS     {$$ = makeIfElseNode($3, $6, $8);}
@@ -69,6 +73,12 @@ OutputStmt  :   WRITE '(' Expr ')' EOS  {$$ = makeWriteNode($3);}
             ;
 
 AsgStmt     :   ID ASSGN Expr EOS       {$$ = makeAssgnNode($1, $3);}
+            ;
+
+BreakStmt   :   BREAK EOS               {$$ = makeBreakNode();}
+            ;
+
+ContinueStmt:   CONTINUE EOS            {$$ = makeContinueNode();}
             ;
 
 Expr        :   Expr PLUS Expr          {$$ = makeArithOPNode(NODE_ADD, $1, $3);}

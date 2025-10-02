@@ -4,6 +4,64 @@ static int regNum = 0;
 static int symbolTable[20];
 static int lnum = 0;
 
+static Stack* loopStack = NULL;
+
+
+/* ========== STACK IMPLEMENTATION ==========*/
+
+// Create a new empty stack
+Stack* createStack() {
+    Stack* stack = (Stack*)malloc(sizeof(Stack));
+    if (!stack) {
+        printf("Memory allocation failed\n");
+        exit(1);
+    }
+    stack->top = NULL;
+    return stack;
+}
+
+// Push a (start, end) pair onto the stack
+void push(Stack* stack, int start, int end) {
+    snode* newNode = (snode*)malloc(sizeof(snode));
+    if (!newNode) {
+        printf("Memory allocation failed\n");
+        exit(1);
+    }
+    newNode->start = start;
+    newNode->end = end;
+    newNode->next = stack->top;
+    stack->top = newNode;
+}
+
+// Pop a node from the stack
+snode* pop(Stack* stack) {
+    if (stack->top == NULL) {
+        printf("Stack underflow! Cannot pop.\n");
+        exit(1);
+    }
+    snode* temp = stack->top;
+    snode* popped = temp;  // copy values
+    stack->top = temp->next;
+    free(temp);
+    return popped;
+}
+
+// Peek at the top element of the stack
+snode* peek(Stack* stack) {
+    return stack->top;
+}
+
+// Free the entire stack
+void freeStack(Stack* stack) {
+    while (stack->top != NULL) {
+        pop(stack);
+    }
+    free(stack);
+}
+
+
+/*========== XSM CODE GENERATION IMPLEMENTATION ==========*/
+
 reg_index getReg(void){
     if(regNum==19){
         fprintf(stderr, "\nRegisters exhausted\n"); 
@@ -90,6 +148,8 @@ reg_index codeGenWhile(tnode* node, FILE* fp){
     int label_1 = getLabel();
     int label_2 = getLabel();
 
+    push(loopStack, label_1, label_2);
+
     fprintf(fp, "_L%d:\n", label_1);
     int r = codeGenNODE(node->left, fp);        // code for while condition
     fprintf(fp, "JZ R%d, _L%d\n", r, label_2);
@@ -97,6 +157,27 @@ reg_index codeGenWhile(tnode* node, FILE* fp){
     fprintf(fp, "JMP _L%d\n", label_1);
     fprintf(fp, "_L%d:\n", label_2);
     freeReg();
+
+    pop(loopStack);
+
+    return -1;
+}
+
+
+reg_index codeGenBreak(tnode* node, FILE* fp){
+    snode* top = peek(loopStack);
+    if(top){
+        fprintf(fp, "JMP _L%d\n", top->end);
+    }
+    return -1;
+}
+
+
+reg_index codeGenContinue(tnode* node, FILE* fp){
+    snode* top = peek(loopStack);
+    if(top){
+        fprintf(fp, "JMP _L%d\n", top->start);
+    }
     return -1;
 }
 
@@ -249,6 +330,12 @@ int codeGenNODE(tnode* node, FILE* fp){
         case NODE_WHILE:
             return codeGenWhile(node, fp);
 
+        case NODE_BREAK:
+            return codeGenBreak(node, fp);
+
+        case NODE_CONTINUE:
+            return codeGenContinue(node, fp);
+
         default:
             return codeGenOP(node, fp);
     }
@@ -263,10 +350,19 @@ int codeGen(tnode *node){
         exit(1);
     }
 
+    if(loopStack == NULL)
+        loopStack = createStack();   // stack to keep track of nested loops
+
+
     codeGenHeader(fp);    // Header section
     codeGenNODE(node, fp);
     codeGenExit(fp);    // Exit system call
 
+    if(loopStack) {
+        freeStack(loopStack);
+        loopStack = NULL;   // safety reset
+    }
+    
     fclose(fp);
     return 0;
 }

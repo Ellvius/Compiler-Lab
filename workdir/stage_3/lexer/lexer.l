@@ -19,6 +19,8 @@
 "while"     { return WHILE; }
 "do"        { return DO; }
 "endwhile"  { return ENDWHILE; }
+"break"     { return BREAK; }
+"continue"  { return CONTINUE; }
 
 "<="        { return LE; }
 ">="        { return GE; }

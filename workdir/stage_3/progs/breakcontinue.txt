@@ -1,11 +1,9 @@
 begin
     read(i);
     i = 0;
-    break;
-    continue;
     while(i < 10) do
         i = i + 1;
-
+        
         if(i == 4) then
             continue;
         endif;

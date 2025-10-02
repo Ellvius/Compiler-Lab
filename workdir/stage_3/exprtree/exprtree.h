@@ -28,7 +28,9 @@ typedef enum {
     NODE_NE,
     NODE_EQ,
     NODE_IFELSE,
-    NODE_WHILE
+    NODE_WHILE,
+    NODE_BREAK,
+    NODE_CONTINUE
 } node_type;
 
 typedef struct tnode {
@@ -61,5 +63,9 @@ tnode* makeConnNode(tnode* l, tnode* r);
 tnode* makeWhileNode(tnode *l, tnode* r);
 
 tnode* makeIfElseNode(tnode* l, tnode* m, tnode* r);
+
+tnode* makeBreakNode(void);
+
+tnode* makeContinueNode(void);
 
 #endif

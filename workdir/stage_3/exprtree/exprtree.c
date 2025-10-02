@@ -94,3 +94,12 @@ tnode* makeIfElseNode(tnode* l, tnode* m, tnode* r){
     return temp;
 }
 
+tnode* makeBreakNode(void){
+    tnode* temp = createTree(0, TYPE_NONE, NULL, NODE_BREAK, NULL, NULL, NULL);    
+    return temp;
+}
+
+tnode* makeContinueNode(void){
+    tnode* temp = createTree(0, TYPE_NONE, NULL, NODE_CONTINUE, NULL, NULL, NULL);    
+    return temp;
+}
