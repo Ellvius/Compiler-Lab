@@ -39,7 +39,7 @@ reg_index codeGenRead(tnode* node, FILE* fp);
 reg_index codeGenWrite(tnode* node, FILE* fp);
 
 reg_index codeGenIfElse(tnode* node, FILE* fp);
-reg_index codeGenWhile(tnode* node, FILE* fp);
+reg_index codeGenIteration(tnode* node, FILE* fp);
 reg_index codeGenBreak(tnode* node, FILE* fp);
 reg_index codeGenContinue(tnode* node, FILE* fp);
 

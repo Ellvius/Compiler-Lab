@@ -144,18 +144,40 @@ reg_index codeGenIfElse(tnode* node, FILE* fp){
 }
 
 
-reg_index codeGenWhile(tnode* node, FILE* fp){
-    int label_1 = getLabel();
-    int label_2 = getLabel();
+reg_index codeGenIteration(tnode* node, FILE* fp){
+    int startLabel = getLabel();
+    int endLabel = getLabel();
 
-    push(loopStack, label_1, label_2);
+    push(loopStack, startLabel, endLabel);
+    int condReg;
 
-    fprintf(fp, "_L%d:\n", label_1);
-    int r = codeGenNODE(node->left, fp);        // code for while condition
-    fprintf(fp, "JZ R%d, _L%d\n", r, label_2);
-    codeGenNODE(node->right, fp);                   // code for while statements
-    fprintf(fp, "JMP _L%d\n", label_1);
-    fprintf(fp, "_L%d:\n", label_2);
+    switch(node->nodetype){
+        case NODE_WHILE: 
+            fprintf(fp, "_L%d:\n", startLabel);
+
+            condReg = codeGenNODE(node->left, fp);        // code for while condition
+            fprintf(fp, "JZ R%d, _L%d\n", condReg, endLabel);  // jump out of loop
+
+            codeGenNODE(node->right, fp);               // code for while statements
+            fprintf(fp, "JMP _L%d\n", startLabel);         // jump back to statements
+            fprintf(fp, "_L%d:\n", endLabel);            // out of loop label
+            break;
+
+        default: 
+            fprintf(fp, "_L%d:\n", startLabel);
+            codeGenNODE(node->right, fp);               // code for statements
+
+            condReg = codeGenNODE(node->left, fp);        // code for condition
+
+            if (node->nodetype == NODE_DOWHILE) {
+                fprintf(fp, "JNZ R%d, _L%d\n", condReg, startLabel); // repeat while true
+            } else {
+                fprintf(fp, "JZ R%d, _L%d\n", condReg, startLabel);  // repeat while false
+            }
+
+            fprintf(fp, "_L%d:\n", endLabel);            // out of loop label
+            break;        
+    }
     freeReg();
 
     pop(loopStack);
@@ -328,7 +350,13 @@ int codeGenNODE(tnode* node, FILE* fp){
             return codeGenIfElse(node, fp);
 
         case NODE_WHILE:
-            return codeGenWhile(node, fp);
+            return codeGenIteration(node, fp);
+
+        case NODE_DOWHILE:
+            return codeGenIteration(node, fp);
+
+        case NODE_REPEAT:
+            return codeGenIteration(node, fp);
 
         case NODE_BREAK:
             return codeGenBreak(node, fp);

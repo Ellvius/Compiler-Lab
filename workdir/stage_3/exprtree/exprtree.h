@@ -29,6 +29,8 @@ typedef enum {
     NODE_EQ,
     NODE_IFELSE,
     NODE_WHILE,
+    NODE_DOWHILE,
+    NODE_REPEAT,
     NODE_BREAK,
     NODE_CONTINUE
 } node_type;
@@ -60,7 +62,7 @@ tnode* makeWriteNode(tnode* l);
 
 tnode* makeConnNode(tnode* l, tnode* r);
 
-tnode* makeWhileNode(tnode *l, tnode* r);
+tnode* makeIterationNode(node_type ntype, tnode *l, tnode* r);
 
 tnode* makeIfElseNode(tnode* l, tnode* m, tnode* r);
 

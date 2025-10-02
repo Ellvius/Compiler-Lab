@@ -74,13 +74,13 @@ tnode* makeConnNode(tnode* l, tnode* r){
     return temp;
 }
 
-tnode* makeWhileNode(tnode *l, tnode* r){
+tnode* makeIterationNode(node_type ntype, tnode *l, tnode* r){
     if(l->vartype != TYPE_BOOL){
         fprintf(stderr, "type mismatch: while\n");
         exit(1);
     }
     
-    tnode* temp = createTree(0, TYPE_NONE, NULL, NODE_WHILE, l, NULL, r);
+    tnode* temp = createTree(0, TYPE_NONE, NULL, ntype, l, NULL, r);
     return temp;
 }
 
