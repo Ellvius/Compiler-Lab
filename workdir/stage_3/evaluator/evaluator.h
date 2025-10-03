@@ -5,10 +5,8 @@
 #include <stdlib.h>
 #include "../exprtree/exprtree.h"
 
-int evaluateOperation(tnode* node);
-
 int evaluateCode(tnode *node);
 
-int evaluateAST(tnode *root);
+int evaluate(tnode *root);
 
 #endif

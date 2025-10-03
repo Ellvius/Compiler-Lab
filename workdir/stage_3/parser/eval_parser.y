@@ -17,13 +17,15 @@
 
 %token START_BLOCK END_BLOCK READ WRITE 
 %token IF THEN ELSE ENDIF
-%token WHILE DO ENDWHILE
+%token WHILE DO ENDWHILE REPEAT UNTIL
+%token BREAK CONTINUE
 %token PLUS MINUS MUL DIV
 %token LT GT LE GE NE EQ
 %token ASSGN EOS
 %token <node> NUM ID
 %type <node> Expr Program Slist Stmt
-%type <node> InputStmt OutputStmt AsgStmt IfStmt WhileStmt
+%type <node> InputStmt OutputStmt AsgStmt IfStmt IterativeStmt
+%type <node> BreakStmt ContinueStmt
 
 %right ASSGN
 %left PLUS MINUS
@@ -35,7 +37,7 @@
 
 Program     :   START_BLOCK Slist END_BLOCK EOS     {
                                                         $$ = $2;
-                                                        evaluateAST($2);
+                                                        evaluate($2);
                                                         exit(0);
                                                     }
             |   START_BLOCK END_BLOCK EOS           {
@@ -49,18 +51,22 @@ Slist       :   Slist Stmt              {$$ = makeConnNode($1, $2);}
             ;
 
 Stmt        :   IfStmt                  {$$ = $1;}
-            |   WhileStmt               {$$ = $1;}
+            |   IterativeStmt           {$$ = $1;}
             |   InputStmt               {$$ = $1;}
             |   OutputStmt              {$$ = $1;}
             |   AsgStmt                 {$$ = $1;}
+            |   BreakStmt               {$$ = $1;}
+            |   ContinueStmt            {$$ = $1;}
             ;
 
 IfStmt      :   IF '(' Expr ')' THEN Slist ELSE Slist ENDIF EOS     {$$ = makeIfElseNode($3, $6, $8);}
             |   IF '(' Expr ')' THEN Slist ENDIF EOS                {$$ = makeIfElseNode($3, $6, NULL);}
             ;
 
-WhileStmt   :   WHILE '(' Expr ')' DO Slist ENDWHILE EOS            {$$ = makeWhileNode($3, $6);}
-            ;
+IterativeStmt   :   WHILE '(' Expr ')' DO Slist ENDWHILE EOS        {$$ = makeIterationNode(NODE_WHILE, $3, $6);}
+                |   DO Slist WHILE '(' Expr ')' EOS                 {$$ = makeIterationNode(NODE_DOWHILE, $5, $2);}
+                |   REPEAT Slist UNTIL '(' Expr ')' EOS             {$$ = makeIterationNode(NODE_REPEAT, $5, $2);}
+                ;
 
 InputStmt   :   READ '(' ID ')' EOS     {$$ = makeReadNode($3);}
             ;
@@ -69,6 +75,12 @@ OutputStmt  :   WRITE '(' Expr ')' EOS  {$$ = makeWriteNode($3);}
             ;
 
 AsgStmt     :   ID ASSGN Expr EOS       {$$ = makeAssgnNode($1, $3);}
+            ;
+
+BreakStmt   :   BREAK EOS               {$$ = makeBreakNode();}
+            ;
+
+ContinueStmt:   CONTINUE EOS            {$$ = makeContinueNode();}
             ;
 
 Expr        :   Expr PLUS Expr          {$$ = makeArithOPNode(NODE_ADD, $1, $3);}
