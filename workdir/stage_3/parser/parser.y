@@ -28,10 +28,10 @@
 %type <node> BreakStmt ContinueStmt
 
 %right ASSGN
-%left PLUS MINUS
-%left MUL DIV
 %nonassoc LT LE GT GE
 %nonassoc NE EQ
+%left PLUS MINUS
+%left MUL DIV
 
 %%
 
