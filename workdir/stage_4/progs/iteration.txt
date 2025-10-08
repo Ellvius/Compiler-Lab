@@ -1,0 +1,48 @@
+begin
+    i = 0;
+    j = 0;
+
+    while(i < 5) do
+        i = i + 1;
+
+        if(i == 2) then
+            continue;
+        endif;
+
+        if(i == 4) then
+            break;
+        endif;
+
+        write(i);
+    endwhile;
+
+    j = 0;
+    do
+        j = j + 1;
+
+        if(j == 2) then
+            continue;
+        endif;
+
+        if(j == 4) then
+            break;
+        endif;
+
+        write(j);
+    while(j < 5);
+
+    i = 0;
+    repeat
+        i = i + 1;
+
+        if(i == 2) then
+            continue;
+        endif;
+
+        if(i == 4) then
+            break;
+        endif;
+
+        write(i);
+    until(i >= 5);
+end;
