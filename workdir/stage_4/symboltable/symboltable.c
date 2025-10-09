@@ -1,5 +1,8 @@
 #include "symboltable.h"
 
+Gsymbol *Ghead = NULL, *Gtail = NULL;
+int freeAddrPtr = START_ADDR;
+
 Gsymbol* GLookup(char * name){
     Gsymbol *temp = Ghead;
 
@@ -11,27 +14,28 @@ Gsymbol* GLookup(char * name){
 }
 
 void GInstall(char *name, int type, int size){
-    Gsymbol *temp = GLookup(name);
+    Gsymbol *newEntry = GLookup(name);
     
-    if(temp != NULL){
+    if(newEntry != NULL){
         fprintf(stdout, "Variable re-initialized \"%s\"\n", name);
         exit(1);
     }
 
-    temp = (Gsymbol*)malloc(sizeof(Gsymbol));
-    temp->name = (char*)malloc(strlen(name)*sizeof(char));
-    strcpy(temp->name, name);
-    temp->type = type;
-    temp->size = size;
-    temp->next = NULL;
+    newEntry = (Gsymbol*)malloc(sizeof(Gsymbol));
+    newEntry->name = strdup(name);
+    newEntry->type = type;
+    newEntry->size = size;
+    newEntry->binding = freeAddrPtr;
+    freeAddrPtr += size;    // advance addr pointer
+    newEntry->next = NULL;
 
     if(Ghead != NULL){
-        Gtail->next = temp;
-        Gtail = temp;
+        Gtail->next = newEntry;
+        Gtail = newEntry;
     }
     else {
-        Ghead = temp;
-        Gtail = temp;
+        Ghead = newEntry;
+        Gtail = newEntry;
     }
 }
 
@@ -53,7 +57,7 @@ void printSymbolTable(void){
     Gsymbol* temp = Ghead;
 
     while(temp != NULL){
-        fprintf(stdout, "%s----%s----%d\n", temp->name, tokenToString(temp->type), temp->size);
+        fprintf(stdout, "%s----%s----%d----%d\n", temp->name, tokenToString(temp->type), temp->size, temp->binding);
         temp = temp->next;
     }
 }

@@ -4,6 +4,8 @@
 #include <stdlib.h>
 #include "../abstree/abstree.h"
 
+#define START_ADDR 4096
+
 typedef struct Gsymbol {
     char* name;             // name of the variable
     int type;               // type of the variable
@@ -14,7 +16,9 @@ typedef struct Gsymbol {
 
 Gsymbol* GLookup(char * name);            // Lookup for global identifier
 void GInstall(char *name, int type, int size);   // Creates a symbol table entry.
-Gsymbol *Ghead, *Gtail;
+
+extern Gsymbol *Ghead, *Gtail;
+extern int freeAddrPtr;
 
 void printSymbolTable(void);            // Prints the Sybbol Table Entries
 char* tokenToString(int);     // Prints the Var type instead of numerical value
