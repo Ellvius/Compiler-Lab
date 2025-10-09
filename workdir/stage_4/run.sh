@@ -24,26 +24,27 @@ pushd parser >/dev/null
 yacc -d parser.y
 popd >/dev/null
 
-gcc lexer/lex.yy.c \
+gcc -g lexer/lex.yy.c \
     parser/y.tab.c \
     abstree/abstree.c \
+    codeGen/codeGen.c \
     symboltable/symboltable.c \
     -o "$OUTPUT_DIR/expl"
 
 "$OUTPUT_DIR/expl" "${1:-}"
 
 # Generate label translator and run it
-# pushd label >/dev/null
-# lex label.l
-# popd >/dev/null
+pushd label >/dev/null
+lex label.l
+popd >/dev/null
 
-# gcc label/lex.yy.c \
-#     label/label.c \
-#     -o "$OUTPUT_DIR/label_translator"
+gcc label/lex.yy.c \
+    label/label.c \
+    -o "$OUTPUT_DIR/label_translator"
 
-# "$OUTPUT_DIR/label_translator" label_output.xsm output.xsm
+"$OUTPUT_DIR/label_translator" label_output.xsm output.xsm
 
 
 # # To run the output xsm code
-# cd "$XSM_DIR"
-# ./xsm -l "$LIBRARY_FILE" -e "$STAGE_DIR/output.xsm" "${2:-}"
+cd "$XSM_DIR"
+./xsm -l "$LIBRARY_FILE" -e "$STAGE_DIR/output.xsm" "${2:-}"

@@ -25,7 +25,7 @@ void GInstall(char *name, int type, int size){
     newEntry->name = strdup(name);
     newEntry->type = type;
     newEntry->size = size;
-    newEntry->binding = freeAddrPtr;
+    newEntry->addr = freeAddrPtr;
     freeAddrPtr += size;    // advance addr pointer
     newEntry->next = NULL;
 
@@ -43,6 +43,7 @@ void GInstall(char *name, int type, int size){
 char* tokenToString(int type){
     switch(type){
         case TYPE_NONE: return "NONE";
+        case TYPE_ID: return "ID";
         case TYPE_INT:  return "INT";
         case TYPE_CHAR: return "CHAR";
         case TYPE_BOOL: return "BOOL";
@@ -57,7 +58,7 @@ void printSymbolTable(void){
     Gsymbol* temp = Ghead;
 
     while(temp != NULL){
-        fprintf(stdout, "%s----%s----%d----%d\n", temp->name, tokenToString(temp->type), temp->size, temp->binding);
+        fprintf(stdout, "%s----%s----%d----%d\n", temp->name, tokenToString(temp->type), temp->size, temp->addr);
         temp = temp->next;
     }
 }

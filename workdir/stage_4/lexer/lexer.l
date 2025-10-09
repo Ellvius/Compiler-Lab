@@ -58,6 +58,9 @@ string          \"(\\.|[^\\\"])*\"
 
 {string}            {
                         size_t  len = strlen(yytext);
+                        if(len < 2) {
+                            yyerror("empty string literal");
+                        }
                         yylval.strVal = strndup(yytext+1, len-2);
                         return STRING;
                     }
@@ -71,7 +74,7 @@ string          \"(\\.|[^\\\"])*\"
 ","         { return COMMA; }
 
 [ \t\n]     { }
-[()"]        { return *yytext; }
+[()]        { return *yytext; }
 .           { 
                 yyerror("unknown character "); 
                 fprintf(stdout, "%c\n", *yytext);

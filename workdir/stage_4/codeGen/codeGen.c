@@ -1,7 +1,8 @@
 #include "codeGen.h"
+#include "../symboltable/symboltable.h"
 
 static int regNum = 0;
-static int symbolTable[20];
+static int registerTable[20];
 static int lnum = 0;
 
 static Stack* loopStack = NULL;
@@ -85,7 +86,7 @@ int getLabel(void){
 
 void codeGenHeader(FILE* fp){
     fprintf(fp, "0\n2056\n0\n0\n0\n0\n0\n0\n");
-    fprintf(fp, "MOV SP, %d\n", SP+26);
+    fprintf(fp, "MOV SP, %d\n", freeAddrPtr);
 }
 
 
@@ -101,20 +102,35 @@ void codeGenExit(FILE* fp){
 
 
 RegIndex codeGenID(ASTNode* node, FILE* fp){
-    char varname = *(node->varname);
-    int loc = varname - 'a' + SP;
+    if(!node->GEntry){
+        fprintf(stderr, "Undefined variable: %d\n", node->type);
+        exit(1);
+    }
 
     int r = getReg();
-    symbolTable[r] = loc;
+    registerTable[r] = node->GEntry->addr;
 
-    fprintf(fp, "MOV R%d, [%d]\n", r, loc);
+    fprintf(fp, "MOV R%d, [%d]\n", r, node->GEntry->addr);
     return r;
 }
 
 
-RegIndex codeGenNUM(ASTNode *node, FILE* fp){
+RegIndex codeGenConst(ASTNode *node, FILE* fp){
     int r = getReg();
-    fprintf(fp, "MOV R%d, %d\n", r, node->val);
+    
+    switch(node->type){
+        case TYPE_INT:
+            fprintf(fp, "MOV R%d, %d\n", r, node->value->intVal);
+            break;
+
+        case TYPE_STR:
+            fprintf(fp, "MOV R%d, \"%s\"\n", r, node->value->strVal);
+            break;
+
+        default:
+            fprintf(stderr, "Undefined const type: %s\n", tokenToString(node->type));
+            break;
+    }
     return r;
 }
 
@@ -242,9 +258,9 @@ RegIndex codeGenOP(ASTNode *node, FILE* fp){
             break;
 
         case NODE_ASSGN:
-            fprintf(fp, "MOV [%d], R%d\n", symbolTable[i], j);
+            fprintf(fp, "MOV [%d], R%d\n", registerTable[i], j);
             freeReg();      // to free up the left (here actually right is freed) subtree reg
-            symbolTable[i] = -1;
+            registerTable[i] = -1;
             i = -1;
             break;
 
@@ -264,9 +280,11 @@ RegIndex codeGenOP(ASTNode *node, FILE* fp){
 
 RegIndex codeGenRead(ASTNode* node, FILE* fp){
     // left node has the var
-    ASTNode* var = node->left;
-    char varname = *(var->varname);
-    int loc = varname - 'a' + SP;
+    Gsymbol* idEntry = node->left->GEntry;
+    if(!idEntry){
+        fprintf(stderr, "Undefined variable: %d\n", node->type);
+        exit(1);
+    }
     int r = getReg();
 
     for(int i = 0; i < r; i++){
@@ -279,7 +297,7 @@ RegIndex codeGenRead(ASTNode* node, FILE* fp){
     fprintf(fp, "PUSH R%d\n", i);
     fprintf(fp, "MOV R%d, -1\n", i);
     fprintf(fp, "PUSH R%d\n", i);
-    fprintf(fp, "MOV R%d, %d\n", i, loc);
+    fprintf(fp, "MOV R%d, %d\n", i, idEntry->addr);
     fprintf(fp, "PUSH R%d\n", i);
     fprintf(fp, "PUSH R%d\n", i);
     fprintf(fp, "PUSH R%d\n", i);
@@ -335,8 +353,8 @@ RegIndex codeGenWrite(ASTNode* node, FILE* fp){
 int codeGenNODE(ASTNode* node, FILE* fp){
     switch(node->nodetype){
         case NODE_LEAF:
-            if(node->varname == NULL)  
-                return codeGenNUM(node, fp);
+            if(node->varName == NULL)  
+                return codeGenConst(node, fp);
             else    
                 return codeGenID(node, fp);
 

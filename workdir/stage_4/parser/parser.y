@@ -2,7 +2,7 @@
     #include <stdlib.h>
     #include <stdio.h>
     #include "../abstree/abstree.h"
-    // #include "../codeGen/codeGen.h"
+    #include "../codeGen/codeGen.h"
     #include "../symboltable/symboltable.h"
 
     extern FILE *yyin;
@@ -33,8 +33,7 @@
 %token <intVal> NUM
 %token <strVal> STRING
 %token <idName> ID
-%type <node> Expr Program Slist Stmt Declarations
-%type <node> DeclList Decl 
+%type <node> Expr Program Slist Stmt Code
 %type <stEntry> VarList
 %type <idType> Type
 %type <node> InputStmt OutputStmt AsgStmt IfStmt IterativeStmt
@@ -48,11 +47,15 @@
 
 %%
 
-Program     :   START_BLOCK Slist END_BLOCK         {
+Program     :   Declarations Code                   {
                                                         $$ = $2;
-                                                        // codeGen($2);
                                                         printSymbolTable();
+                                                        codeGen($2);
                                                         exit(0);
+                                                    }
+
+Code        :   START_BLOCK Slist END_BLOCK         {
+                                                        $$ = $2;
                                                     }
             |   START_BLOCK END_BLOCK               {
                                                         fprintf(stdout, "Empty program\n");
@@ -85,8 +88,8 @@ DeclList    :   DeclList Decl           {}
 Decl        :   Type VarList EOS        {}
             ;
 
-Type        :   INT                     { currentType = TYPE_INT; $$ = TYPE_INT;}
-            |   STR                     { currentType = TYPE_STR; $$ = TYPE_STR;}
+Type        :   INT                     {currentType = TYPE_INT; $$ = TYPE_INT;}
+            |   STR                     {currentType = TYPE_STR; $$ = TYPE_STR;}
             ;
 
 VarList     :   VarList COMMA ID        {GInstall($3, currentType, 1);}
@@ -103,7 +106,7 @@ IterativeStmt   :   WHILE '(' Expr ')' DO Slist ENDWHILE EOS        {$$ = makeIt
                 ;
 
 InputStmt   :   READ '(' ID ')' EOS     {
-                                            ASTNode* id = makeLeafNode(0, NULL, TYPE_NONE, $3);
+                                            ASTNode* id = makeLeafNode(0, NULL, TYPE_ID, $3);
                                             $$ = makeReadNode(id);
                                         }
             ;
@@ -112,7 +115,7 @@ OutputStmt  :   WRITE '(' Expr ')' EOS  {$$ = makeWriteNode($3);}
             ;
 
 AsgStmt     :   ID ASSGN Expr EOS       {
-                                            ASTNode* id = makeLeafNode(0, NULL, TYPE_NONE, $1);
+                                            ASTNode* id = makeLeafNode(0, NULL, TYPE_ID, $1);
                                             $$ = makeAssgnNode(id, $3);
                                         }
             ;
@@ -136,7 +139,7 @@ Expr        :   Expr PLUS Expr          {$$ = makeArithOPNode(NODE_ADD, $1, $3);
             |   Expr EQ Expr            {$$ = makeRelOPNode(NODE_EQ, $1, $3);}
             |   NUM                     {$$ = makeLeafNode($1, NULL, TYPE_INT, NULL);}
             |   STRING                  {$$ = makeLeafNode(0, $1, TYPE_STR, NULL);}
-            |   ID                      {$$ = makeLeafNode(0, NULL, TYPE_NONE, $1);}
+            |   ID                      {$$ = makeLeafNode(0, NULL, TYPE_ID, $1);}
             ;
 
 %%

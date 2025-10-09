@@ -7,6 +7,7 @@
 
 typedef enum {
     TYPE_NONE,
+    TYPE_ID,
     TYPE_INT,
     TYPE_CHAR,
     TYPE_BOOL,
@@ -44,12 +45,12 @@ typedef enum {
 typedef union Constant {
     int intVal;                             // value of the constant
     char* strVal;
-    char* varName;                          // name of the variable
 } Constant;
 
 typedef struct ASTNode{
-    Constant value;                         // union of intval, strval, or varname
+    Constant *value;                         // union of intval, strval, or varname
     VarType type;                           // type of the variable
+    char* varName;                          // name of the variable
     NodeType nodetype;                      // node type information
     struct Gsymbol *GEntry;           // pointer to GST entry for global variables and functions
     struct ASTNode *left, *middle, *right;    // children nodes
@@ -58,7 +59,7 @@ typedef struct ASTNode{
 
 
 /* Create a generic AST node */
-ASTNode* TreeCreate(int n, char* s, VarType vtype, char* vname, NodeType ntype, ASTNode *l, ASTNode *m, ASTNode *r);
+ASTNode* TreeCreate(union Constant *val, VarType vtype, char* vname, NodeType ntype, ASTNode *l, ASTNode *m, ASTNode *r);
 
 /* Make Leaf node (NUM constant or ID variable) */
 ASTNode* makeLeafNode(int n, char* s, VarType vtype, char* vname);

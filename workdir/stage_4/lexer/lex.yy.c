@@ -362,7 +362,7 @@ struct yy_trans_info
 	};
 static const flex_int16_t yy_accept[103] =
     {   0,
-        0,    0,   40,   38,   36,   36,   38,   37,   37,   31,
+        0,    0,   40,   38,   36,   36,   38,   38,   37,   31,
        29,   35,   30,   32,   26,   34,   24,   33,   25,   27,
        27,   27,   27,   27,   27,   27,   27,   27,   27,   27,
        22,    0,   28,    0,   26,   20,   23,   21,   27,   27,
@@ -938,59 +938,62 @@ YY_RULE_SETUP
 #line 59 "lexer.l"
 {
                         size_t  len = strlen(yytext);
+                        if(len < 2) {
+                            yyerror("empty string literal");
+                        }
                         yylval.strVal = strndup(yytext+1, len-2);
                         return STRING;
                     }
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 65 "lexer.l"
+#line 68 "lexer.l"
 { return PLUS; }
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 66 "lexer.l"
+#line 69 "lexer.l"
 { return MINUS; }
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 67 "lexer.l"
+#line 70 "lexer.l"
 { return MUL; }
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 68 "lexer.l"
+#line 71 "lexer.l"
 { return DIV; }
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
-#line 69 "lexer.l"
+#line 72 "lexer.l"
 { return ASSGN; }
 	YY_BREAK
 case 34:
 YY_RULE_SETUP
-#line 70 "lexer.l"
+#line 73 "lexer.l"
 { return EOS; }
 	YY_BREAK
 case 35:
 YY_RULE_SETUP
-#line 71 "lexer.l"
+#line 74 "lexer.l"
 { return COMMA; }
 	YY_BREAK
 case 36:
 /* rule 36 can match eol */
 YY_RULE_SETUP
-#line 73 "lexer.l"
+#line 76 "lexer.l"
 { }
 	YY_BREAK
 case 37:
 YY_RULE_SETUP
-#line 74 "lexer.l"
+#line 77 "lexer.l"
 { return *yytext; }
 	YY_BREAK
 case 38:
 YY_RULE_SETUP
-#line 75 "lexer.l"
+#line 78 "lexer.l"
 { 
                 yyerror("unknown character "); 
                 fprintf(stdout, "%c\n", *yytext);
@@ -999,10 +1002,10 @@ YY_RULE_SETUP
 	YY_BREAK
 case 39:
 YY_RULE_SETUP
-#line 81 "lexer.l"
+#line 84 "lexer.l"
 ECHO;
 	YY_BREAK
-#line 1006 "lex.yy.c"
+#line 1009 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -2007,7 +2010,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 81 "lexer.l"
+#line 84 "lexer.l"
 
 
 int yywrap(void) {
