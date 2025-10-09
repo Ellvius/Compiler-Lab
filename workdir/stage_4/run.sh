@@ -27,7 +27,6 @@ popd >/dev/null
 gcc lexer/lex.yy.c \
     parser/y.tab.c \
     abstree/abstree.c \
-    codeGen/codeGen.c \
     symboltable/symboltable.c \
     -o "$OUTPUT_DIR/expl"
 

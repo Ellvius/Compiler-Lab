@@ -10,6 +10,8 @@ begin
         sum = sum + num;
         read(num);
     endwhile;
+    write("sum is:");
     write(sum);
+    mesg = "good bye";
     write(mesg);
 end

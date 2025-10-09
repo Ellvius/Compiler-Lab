@@ -82,7 +82,8 @@ extern int yydebug;
     INT = 288,
     STR = 289,
     NUM = 290,
-    ID = 291
+    STRING = 291,
+    ID = 292
   };
 #endif
 /* Tokens.  */
@@ -119,7 +120,8 @@ extern int yydebug;
 #define INT 288
 #define STR 289
 #define NUM 290
-#define ID 291
+#define STRING 291
+#define ID 292
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
@@ -132,8 +134,9 @@ union YYSTYPE
     int idType;
     char* idName;
     int intVal;
+    char* strVal;
 
-#line 137 "y.tab.h"
+#line 140 "y.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;

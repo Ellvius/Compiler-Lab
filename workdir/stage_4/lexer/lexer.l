@@ -8,8 +8,10 @@
     int val;
 %}
 
-letter  [a-zA-Z]
-digit   [0-9]
+digit           [0-9]
+letter          [a-zA-Z]
+identifier      {letter}({letter}|{digit})*
+string          \"(\\.|[^\\\"])*\"
 
 %%
 
@@ -44,8 +46,21 @@ digit   [0-9]
 "<"         { return LT; }
 ">"         { return GT; }
 
-{digit}+                            { yylval.intVal = atoi(yytext); return NUM;}
-{letter}({letter}|{digit})*         { yylval.idName = strdup(yytext); return ID;}
+{digit}+            { 
+                        yylval.intVal = atoi(yytext); 
+                        return NUM;
+                    }
+
+{identifier}        { 
+                        yylval.idName = strdup(yytext); 
+                        return ID;
+                    }
+
+{string}            {
+                        size_t  len = strlen(yytext);
+                        yylval.strVal = strndup(yytext+1, len-2);
+                        return STRING;
+                    }
 
 "+"         { return PLUS; }
 "-"         { return MINUS; }
@@ -56,7 +71,7 @@ digit   [0-9]
 ","         { return COMMA; }
 
 [ \t\n]     { }
-[()]        { return *yytext; }
+[()"]        { return *yytext; }
 .           { 
                 yyerror("unknown character "); 
                 fprintf(stdout, "%c\n", *yytext);

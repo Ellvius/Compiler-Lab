@@ -39,20 +39,29 @@ typedef enum {
     NODE_CONTINUE
 } NodeType;
 
+
+
+typedef union Constant {
+    int intVal;                             // value of the constant
+    char* strVal;
+    char* varName;                          // name of the variable
+} Constant;
+
 typedef struct ASTNode{
-    int val;                                // value of the constant
-    char* varname;                          // name of the variable
+    Constant value;                         // union of intval, strval, or varname
     VarType type;                           // type of the variable
     NodeType nodetype;                      // node type information
-    struct Gsymbol *symEntry;           // pointer to GST entry for global variables and functions
+    struct Gsymbol *GEntry;           // pointer to GST entry for global variables and functions
     struct ASTNode *left, *middle, *right;    // children nodes
 } ASTNode;
 
+
+
 /* Create a generic AST node */
-ASTNode* createTree(int n, VarType vtype, char* vname, NodeType ntype, ASTNode *l, ASTNode *m, ASTNode *r);
+ASTNode* TreeCreate(int n, char* s, VarType vtype, char* vname, NodeType ntype, ASTNode *l, ASTNode *m, ASTNode *r);
 
 /* Make Leaf node (NUM constant or ID variable) */
-ASTNode* makeLeafNode(int n, VarType vtype, char* vname);
+ASTNode* makeLeafNode(int n, char* s, VarType vtype, char* vname);
 
 /* Make arithmetic operator node (+, -, *, /) */
 ASTNode* makeArithOPNode(NodeType ntype, ASTNode* l, ASTNode* r);

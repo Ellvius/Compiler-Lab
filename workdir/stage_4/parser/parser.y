@@ -2,7 +2,7 @@
     #include <stdlib.h>
     #include <stdio.h>
     #include "../abstree/abstree.h"
-    #include "../codeGen/codeGen.h"
+    // #include "../codeGen/codeGen.h"
     #include "../symboltable/symboltable.h"
 
     extern FILE *yyin;
@@ -19,6 +19,7 @@
     int idType;
     char* idName;
     int intVal;
+    char* strVal;
 }
 
 %token START_BLOCK END_BLOCK DECL ENDDECL READ WRITE 
@@ -30,6 +31,7 @@
 %token ASSGN EOS COMMA
 %token INT STR
 %token <intVal> NUM
+%token <strVal> STRING
 %token <idName> ID
 %type <node> Expr Program Slist Stmt Declarations
 %type <node> DeclList Decl 
@@ -100,13 +102,19 @@ IterativeStmt   :   WHILE '(' Expr ')' DO Slist ENDWHILE EOS        {$$ = makeIt
                 |   REPEAT Slist UNTIL '(' Expr ')' EOS             {$$ = makeIterationNode(NODE_REPEAT, $5, $2);}
                 ;
 
-InputStmt   :   READ '(' ID ')' EOS     {$$ = makeReadNode(makeLeafNode(0, TYPE_INT, $3));}
+InputStmt   :   READ '(' ID ')' EOS     {
+                                            ASTNode* id = makeLeafNode(0, NULL, TYPE_NONE, $3);
+                                            $$ = makeReadNode(id);
+                                        }
             ;
 
 OutputStmt  :   WRITE '(' Expr ')' EOS  {$$ = makeWriteNode($3);}
             ;
 
-AsgStmt     :   ID ASSGN Expr EOS       {$$ = makeAssgnNode(makeLeafNode(0, TYPE_INT, $1), $3);}
+AsgStmt     :   ID ASSGN Expr EOS       {
+                                            ASTNode* id = makeLeafNode(0, NULL, TYPE_NONE, $1);
+                                            $$ = makeAssgnNode(id, $3);
+                                        }
             ;
 
 BreakStmt   :   BREAK EOS               {$$ = makeBreakNode();}
@@ -126,8 +134,9 @@ Expr        :   Expr PLUS Expr          {$$ = makeArithOPNode(NODE_ADD, $1, $3);
             |   Expr GE Expr            {$$ = makeRelOPNode(NODE_GE, $1, $3);}
             |   Expr NE Expr            {$$ = makeRelOPNode(NODE_NE, $1, $3);}
             |   Expr EQ Expr            {$$ = makeRelOPNode(NODE_EQ, $1, $3);}
-            |   NUM                     {$$ = makeLeafNode($1, TYPE_INT, NULL);}
-            |   ID                      {$$ = makeLeafNode(0, TYPE_INT, $1);}
+            |   NUM                     {$$ = makeLeafNode($1, NULL, TYPE_INT, NULL);}
+            |   STRING                  {$$ = makeLeafNode(0, $1, TYPE_STR, NULL);}
+            |   ID                      {$$ = makeLeafNode(0, NULL, TYPE_NONE, $1);}
             ;
 
 %%
