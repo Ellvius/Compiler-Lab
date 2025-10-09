@@ -74,10 +74,9 @@ string          \"(\\.|[^\\\"])*\"
 ","         { return COMMA; }
 
 [ \t\n]     { }
-[()]        { return *yytext; }
+[()\[\]]        { return *yytext; }
 .           { 
-                yyerror("unknown character "); 
-                fprintf(stdout, "%c\n", *yytext);
+                fprintf(stderr, "Unknown character: %c\n", *yytext);
                 exit(1);
             }
 

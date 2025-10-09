@@ -37,7 +37,8 @@ typedef enum {
     NODE_DOWHILE,
     NODE_REPEAT,
     NODE_BREAK,
-    NODE_CONTINUE
+    NODE_CONTINUE,
+    NODE_ARRAY
 } NodeType;
 
 
@@ -93,5 +94,8 @@ ASTNode* makeBreakNode(void);
 
 /* Make CONTINUE statement node */
 ASTNode* makeContinueNode(void);
+
+/* Make Int/String array node*/
+ASTNode* makeArrayNode(char* arrName, VarType type, ASTNode* expr);
 
 #endif

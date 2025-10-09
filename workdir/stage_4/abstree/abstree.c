@@ -135,3 +135,8 @@ ASTNode* makeContinueNode(void){
     ASTNode* temp = TreeCreate(NULL, TYPE_NONE, NULL, NODE_CONTINUE, NULL, NULL, NULL);    
     return temp;
 }
+
+ASTNode* makeArrayNode(char* arrName, VarType type, ASTNode* expr){
+    ASTNode* temp = TreeCreate(NULL, TYPE_ID, arrName, NODE_ARRAY, expr, NULL, NULL);
+    return temp;
+}
