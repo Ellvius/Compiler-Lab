@@ -1,3 +1,7 @@
+decl
+    int i, j;
+enddecl
+
 begin
     i = 0;
     j = 0;

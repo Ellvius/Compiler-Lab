@@ -14,6 +14,10 @@ ASTNode* TreeCreate(union Constant* val, VarType vtype, char* vname, NodeType nt
 
     if(temp->type == TYPE_ID){
         var = GLookup(vname);
+        if(!var){
+            fprintf(stderr, "Undefined variables: %s\n", vname);
+            exit(1);
+        }
         temp->type = var->type;
     }
     temp->GEntry = var;

@@ -1,3 +1,7 @@
+decl
+    int s, n, i, a;
+enddecl
+
 begin
     read(n);
     i = 0;
