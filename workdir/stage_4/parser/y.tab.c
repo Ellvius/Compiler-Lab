@@ -1503,7 +1503,7 @@ yyreduce:
 #line 50 "parser.y"
                                                     {
                                                         (yyval.node) = (yyvsp[0].node);
-                                                        printSymbolTable();
+                                                        // printSymbolTable();
                                                         codeGen((yyvsp[0].node));
                                                         exit(0);
                                                     }

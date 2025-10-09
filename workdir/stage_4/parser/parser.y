@@ -49,7 +49,7 @@
 
 Program     :   Declarations Code                   {
                                                         $$ = $2;
-                                                        printSymbolTable();
+                                                        // printSymbolTable();
                                                         codeGen($2);
                                                         exit(0);
                                                     }

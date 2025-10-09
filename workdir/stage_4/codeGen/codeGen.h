@@ -35,6 +35,7 @@ void codeGenExit(FILE* fp);
 RegIndex codeGenID(ASTNode *node, FILE* fp);
 RegIndex codeGenConst(ASTNode *node, FILE* fp);
 RegIndex codeGenOP(ASTNode *node, FILE* fp);
+RegIndex codeGenAssgn(ASTNode* node, FILE* fp);
 RegIndex codeGenRead(ASTNode* node, FILE* fp);
 RegIndex codeGenWrite(ASTNode* node, FILE* fp);
 

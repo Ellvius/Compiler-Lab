@@ -2,7 +2,6 @@
 #include "../symboltable/symboltable.h"
 
 static int regNum = 0;
-static int registerTable[20];
 static int lnum = 0;
 
 static Stack* loopStack = NULL;
@@ -108,7 +107,6 @@ RegIndex codeGenID(ASTNode* node, FILE* fp){
     }
 
     int r = getReg();
-    registerTable[r] = node->GEntry->addr;
 
     fprintf(fp, "MOV R%d, [%d]\n", r, node->GEntry->addr);
     return r;
@@ -132,6 +130,16 @@ RegIndex codeGenConst(ASTNode *node, FILE* fp){
             break;
     }
     return r;
+}
+
+
+RegIndex codeGenAssgn(ASTNode* node, FILE* fp){
+    Gsymbol* idEntry = node->left->GEntry;
+    int j = codeGenNODE(node->right, fp);
+
+    fprintf(fp, "MOV [%d], R%d\n", idEntry->addr, j);
+    freeReg();
+    return -1;
 }
 
 
@@ -257,13 +265,6 @@ RegIndex codeGenOP(ASTNode *node, FILE* fp){
             fprintf(fp, "EQ R%d, R%d\n", i, j);
             break;
 
-        case NODE_ASSGN:
-            fprintf(fp, "MOV [%d], R%d\n", registerTable[i], j);
-            freeReg();      // to free up the left (here actually right is freed) subtree reg
-            registerTable[i] = -1;
-            i = -1;
-            break;
-
         case NODE_CONN:
             if(i != -1)
                 freeReg();  // to free up the left stmt also
@@ -381,6 +382,9 @@ int codeGenNODE(ASTNode* node, FILE* fp){
 
         case NODE_CONTINUE:
             return codeGenContinue(node, fp);
+
+        case NODE_ASSGN:
+            return codeGenAssgn(node, fp);
 
         default:
             return codeGenOP(node, fp);
