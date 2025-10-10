@@ -67,13 +67,13 @@ ASTNode* makeRelOPNode(NodeType ntype, ASTNode* l, ASTNode* r){
 }
 
 ASTNode* makeAssgnNode(ASTNode* l, ASTNode* r){
-    if(l->nodetype != NODE_LEAF || l->varName == NULL){
+    if((l->nodetype != NODE_LEAF && l->nodetype != NODE_ARRAY) || l->varName == NULL){
         fprintf(stderr, "type mismatch: assign (ID)\n");
         exit(1);
     }
 
     if(l->type != r->type){
-        fprintf(stderr, "type mismatch: assign\n");
+        fprintf(stderr, "type mismatch: assign %d %d\n", l->type, r->type);
         exit(1);
     }
 

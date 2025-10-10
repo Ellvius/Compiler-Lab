@@ -387,7 +387,7 @@ static const YY_CHAR yy_ec[256] =
        15,   16,    1,    1,   17,   17,   17,   17,   17,   17,
        17,   17,   17,   17,   17,   17,   17,   17,   17,   17,
        17,   17,   17,   17,   17,   17,   17,   17,   17,   17,
-        1,   18,    1,    1,    1,    1,   19,   20,   21,   22,
+        6,   18,    6,    1,    1,    1,   19,   20,   21,   22,
 
        23,   24,   25,   26,   27,   17,   28,   29,   17,   30,
        31,   32,   17,   33,   34,   35,   36,   17,   37,   17,
@@ -995,17 +995,16 @@ case 38:
 YY_RULE_SETUP
 #line 78 "lexer.l"
 { 
-                yyerror("unknown character "); 
-                fprintf(stdout, "%c\n", *yytext);
+                fprintf(stderr, "Unknown character: %c\n", *yytext);
                 exit(1);
             }
 	YY_BREAK
 case 39:
 YY_RULE_SETUP
-#line 84 "lexer.l"
+#line 83 "lexer.l"
 ECHO;
 	YY_BREAK
-#line 1009 "lex.yy.c"
+#line 1008 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -2010,7 +2009,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 84 "lexer.l"
+#line 83 "lexer.l"
 
 
 int yywrap(void) {

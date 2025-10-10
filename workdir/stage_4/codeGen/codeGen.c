@@ -133,11 +133,41 @@ RegIndex codeGenConst(ASTNode *node, FILE* fp){
 }
 
 
+RegIndex codeGenArray(ASTNode * node, FILE* fp){
+    if(!node->GEntry){
+        fprintf(stderr, "Undefined variable: %d\n", node->type);
+        exit(1);
+    }
+
+    int i = getReg();
+    int j = codeGenNODE(node->left, fp);
+
+    fprintf(fp, "ADD R%d, %d\n", j, node->GEntry->addr);
+    fprintf(fp, "MOV R%d, [R%d]\n", i, j);
+    freeReg();
+    return i;
+}
+
+
 RegIndex codeGenAssgn(ASTNode* node, FILE* fp){
-    Gsymbol* idEntry = node->left->GEntry;
+    ASTNode* id = node->left;
+    if(!id->GEntry){
+        fprintf(stderr, "Undefined variable: %d\n", node->type);
+        exit(1);
+    }
+
     int j = codeGenNODE(node->right, fp);
 
-    fprintf(fp, "MOV [%d], R%d\n", idEntry->addr, j);
+    if(id->nodetype == NODE_ARRAY){
+        int i = codeGenNODE(id->left, fp);
+
+        fprintf(fp, "ADD R%d, %d\n", i, id->GEntry->addr);
+        fprintf(fp, "MOV [R%d], R%d\n", i, j);
+        freeReg();
+    } else{
+        fprintf(fp, "MOV [%d], R%d\n", id->GEntry->addr, j);
+    }
+
     freeReg();
     return -1;
 }
@@ -281,8 +311,8 @@ RegIndex codeGenOP(ASTNode *node, FILE* fp){
 
 RegIndex codeGenRead(ASTNode* node, FILE* fp){
     // left node has the var
-    Gsymbol* idEntry = node->left->GEntry;
-    if(!idEntry){
+    ASTNode* id = node->left;
+    if(!id->GEntry){
         fprintf(stderr, "Undefined variable: %d\n", node->type);
         exit(1);
     }
@@ -298,8 +328,18 @@ RegIndex codeGenRead(ASTNode* node, FILE* fp){
     fprintf(fp, "PUSH R%d\n", i);
     fprintf(fp, "MOV R%d, -1\n", i);
     fprintf(fp, "PUSH R%d\n", i);
-    fprintf(fp, "MOV R%d, %d\n", i, idEntry->addr);
-    fprintf(fp, "PUSH R%d\n", i);
+
+    if(id->nodetype == NODE_ARRAY){
+        int offset = codeGenNODE(id->left, fp);
+
+        fprintf(fp, "ADD R%d, %d\n", offset, id->GEntry->addr);
+        fprintf(fp, "PUSH R%d\n", offset);
+        freeReg();
+    }
+    else {
+        fprintf(fp, "MOV R%d, %d\n", i, id->GEntry->addr);
+        fprintf(fp, "PUSH R%d\n", i);
+    }
     fprintf(fp, "PUSH R%d\n", i);
     fprintf(fp, "PUSH R%d\n", i);
     fprintf(fp, "CALL 0\n");
@@ -385,6 +425,9 @@ int codeGenNODE(ASTNode* node, FILE* fp){
 
         case NODE_ASSGN:
             return codeGenAssgn(node, fp);
+
+        case NODE_ARRAY:
+            return codeGenArray(node, fp);
 
         default:
             return codeGenOP(node, fp);

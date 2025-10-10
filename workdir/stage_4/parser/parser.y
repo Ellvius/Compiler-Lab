@@ -49,8 +49,8 @@
 
 Program     :   Declarations Code                   {
                                                         $$ = $2;
-                                                        printSymbolTable();
-                                                        // codeGen($2);
+                                                        // printSymbolTable();
+                                                        codeGen($2);
                                                         exit(0);
                                                     }
 
@@ -112,7 +112,7 @@ InputStmt   :   READ '(' ID ')' EOS                 {
                                                         $$ = makeReadNode(id);
                                                     }
             |   READ '(' ID '['Expr']' ')' EOS      {
-                                                        ASTNode* id = makeLeafNode(0, NULL, TYPE_ID, $3);
+                                                        ASTNode* id = makeArrayNode($3, TYPE_ID, $5);
                                                         $$ = makeReadNode(id);
                                                     }
             ;
@@ -125,8 +125,8 @@ AsgStmt     :   ID ASSGN Expr EOS                   {
                                                         $$ = makeAssgnNode(id, $3);
                                                     }
             |   ID '['Expr']' ASSGN Expr EOS        {
-                                                        ASTNode* id = makeLeafNode(0, NULL, TYPE_ID, $1);
-                                                        $$ = makeAssgnNode(id, $3);
+                                                        ASTNode* id = makeArrayNode($1, TYPE_ID, $3);
+                                                        $$ = makeAssgnNode(id, $6);
                                                     }
             ;
 
