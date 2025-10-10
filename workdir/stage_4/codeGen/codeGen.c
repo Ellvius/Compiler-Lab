@@ -140,11 +140,19 @@ RegIndex codeGenArray(ASTNode * node, FILE* fp){
     }
 
     int i = getReg();
-    int j = codeGenNODE(node->left, fp);
+    int offsetRow = codeGenNODE(node->left, fp);
 
-    fprintf(fp, "ADD R%d, %d\n", j, node->GEntry->addr);
-    fprintf(fp, "MOV R%d, [R%d]\n", i, j);
-    freeReg();
+    if(node->right != NULL){
+        int offsetCol = codeGenNODE(node->right, fp);
+
+        fprintf(fp, "MUL R%d, %d\n", offsetRow, node->GEntry->rowsize);     // i*rowsize
+        fprintf(fp, "ADD R%d, R%d\n", offsetRow, offsetCol);                // i*rowsize + j
+        freeReg();      // free offsetCol
+    }
+
+    fprintf(fp, "ADD R%d, %d\n", offsetRow, node->GEntry->addr);
+    fprintf(fp, "MOV R%d, [R%d]\n", i, offsetRow);
+    freeReg();          // free offsetRow
     return i;
 }
 
@@ -156,16 +164,24 @@ RegIndex codeGenAssgn(ASTNode* node, FILE* fp){
         exit(1);
     }
 
-    int j = codeGenNODE(node->right, fp);
+    int expr = codeGenNODE(node->right, fp);
 
     if(id->nodetype == NODE_ARRAY){
-        int i = codeGenNODE(id->left, fp);
+        int offsetRow = codeGenNODE(id->left, fp);
 
-        fprintf(fp, "ADD R%d, %d\n", i, id->GEntry->addr);
-        fprintf(fp, "MOV [R%d], R%d\n", i, j);
+        if(id->right != NULL){
+            int offsetCol = codeGenNODE(id->right, fp);
+    
+            fprintf(fp, "MUL R%d, %d\n", offsetRow, id->GEntry->rowsize);     // i*rowsize
+            fprintf(fp, "ADD R%d, R%d\n", offsetRow, offsetCol);                // i*rowsize + j
+            freeReg();      // free offsetCol
+        }
+
+        fprintf(fp, "ADD R%d, %d\n", offsetRow, id->GEntry->addr);
+        fprintf(fp, "MOV [R%d], R%d\n", offsetRow, expr);
         freeReg();
     } else{
-        fprintf(fp, "MOV [%d], R%d\n", id->GEntry->addr, j);
+        fprintf(fp, "MOV [%d], R%d\n", id->GEntry->addr, expr);
     }
 
     freeReg();
@@ -276,6 +292,10 @@ RegIndex codeGenOP(ASTNode *node, FILE* fp){
             fprintf(fp, "DIV R%d, R%d\n", i, j);
             break;
 
+        case NODE_MOD: 
+            fprintf(fp, "MOD R%d, R%d\n", i, j);
+            break;
+
         case NODE_LT: 
             fprintf(fp, "LT R%d, R%d\n", i, j);
             break;
@@ -330,10 +350,18 @@ RegIndex codeGenRead(ASTNode* node, FILE* fp){
     fprintf(fp, "PUSH R%d\n", i);
 
     if(id->nodetype == NODE_ARRAY){
-        int offset = codeGenNODE(id->left, fp);
+        int offsetRow = codeGenNODE(id->left, fp);
 
-        fprintf(fp, "ADD R%d, %d\n", offset, id->GEntry->addr);
-        fprintf(fp, "PUSH R%d\n", offset);
+        if(id->right != NULL){
+            int offsetCol = codeGenNODE(id->right, fp);
+    
+            fprintf(fp, "MUL R%d, %d\n", offsetRow, id->GEntry->rowsize);     // i*rowsize
+            fprintf(fp, "ADD R%d, R%d\n", offsetRow, offsetCol);                // i*rowsize + j
+            freeReg();      // free offsetCol
+        }
+
+        fprintf(fp, "ADD R%d, %d\n", offsetRow, id->GEntry->addr);
+        fprintf(fp, "PUSH R%d\n", offsetRow);
         freeReg();
     }
     else {

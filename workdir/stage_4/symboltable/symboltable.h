@@ -10,12 +10,14 @@ typedef struct Gsymbol {
     char* name;             // name of the variable
     int type;               // type of the variable
     int size;               // size of the type of the variable
+    int rowsize;
+    int colsize;
     int addr;            // stores the static memory address allocated to the variable
     struct Gsymbol *next;
 } Gsymbol;
 
 Gsymbol* GLookup(char * name);            // Lookup for global identifier
-void GInstall(char *name, int type, int size);   // Creates a symbol table entry.
+void GInstall(char *name, int type, int size, int r, int c);   // Creates a symbol table entry.
 
 extern Gsymbol *Ghead, *Gtail;
 extern int freeAddrPtr;

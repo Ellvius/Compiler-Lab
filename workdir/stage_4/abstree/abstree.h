@@ -26,6 +26,7 @@ typedef enum {
     NODE_SUB,
     NODE_MUL,
     NODE_DIV,
+    NODE_MOD,
     NODE_LT,
     NODE_GT,
     NODE_LE,
@@ -96,6 +97,6 @@ ASTNode* makeBreakNode(void);
 ASTNode* makeContinueNode(void);
 
 /* Make Int/String array node*/
-ASTNode* makeArrayNode(char* arrName, VarType type, ASTNode* expr);
+ASTNode* makeArrayNode(char* arrName, VarType type, ASTNode* l, ASTNode* r);
 
 #endif

@@ -58,7 +58,8 @@ int main(int argc, char* argv[]){
     output_file = fopen(argv[2], "w");
 
     if(label_file == NULL || output_file == NULL){
-        printf("Error opening files\n");
+        printf("Error opening file: label/output\n");
+        exit(1);
     }
 
     yyin = label_file;

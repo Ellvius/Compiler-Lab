@@ -136,7 +136,7 @@ ASTNode* makeContinueNode(void){
     return temp;
 }
 
-ASTNode* makeArrayNode(char* arrName, VarType type, ASTNode* expr){
-    ASTNode* temp = TreeCreate(NULL, TYPE_ID, arrName, NODE_ARRAY, expr, NULL, NULL);
+ASTNode* makeArrayNode(char* arrName, VarType type, ASTNode* l, ASTNode* r){
+    ASTNode* temp = TreeCreate(NULL, TYPE_ID, arrName, NODE_ARRAY, l, NULL, r);
     return temp;
 }

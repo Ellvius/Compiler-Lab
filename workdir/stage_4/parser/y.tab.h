@@ -70,20 +70,21 @@ extern int yydebug;
     MINUS = 276,
     MUL = 277,
     DIV = 278,
-    LT = 279,
-    GT = 280,
-    LE = 281,
-    GE = 282,
-    NE = 283,
-    EQ = 284,
-    ASSGN = 285,
-    EOS = 286,
-    COMMA = 287,
-    INT = 288,
-    STR = 289,
-    NUM = 290,
-    STRING = 291,
-    ID = 292
+    MOD = 279,
+    LT = 280,
+    GT = 281,
+    LE = 282,
+    GE = 283,
+    NE = 284,
+    EQ = 285,
+    ASSGN = 286,
+    EOS = 287,
+    COMMA = 288,
+    INT = 289,
+    STR = 290,
+    NUM = 291,
+    STRING = 292,
+    ID = 293
   };
 #endif
 /* Tokens.  */
@@ -108,20 +109,21 @@ extern int yydebug;
 #define MINUS 276
 #define MUL 277
 #define DIV 278
-#define LT 279
-#define GT 280
-#define LE 281
-#define GE 282
-#define NE 283
-#define EQ 284
-#define ASSGN 285
-#define EOS 286
-#define COMMA 287
-#define INT 288
-#define STR 289
-#define NUM 290
-#define STRING 291
-#define ID 292
+#define MOD 279
+#define LT 280
+#define GT 281
+#define LE 282
+#define GE 283
+#define NE 284
+#define EQ 285
+#define ASSGN 286
+#define EOS 287
+#define COMMA 288
+#define INT 289
+#define STR 290
+#define NUM 291
+#define STRING 292
+#define ID 293
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
@@ -136,7 +138,7 @@ union YYSTYPE
     int intVal;
     char* strVal;
 
-#line 140 "y.tab.h"
+#line 142 "y.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;

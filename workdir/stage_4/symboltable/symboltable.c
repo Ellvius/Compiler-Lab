@@ -13,7 +13,7 @@ Gsymbol* GLookup(char * name){
     return temp;
 }
 
-void GInstall(char *name, int type, int size){
+void GInstall(char *name, int type, int size, int r, int c){
     Gsymbol *newEntry = GLookup(name);
     
     if(newEntry != NULL){
@@ -27,6 +27,8 @@ void GInstall(char *name, int type, int size){
     newEntry->size = size;
     newEntry->addr = freeAddrPtr;
     freeAddrPtr += size;    // advance addr pointer
+    newEntry->rowsize = r;
+    newEntry->colsize = c;
     newEntry->next = NULL;
 
     if(Ghead != NULL){
@@ -58,7 +60,7 @@ void printSymbolTable(void){
     Gsymbol* temp = Ghead;
 
     while(temp != NULL){
-        fprintf(stdout, "%s----%s----%d----%d\n", temp->name, tokenToString(temp->type), temp->size, temp->addr);
+        fprintf(stdout, "%s----%s----%d----%d----%d----%d\n", temp->name, tokenToString(temp->type), temp->size, temp->addr, temp->rowsize, temp->colsize);
         temp = temp->next;
     }
 }

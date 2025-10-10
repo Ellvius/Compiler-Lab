@@ -26,7 +26,7 @@
 %token IF THEN ELSE ENDIF
 %token WHILE DO ENDWHILE REPEAT UNTIL
 %token BREAK CONTINUE
-%token PLUS MINUS MUL DIV
+%token PLUS MINUS MUL DIV MOD
 %token LT GT LE GE NE EQ
 %token ASSGN EOS COMMA
 %token INT STR
@@ -37,13 +37,13 @@
 %type <stEntry> VarList
 %type <idType> Type
 %type <node> InputStmt OutputStmt AsgStmt IfStmt IterativeStmt
-%type <node> BreakStmt ContinueStmt
+%type <node> BreakStmt ContinueStmt Identifier
 
 %right ASSGN
 %nonassoc NE EQ
 %nonassoc LT LE GT GE
 %left PLUS MINUS
-%left MUL DIV
+%left MUL DIV MOD
 
 %%
 
@@ -92,10 +92,12 @@ Type        :   INT                     {currentType = TYPE_INT; $$ = TYPE_INT;}
             |   STR                     {currentType = TYPE_STR; $$ = TYPE_STR;}
             ;
 
-VarList     :   VarList COMMA ID                {GInstall($3, currentType, 1);}
-            |   VarList COMMA ID '['NUM']'      {GInstall($3, currentType, $5);} 
-            |   ID '['NUM']'                    {GInstall($1, currentType, $3);}
-            |   ID                              {GInstall($1, currentType, 1);}
+VarList     :   VarList COMMA ID '['NUM']' '['NUM']'    {GInstall($3, currentType, $5*$8, $5, $8);} 
+            |   VarList COMMA ID '['NUM']'              {GInstall($3, currentType, $5, $5, 0);} 
+            |   VarList COMMA ID                        {GInstall($3, currentType, 1, 0, 0);}
+            |   ID '['NUM']' '['NUM']'                  {GInstall($1, currentType, $3*$6, $3, $6);} 
+            |   ID '['NUM']'                            {GInstall($1, currentType, $3, $3, 0);}
+            |   ID                                      {GInstall($1, currentType, 1, 0, 0);}
             ;
 
 IfStmt      :   IF '(' Expr ')' THEN Slist ELSE Slist ENDIF EOS     {$$ = makeIfElseNode($3, $6, $8);}
@@ -107,27 +109,13 @@ IterativeStmt   :   WHILE '(' Expr ')' DO Slist ENDWHILE EOS        {$$ = makeIt
                 |   REPEAT Slist UNTIL '(' Expr ')' EOS             {$$ = makeIterationNode(NODE_REPEAT, $5, $2);}
                 ;
 
-InputStmt   :   READ '(' ID ')' EOS                 {
-                                                        ASTNode* id = makeLeafNode(0, NULL, TYPE_ID, $3);
-                                                        $$ = makeReadNode(id);
-                                                    }
-            |   READ '(' ID '['Expr']' ')' EOS      {
-                                                        ASTNode* id = makeArrayNode($3, TYPE_ID, $5);
-                                                        $$ = makeReadNode(id);
-                                                    }
+InputStmt   :   READ '(' Identifier ')' EOS         {$$ = makeReadNode($3);}
             ;
 
 OutputStmt  :   WRITE '(' Expr ')' EOS  {$$ = makeWriteNode($3);}
             ;
 
-AsgStmt     :   ID ASSGN Expr EOS                   {
-                                                        ASTNode* id = makeLeafNode(0, NULL, TYPE_ID, $1);
-                                                        $$ = makeAssgnNode(id, $3);
-                                                    }
-            |   ID '['Expr']' ASSGN Expr EOS        {
-                                                        ASTNode* id = makeArrayNode($1, TYPE_ID, $3);
-                                                        $$ = makeAssgnNode(id, $6);
-                                                    }
+AsgStmt     :   Identifier ASSGN Expr EOS       {$$ = makeAssgnNode($1, $3);}
             ;
 
 BreakStmt   :   BREAK EOS               {$$ = makeBreakNode();}
@@ -136,10 +124,16 @@ BreakStmt   :   BREAK EOS               {$$ = makeBreakNode();}
 ContinueStmt:   CONTINUE EOS            {$$ = makeContinueNode();}
             ;
 
+Identifier  :   ID '['Expr']' '['Expr']'    {$$ = makeArrayNode($1, TYPE_ID, $3, $6);}
+            |   ID '['Expr']'               {$$ = makeArrayNode($1, TYPE_ID, $3, NULL);}
+            |   ID                          {$$ = makeLeafNode(0, NULL, TYPE_ID, $1);}
+            ;
+
 Expr        :   Expr PLUS Expr          {$$ = makeArithOPNode(NODE_ADD, $1, $3);}
             |   Expr MINUS Expr         {$$ = makeArithOPNode(NODE_SUB, $1, $3);}
             |   Expr MUL Expr           {$$ = makeArithOPNode(NODE_MUL, $1, $3);}
             |   Expr DIV Expr           {$$ = makeArithOPNode(NODE_DIV, $1, $3);}
+            |   Expr MOD Expr           {$$ = makeArithOPNode(NODE_MOD, $1, $3);}
             |   '(' Expr ')'            {$$ = $2;}
             |   Expr LT Expr            {$$ = makeRelOPNode(NODE_LT, $1, $3);}
             |   Expr GT Expr            {$$ = makeRelOPNode(NODE_GT, $1, $3);}
@@ -147,10 +141,9 @@ Expr        :   Expr PLUS Expr          {$$ = makeArithOPNode(NODE_ADD, $1, $3);
             |   Expr GE Expr            {$$ = makeRelOPNode(NODE_GE, $1, $3);}
             |   Expr NE Expr            {$$ = makeRelOPNode(NODE_NE, $1, $3);}
             |   Expr EQ Expr            {$$ = makeRelOPNode(NODE_EQ, $1, $3);}
+            |   Identifier              {$$ = $1;}
             |   NUM                     {$$ = makeLeafNode($1, NULL, TYPE_INT, NULL);}
             |   STRING                  {$$ = makeLeafNode(0, $1, TYPE_STR, NULL);}
-            |   ID '['Expr']'           {$$ = makeArrayNode($1, TYPE_ID, $3);}
-            |   ID                      {$$ = makeLeafNode(0, NULL, TYPE_ID, $1);}
             ;
 
 %%

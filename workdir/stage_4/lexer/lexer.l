@@ -69,6 +69,7 @@ string          \"(\\.|[^\\\"])*\"
 "-"         { return MINUS; }
 "*"         { return MUL; }
 "/"         { return DIV; }
+"%"         { return MOD; }
 "="         { return ASSGN; }
 ";"         { return EOS; }
 ","         { return COMMA; }
