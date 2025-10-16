@@ -67,7 +67,7 @@ ASTNode* makeRelOPNode(NodeType ntype, ASTNode* l, ASTNode* r){
 }
 
 ASTNode* makeAssgnNode(ASTNode* l, ASTNode* r){
-    if((l->nodetype != NODE_LEAF && l->nodetype != NODE_ARRAY) || l->varName == NULL){
+    if((l->nodetype != NODE_LEAF && l->nodetype != NODE_ARRAY && l->nodetype != NODE_PTR) || (l->nodetype != NODE_PTR && l->varName == NULL)){
         fprintf(stderr, "type mismatch: assign (ID)\n");
         exit(1);
     }
@@ -92,7 +92,7 @@ ASTNode* makeReadNode(ASTNode* l){
 }
 
 ASTNode* makeWriteNode(ASTNode* l){
-    if(l->type != TYPE_INT && l->type != TYPE_BOOL && l->type != TYPE_STR){
+    if(l->type != TYPE_INT && l->type != TYPE_BOOL && l->type != TYPE_STR && l->type != TYPE_INT_PTR && l->type != TYPE_STR_PTR){
         fprintf(stderr, "type mismatch: write %d\n", l->type);
         exit(1);
     }
@@ -138,5 +138,34 @@ ASTNode* makeContinueNode(void){
 
 ASTNode* makeArrayNode(char* arrName, VarType type, ASTNode* l, ASTNode* r){
     ASTNode* temp = TreeCreate(NULL, TYPE_ID, arrName, NODE_ARRAY, l, NULL, r);
+    return temp;
+}
+
+ASTNode* makeAddrNode(ASTNode* var){
+    VarType vtype = TYPE_NONE;
+
+    switch(var->type){
+        case TYPE_INT: vtype = TYPE_INT_PTR; break;
+        case TYPE_STR: vtype = TYPE_STR_PTR; break;
+        default: fprintf(stderr, "Address-of not supported for this type\n");
+                exit(1);
+    }
+
+    ASTNode* temp = TreeCreate(NULL, vtype, NULL, NODE_ADDR, var, NULL, NULL);
+    return temp;
+}
+
+
+ASTNode* makePtrNode(ASTNode* ptrVar){
+    VarType vtype = TYPE_NONE;
+
+    switch(ptrVar->type){
+        case TYPE_INT_PTR: vtype = TYPE_INT; break;
+        case TYPE_STR_PTR: vtype = TYPE_STR; break;
+        default: fprintf(stderr, "Dereference not supported for this type\n");
+                exit(1);
+    }
+
+    ASTNode* temp = TreeCreate(NULL, vtype, NULL, NODE_PTR, ptrVar, NULL, NULL);
     return temp;
 }

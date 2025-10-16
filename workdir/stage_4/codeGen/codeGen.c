@@ -102,7 +102,7 @@ void codeGenExit(FILE* fp){
 
 RegIndex codeGenID(ASTNode* node, FILE* fp){
     if(!node->GEntry){
-        fprintf(stderr, "Undefined variable: %d\n", node->type);
+        fprintf(stderr, "Undefined variable: %d id\n", node->type);
         exit(1);
     }
 
@@ -135,7 +135,7 @@ RegIndex codeGenConst(ASTNode *node, FILE* fp){
 
 RegIndex codeGenArray(ASTNode * node, FILE* fp){
     if(!node->GEntry){
-        fprintf(stderr, "Undefined variable: %d\n", node->type);
+        fprintf(stderr, "Undefined variable: %d array\n", node->type);
         exit(1);
     }
 
@@ -157,16 +157,48 @@ RegIndex codeGenArray(ASTNode * node, FILE* fp){
 }
 
 
-RegIndex codeGenAssgn(ASTNode* node, FILE* fp){
-    ASTNode* id = node->left;
-    if(!id->GEntry){
-        fprintf(stderr, "Undefined variable: %d\n", node->type);
+RegIndex codeGenAddress(ASTNode * node, FILE* fp){
+    ASTNode* var = node->left;
+
+    if(!var->GEntry){
+        fprintf(stderr, "Undefined variable: %d addr\n", node->type);
         exit(1);
     }
 
+    int address = getReg();
+
+    fprintf(fp, "MOV R%d, %d\n", address, var->GEntry->addr);
+    return address;
+}
+
+
+RegIndex codeGenPtr(ASTNode * node, FILE* fp){
+    ASTNode* ptr = node->left;
+
+    if(!ptr->GEntry){
+        fprintf(stderr, "Undefined variable: %d ptr\n", node->type);
+        exit(1);
+    }
+
+    int val = getReg();
+
+    fprintf(fp, "MOV R%d, %d\n", val, ptr->GEntry->addr);
+    fprintf(fp, "MOV R%d, [R%d]\n", val, val);
+    fprintf(fp, "MOV R%d, [R%d]\n", val, val);
+    return val;
+}
+
+
+RegIndex codeGenAssgn(ASTNode* node, FILE* fp){
+    ASTNode* id = node->left;
     int expr = codeGenNODE(node->right, fp);
 
     if(id->nodetype == NODE_ARRAY){
+        if(!id->GEntry){
+            fprintf(stderr, "Undefined variable: %d asar\n", node->type);
+            exit(1);
+        }
+
         int offsetRow = codeGenNODE(id->left, fp);
 
         if(id->right != NULL){
@@ -180,7 +212,21 @@ RegIndex codeGenAssgn(ASTNode* node, FILE* fp){
         fprintf(fp, "ADD R%d, %d\n", offsetRow, id->GEntry->addr);
         fprintf(fp, "MOV [R%d], R%d\n", offsetRow, expr);
         freeReg();
-    } else{
+    } 
+    else if(id->nodetype == NODE_PTR){
+        ASTNode* ptr = id->left;
+
+        int addr = getReg();
+        fprintf(fp, "MOV R%d, %d\n", addr, ptr->GEntry->addr);
+        fprintf(fp, "MOV R%d, [R%d]\n", addr, addr);
+        fprintf(fp, "MOV [R%d], R%d\n", addr, expr);
+        freeReg();
+    }
+    else{
+        if(!id->GEntry){
+            fprintf(stderr, "Undefined variable: %d var\n", node->type);
+            exit(1);
+        }
         fprintf(fp, "MOV [%d], R%d\n", id->GEntry->addr, expr);
     }
 
@@ -333,7 +379,7 @@ RegIndex codeGenRead(ASTNode* node, FILE* fp){
     // left node has the var
     ASTNode* id = node->left;
     if(!id->GEntry){
-        fprintf(stderr, "Undefined variable: %d\n", node->type);
+        fprintf(stderr, "Undefined variable: %d read\n", node->type);
         exit(1);
     }
     int r = getReg();
@@ -456,6 +502,12 @@ int codeGenNODE(ASTNode* node, FILE* fp){
 
         case NODE_ARRAY:
             return codeGenArray(node, fp);
+
+        case NODE_ADDR:
+            return codeGenAddress(node, fp);
+
+        case NODE_PTR:
+            return codeGenPtr(node, fp);
 
         default:
             return codeGenOP(node, fp);

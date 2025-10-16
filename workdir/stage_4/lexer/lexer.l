@@ -67,12 +67,13 @@ string          \"(\\.|[^\\\"])*\"
 
 "+"         { return PLUS; }
 "-"         { return MINUS; }
-"*"         { return MUL; }
+"*"         { return STAR; }
 "/"         { return DIV; }
 "%"         { return MOD; }
 "="         { return ASSGN; }
 ";"         { return EOS; }
 ","         { return COMMA; }
+"&"         { return ADDR; }
 
 [ \t\n]     { }
 [()\[\]]        { return *yytext; }

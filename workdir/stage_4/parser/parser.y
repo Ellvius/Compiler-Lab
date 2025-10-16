@@ -26,9 +26,9 @@
 %token IF THEN ELSE ENDIF
 %token WHILE DO ENDWHILE REPEAT UNTIL
 %token BREAK CONTINUE
-%token PLUS MINUS MUL DIV MOD
+%token PLUS MINUS STAR DIV MOD
 %token LT GT LE GE NE EQ
-%token ASSGN EOS COMMA
+%token ASSGN EOS COMMA ADDR
 %token INT STR
 %token <intVal> NUM
 %token <strVal> STRING
@@ -43,7 +43,7 @@
 %nonassoc NE EQ
 %nonassoc LT LE GT GE
 %left PLUS MINUS
-%left MUL DIV MOD
+%left STAR DIV MOD
 
 %%
 
@@ -95,9 +95,19 @@ Type        :   INT                     {currentType = TYPE_INT; $$ = TYPE_INT;}
 VarList     :   VarList COMMA ID '['NUM']' '['NUM']'    {GInstall($3, currentType, $5*$8, $5, $8);} 
             |   VarList COMMA ID '['NUM']'              {GInstall($3, currentType, $5, $5, 0);} 
             |   VarList COMMA ID                        {GInstall($3, currentType, 1, 0, 0);}
+            |   VarList COMMA STAR ID                   {
+                                                            VarType ptrType = currentType == TYPE_INT ?
+                                                            TYPE_INT_PTR : TYPE_STR_PTR; 
+                                                            GInstall($4, ptrType, 1, 0, 0);
+                                                        }
             |   ID '['NUM']' '['NUM']'                  {GInstall($1, currentType, $3*$6, $3, $6);} 
             |   ID '['NUM']'                            {GInstall($1, currentType, $3, $3, 0);}
             |   ID                                      {GInstall($1, currentType, 1, 0, 0);}
+            |   STAR ID                                 {
+                                                            VarType ptrType = currentType == TYPE_INT ?
+                                                            TYPE_INT_PTR : TYPE_STR_PTR; 
+                                                            GInstall($2, ptrType, 1, 0, 0);
+                                                        }
             ;
 
 IfStmt      :   IF '(' Expr ')' THEN Slist ELSE Slist ENDIF EOS     {$$ = makeIfElseNode($3, $6, $8);}
@@ -115,7 +125,8 @@ InputStmt   :   READ '(' Identifier ')' EOS         {$$ = makeReadNode($3);}
 OutputStmt  :   WRITE '(' Expr ')' EOS  {$$ = makeWriteNode($3);}
             ;
 
-AsgStmt     :   Identifier ASSGN Expr EOS       {$$ = makeAssgnNode($1, $3);}
+AsgStmt     :   Identifier ASSGN Expr EOS               {$$ = makeAssgnNode($1, $3);}
+            |   Identifier ASSGN ADDR Identifier EOS    {$$ = makeAssgnNode($1, makeAddrNode($4));}
             ;
 
 BreakStmt   :   BREAK EOS               {$$ = makeBreakNode();}
@@ -127,11 +138,12 @@ ContinueStmt:   CONTINUE EOS            {$$ = makeContinueNode();}
 Identifier  :   ID '['Expr']' '['Expr']'    {$$ = makeArrayNode($1, TYPE_ID, $3, $6);}
             |   ID '['Expr']'               {$$ = makeArrayNode($1, TYPE_ID, $3, NULL);}
             |   ID                          {$$ = makeLeafNode(0, NULL, TYPE_ID, $1);}
+            |   STAR ID                     {$$ = makePtrNode(makeLeafNode(0, NULL, TYPE_ID, $2));}
             ;
 
 Expr        :   Expr PLUS Expr          {$$ = makeArithOPNode(NODE_ADD, $1, $3);}
             |   Expr MINUS Expr         {$$ = makeArithOPNode(NODE_SUB, $1, $3);}
-            |   Expr MUL Expr           {$$ = makeArithOPNode(NODE_MUL, $1, $3);}
+            |   Expr STAR Expr          {$$ = makeArithOPNode(NODE_MUL, $1, $3);}
             |   Expr DIV Expr           {$$ = makeArithOPNode(NODE_DIV, $1, $3);}
             |   Expr MOD Expr           {$$ = makeArithOPNode(NODE_MOD, $1, $3);}
             |   '(' Expr ')'            {$$ = $2;}

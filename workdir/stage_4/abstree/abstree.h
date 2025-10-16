@@ -39,7 +39,9 @@ typedef enum {
     NODE_REPEAT,
     NODE_BREAK,
     NODE_CONTINUE,
-    NODE_ARRAY
+    NODE_ARRAY,
+    NODE_ADDR,
+    NODE_PTR
 } NodeType;
 
 
@@ -98,5 +100,9 @@ ASTNode* makeContinueNode(void);
 
 /* Make Int/String array node*/
 ASTNode* makeArrayNode(char* arrName, VarType type, ASTNode* l, ASTNode* r);
+
+ASTNode* makeAddrNode(ASTNode* node);
+
+ASTNode* makePtrNode(ASTNode* node);
 
 #endif

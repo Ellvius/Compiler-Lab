@@ -1,0 +1,26 @@
+decl
+    int x, y, *p, *q;
+    str mesg, *hello;
+enddecl
+
+begin
+    x = 7;
+    p = &x;
+    write(*p);
+
+    y = 5;
+    q = &y;
+    write(*q);
+
+    *q = *p;
+    write(*q);
+    write(y);
+    write(q);
+
+    *p = *q + 1;
+    write(*p);
+
+    mesg = "world";
+    hello = &mesg;
+    write(*hello);
+end
