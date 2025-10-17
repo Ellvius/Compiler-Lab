@@ -137,6 +137,12 @@ ASTNode* makeContinueNode(void){
 }
 
 ASTNode* makeArrayNode(char* arrName, VarType type, ASTNode* l, ASTNode* r){
+    Gsymbol* var = GLookup(arrName);
+
+    if(var->rowsize == 0){
+        fprintf(stderr, "Not an array: %s\n", arrName);
+        exit(1);
+    }
     ASTNode* temp = TreeCreate(NULL, TYPE_ID, arrName, NODE_ARRAY, l, NULL, r);
     return temp;
 }
