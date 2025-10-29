@@ -5,6 +5,7 @@ Lsymbol *Lhead = NULL, *Ltail = NULL;
 Paramstruct *Phead = NULL, *Ptail = NULL;
 int nextFreeAddr = START_ADDR;
 int functionLabelNum = 0;
+int relFreeAddr = 1;
 
 
 //-----------------------------PARAMETER TABLE------------------------------------
@@ -147,7 +148,8 @@ void* LInstall(char *name, int type){
     temp->name = strdup(name);
     temp->type = type;
     temp->next = NULL;
-    temp->binding = 1;
+    temp->binding = relFreeAddr;
+    relFreeAddr++;
 
     if(Lhead != NULL){
         Ltail->next = temp;
@@ -172,6 +174,7 @@ void FreeLST(void){
 
     Lhead = NULL;
     Ltail = NULL;
+    relFreeAddr = 1;
 }
 
 void printLST(char *name){
