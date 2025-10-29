@@ -96,10 +96,11 @@ FDefBlock   :   FDefBlock FDef
 
 FDef        :   Type ID '(' ParamList ')'       {
                                                     PInstallLST($2);    // Insert params to Local symbol Table
+                                                    validateParams($2, Phead);  // check name equivalence of the parameters
                                                     freeParamList();    // Free the unwanted paramlist formed from the Fdef block, we will use the paramlist from GST
                                                 }
                 '{' LDeclBlock Body '}'         {
-                                                    printLST($2);
+                                                    // printLST($2);
                                                     FreeLST();
                                                 }
             ;
@@ -147,7 +148,7 @@ Type        :   INT                     {currentType = TYPE_INT; $$ = TYPE_INT;}
 /*----------------------------------------------------------------------------------------------------*/
 
 MainBlock   :   Type MAIN '('')' '{' LDeclBlock Body '}'    {
-                                                                printLST("main");
+                                                                // printLST("main");
                                                                 FreeLST();
                                                             }
             ;

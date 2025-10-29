@@ -54,6 +54,7 @@ extern int relFreeAddr;             // Relative address for Local variable
 
 void PInstallLST(char *fname);      // Store function params in LST
 char* tokenToString(int);           // Prints the Var type instead of numerical value
+void validateParams(char* fname, Paramstruct *head);
 
 
 #endif

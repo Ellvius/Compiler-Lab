@@ -607,13 +607,13 @@ static const yytype_uint8 yyrline[] =
 {
        0,    48,    48,    52,    53,    56,    57,    60,    61,    64,
       67,    68,    71,    74,    77,    80,    85,    92,    93,    97,
-      97,   107,   108,   109,   112,   117,   118,   121,   122,   125,
-     128,   129,   132,   137,   143,   144,   149,   155,   156,   159,
-     162,   163,   166,   167,   168,   169,   170,   171,   172,   177,
-     178,   181,   182,   183,   186,   189,   192,   193,   196,   199,
-     204,   205,   206,   207,   208,   209,   210,   211,   212,   213,
-     214,   215,   216,   217,   218,   219,   220,   221,   224,   225,
-     226,   227,   228,   229,   232,   233
+      97,   108,   109,   110,   113,   118,   119,   122,   123,   126,
+     129,   130,   133,   138,   144,   145,   150,   156,   157,   160,
+     163,   164,   167,   168,   169,   170,   171,   172,   173,   178,
+     179,   182,   183,   184,   187,   190,   193,   194,   197,   200,
+     205,   206,   207,   208,   209,   210,   211,   212,   213,   214,
+     215,   216,   217,   218,   219,   220,   221,   222,   225,   226,
+     227,   228,   229,   230,   233,   234
 };
 #endif
 
@@ -1668,331 +1668,332 @@ yyreduce:
 #line 97 "abstree.y"
                                                 {
                                                     PInstallLST((yyvsp[-3].idName));    // Insert params to Local symbol Table
+                                                    validateParams((yyvsp[-3].idName), Phead);  // check name equivalence of the parameters
                                                     freeParamList();    // Free the unwanted paramlist formed from the Fdef block, we will use the paramlist from GST
                                                 }
-#line 1674 "y.tab.c"
+#line 1675 "y.tab.c"
     break;
 
   case 20:
-#line 101 "abstree.y"
+#line 102 "abstree.y"
                                                 {
-                                                    printLST((yyvsp[-8].idName));
+                                                    // printLST($2);
                                                     FreeLST();
                                                 }
-#line 1683 "y.tab.c"
+#line 1684 "y.tab.c"
     break;
 
   case 24:
-#line 112 "abstree.y"
+#line 113 "abstree.y"
                                      {PInstall((yyvsp[0].idName), currentType);}
-#line 1689 "y.tab.c"
+#line 1690 "y.tab.c"
     break;
 
   case 32:
-#line 132 "abstree.y"
+#line 133 "abstree.y"
                                                 {
                                                     VarType ptrType = currentType == TYPE_INT ?
                                                     TYPE_INT_PTR : TYPE_STR_PTR; 
                                                     LInstall((yyvsp[0].idName), ptrType);
                                                 }
-#line 1699 "y.tab.c"
+#line 1700 "y.tab.c"
     break;
 
   case 33:
-#line 137 "abstree.y"
+#line 138 "abstree.y"
                                                 {
                                                     LInstall((yyvsp[0].idName), currentType);
                                                 }
-#line 1707 "y.tab.c"
+#line 1708 "y.tab.c"
     break;
 
   case 34:
-#line 143 "abstree.y"
+#line 144 "abstree.y"
                                         {currentType = TYPE_INT; (yyval.idType) = TYPE_INT;}
-#line 1713 "y.tab.c"
+#line 1714 "y.tab.c"
     break;
 
   case 35:
-#line 144 "abstree.y"
+#line 145 "abstree.y"
                                         {currentType = TYPE_STR; (yyval.idType) = TYPE_STR;}
-#line 1719 "y.tab.c"
+#line 1720 "y.tab.c"
     break;
 
   case 36:
-#line 149 "abstree.y"
+#line 150 "abstree.y"
                                                             {
-                                                                printLST("main");
+                                                                // printLST("main");
                                                                 FreeLST();
                                                             }
-#line 1728 "y.tab.c"
+#line 1729 "y.tab.c"
     break;
 
   case 40:
-#line 162 "abstree.y"
+#line 163 "abstree.y"
                                         {}
-#line 1734 "y.tab.c"
+#line 1735 "y.tab.c"
     break;
 
   case 41:
-#line 163 "abstree.y"
+#line 164 "abstree.y"
                                         {}
-#line 1740 "y.tab.c"
+#line 1741 "y.tab.c"
     break;
 
   case 42:
-#line 166 "abstree.y"
+#line 167 "abstree.y"
                                         {}
-#line 1746 "y.tab.c"
+#line 1747 "y.tab.c"
     break;
 
   case 43:
-#line 167 "abstree.y"
+#line 168 "abstree.y"
                                         {}
-#line 1752 "y.tab.c"
+#line 1753 "y.tab.c"
     break;
 
   case 44:
-#line 168 "abstree.y"
+#line 169 "abstree.y"
                                         {}
-#line 1758 "y.tab.c"
+#line 1759 "y.tab.c"
     break;
 
   case 45:
-#line 169 "abstree.y"
+#line 170 "abstree.y"
                                         {}
-#line 1764 "y.tab.c"
+#line 1765 "y.tab.c"
     break;
 
   case 46:
-#line 170 "abstree.y"
+#line 171 "abstree.y"
                                         {}
-#line 1770 "y.tab.c"
+#line 1771 "y.tab.c"
     break;
 
   case 47:
-#line 171 "abstree.y"
+#line 172 "abstree.y"
                                         {}
-#line 1776 "y.tab.c"
+#line 1777 "y.tab.c"
     break;
 
   case 48:
-#line 172 "abstree.y"
+#line 173 "abstree.y"
                                         {}
-#line 1782 "y.tab.c"
+#line 1783 "y.tab.c"
     break;
 
   case 49:
-#line 177 "abstree.y"
+#line 178 "abstree.y"
                                                                     {}
-#line 1788 "y.tab.c"
+#line 1789 "y.tab.c"
     break;
 
   case 50:
-#line 178 "abstree.y"
+#line 179 "abstree.y"
                                                                     {}
-#line 1794 "y.tab.c"
+#line 1795 "y.tab.c"
     break;
 
   case 51:
-#line 181 "abstree.y"
+#line 182 "abstree.y"
                                                                     {}
-#line 1800 "y.tab.c"
+#line 1801 "y.tab.c"
     break;
 
   case 52:
-#line 182 "abstree.y"
+#line 183 "abstree.y"
                                                                     {}
-#line 1806 "y.tab.c"
+#line 1807 "y.tab.c"
     break;
 
   case 53:
-#line 183 "abstree.y"
+#line 184 "abstree.y"
                                                                     {}
-#line 1812 "y.tab.c"
+#line 1813 "y.tab.c"
     break;
 
   case 54:
-#line 186 "abstree.y"
+#line 187 "abstree.y"
                                                         {}
-#line 1818 "y.tab.c"
+#line 1819 "y.tab.c"
     break;
 
   case 55:
-#line 189 "abstree.y"
+#line 190 "abstree.y"
                                                         {}
-#line 1824 "y.tab.c"
+#line 1825 "y.tab.c"
     break;
 
   case 56:
-#line 192 "abstree.y"
+#line 193 "abstree.y"
                                                         {}
-#line 1830 "y.tab.c"
+#line 1831 "y.tab.c"
     break;
 
   case 57:
-#line 193 "abstree.y"
+#line 194 "abstree.y"
                                                         {}
-#line 1836 "y.tab.c"
+#line 1837 "y.tab.c"
     break;
 
   case 58:
-#line 196 "abstree.y"
+#line 197 "abstree.y"
                                         {}
-#line 1842 "y.tab.c"
+#line 1843 "y.tab.c"
     break;
 
   case 59:
-#line 199 "abstree.y"
+#line 200 "abstree.y"
                                         {}
-#line 1848 "y.tab.c"
+#line 1849 "y.tab.c"
     break;
 
   case 60:
-#line 204 "abstree.y"
+#line 205 "abstree.y"
                                         {}
-#line 1854 "y.tab.c"
+#line 1855 "y.tab.c"
     break;
 
   case 61:
-#line 205 "abstree.y"
+#line 206 "abstree.y"
                                         {}
-#line 1860 "y.tab.c"
+#line 1861 "y.tab.c"
     break;
 
   case 62:
-#line 206 "abstree.y"
+#line 207 "abstree.y"
                                         {}
-#line 1866 "y.tab.c"
+#line 1867 "y.tab.c"
     break;
 
   case 63:
-#line 207 "abstree.y"
+#line 208 "abstree.y"
                                         {}
-#line 1872 "y.tab.c"
+#line 1873 "y.tab.c"
     break;
 
   case 64:
-#line 208 "abstree.y"
+#line 209 "abstree.y"
                                         {}
-#line 1878 "y.tab.c"
+#line 1879 "y.tab.c"
     break;
 
   case 65:
-#line 209 "abstree.y"
+#line 210 "abstree.y"
                                         {}
-#line 1884 "y.tab.c"
+#line 1885 "y.tab.c"
     break;
 
   case 66:
-#line 210 "abstree.y"
+#line 211 "abstree.y"
                                         {}
-#line 1890 "y.tab.c"
+#line 1891 "y.tab.c"
     break;
 
   case 67:
-#line 211 "abstree.y"
+#line 212 "abstree.y"
                                         {}
-#line 1896 "y.tab.c"
+#line 1897 "y.tab.c"
     break;
 
   case 68:
-#line 212 "abstree.y"
+#line 213 "abstree.y"
                                         {}
-#line 1902 "y.tab.c"
+#line 1903 "y.tab.c"
     break;
 
   case 69:
-#line 213 "abstree.y"
+#line 214 "abstree.y"
                                         {}
-#line 1908 "y.tab.c"
+#line 1909 "y.tab.c"
     break;
 
   case 70:
-#line 214 "abstree.y"
+#line 215 "abstree.y"
                                         {}
-#line 1914 "y.tab.c"
+#line 1915 "y.tab.c"
     break;
 
   case 71:
-#line 215 "abstree.y"
+#line 216 "abstree.y"
                                         {}
-#line 1920 "y.tab.c"
+#line 1921 "y.tab.c"
     break;
 
   case 72:
-#line 216 "abstree.y"
+#line 217 "abstree.y"
                                         {}
-#line 1926 "y.tab.c"
+#line 1927 "y.tab.c"
     break;
 
   case 73:
-#line 217 "abstree.y"
+#line 218 "abstree.y"
                                         {}
-#line 1932 "y.tab.c"
+#line 1933 "y.tab.c"
     break;
 
   case 74:
-#line 218 "abstree.y"
+#line 219 "abstree.y"
                                         {}
-#line 1938 "y.tab.c"
+#line 1939 "y.tab.c"
     break;
 
   case 75:
-#line 219 "abstree.y"
+#line 220 "abstree.y"
                                         {}
-#line 1944 "y.tab.c"
+#line 1945 "y.tab.c"
     break;
 
   case 76:
-#line 220 "abstree.y"
+#line 221 "abstree.y"
                                         {}
-#line 1950 "y.tab.c"
+#line 1951 "y.tab.c"
     break;
 
   case 77:
-#line 221 "abstree.y"
+#line 222 "abstree.y"
                                         {}
-#line 1956 "y.tab.c"
+#line 1957 "y.tab.c"
     break;
 
   case 78:
-#line 224 "abstree.y"
+#line 225 "abstree.y"
                                             {}
-#line 1962 "y.tab.c"
+#line 1963 "y.tab.c"
     break;
 
   case 79:
-#line 225 "abstree.y"
+#line 226 "abstree.y"
                                             {}
-#line 1968 "y.tab.c"
+#line 1969 "y.tab.c"
     break;
 
   case 80:
-#line 226 "abstree.y"
+#line 227 "abstree.y"
                                             {}
-#line 1974 "y.tab.c"
+#line 1975 "y.tab.c"
     break;
 
   case 81:
-#line 227 "abstree.y"
+#line 228 "abstree.y"
                                             {}
-#line 1980 "y.tab.c"
+#line 1981 "y.tab.c"
     break;
 
   case 82:
-#line 228 "abstree.y"
+#line 229 "abstree.y"
                                             {}
-#line 1986 "y.tab.c"
+#line 1987 "y.tab.c"
     break;
 
   case 83:
-#line 229 "abstree.y"
+#line 230 "abstree.y"
                                             {}
-#line 1992 "y.tab.c"
+#line 1993 "y.tab.c"
     break;
 
 
-#line 1996 "y.tab.c"
+#line 1997 "y.tab.c"
 
       default: break;
     }
@@ -2224,7 +2225,7 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 236 "abstree.y"
+#line 237 "abstree.y"
 
 
 int yyerror(const char *s){
