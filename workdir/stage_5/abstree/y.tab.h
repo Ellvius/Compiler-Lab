@@ -141,14 +141,15 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 14 "abstree.y"
+#line 17 "abstree.y"
 
+    struct ASTNode* node;
     int idType;
     char* idName;
     int intVal;
     char* strVal;
 
-#line 152 "y.tab.h"
+#line 153 "y.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;

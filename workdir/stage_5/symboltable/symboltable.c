@@ -225,32 +225,32 @@ void validateParams(char *fname, Paramstruct *head) {
     }
 
     Paramstruct *decl = stentry->paramlist;
-    Paramstruct *defn = head;
+    Paramstruct *def = head;
 
-    if (decl == NULL && defn == NULL)
+    if (decl == NULL && def == NULL)
         return;
 
-    if ((decl == NULL && defn != NULL) || (decl != NULL && defn == NULL)) {
+    if ((decl == NULL && def != NULL) || (decl != NULL && def == NULL)) {
         fprintf(stderr, "param count mismatch in function: %s.\n", fname);
         exit(1);
     }
 
-    while (decl != NULL && defn != NULL) {
-        if (decl->type != defn->type) {
+    while (decl != NULL && def != NULL) {
+        if (decl->type != def->type) {
             fprintf(stderr, "param type mismatch in function: %s\n", fname);
             exit(1);
         }
 
-        if (strcmp(decl->name, defn->name) != 0) {
+        if (strcmp(decl->name, def->name) != 0) {
             fprintf(stderr, "param name mismatch in function: %s \n", fname);
             exit(1);
         }
 
         decl = decl->next;
-        defn = defn->next;
+        def = def->next;
     }
 
-    if (decl != NULL || defn != NULL) {
+    if (decl != NULL || def != NULL) {
         fprintf(stderr, "param count mismatch in function: %s\n", fname);
         exit(1);
     }
