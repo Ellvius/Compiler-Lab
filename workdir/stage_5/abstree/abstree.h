@@ -62,7 +62,7 @@ typedef struct ASTNode{
     char *name;                       //stores the variable/function name in case of variable/function nodes
     union Constant *value;             //stores the value of the constant if the node corresponds to a constant
     struct ASTNode *arglist;          //pointer to the expression list given as arguments to a function call
-    struct ASTNode *ptr1,*ptr2,*ptr3; //Subtrees of the node. (Maximum Subtrees for IF THEN ELSE)
+    struct ASTNode *left,*middle,*right; //Subtrees of the node. (Maximum Subtrees for IF THEN ELSE)
     struct Gsymbol *Gentry;           //pointer to GST entry for global variables and functions
     struct Lsymbol *Lentry;           //pointer to the function's LST for local variables and arguements
 } ASTNode;

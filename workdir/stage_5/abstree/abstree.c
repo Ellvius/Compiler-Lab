@@ -9,9 +9,9 @@ ASTNode* TreeCreate(union Constant* val, VarType vtype, char* vname, NodeType nt
     temp->type = vtype;
     temp->name = vname;
     temp->nodetype = ntype;
-    temp->ptr1 = l;
-    temp->ptr2 = m;
-    temp->ptr3 = r;
+    temp->left = l;
+    temp->middle = m;
+    temp->right = r;
     temp->arglist = arglist;
     temp->Gentry = NULL;
     temp->Lentry = NULL;

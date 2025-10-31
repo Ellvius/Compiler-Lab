@@ -3,11 +3,13 @@
     #include <stdio.h>
     #include "abstree.h"
     #include "../symboltable/symboltable.h"
+    #include "../codeGen/codeGen.h"
 
     extern FILE *yyin;
     VarType DeclType = TYPE_NONE;
     VarType ParamType = TYPE_NONE;
     char* ExecFunction;
+    int total_params = 0;
 
     int yylex(void);
     int yyerror(const char *s);
@@ -102,15 +104,29 @@ FDefBlock   :   FDefBlock FDef
 
 FDef        :   DType ID '(' ParamList ')'       {
                                                     PInstallLST($2);    // Insert params to Local symbol Table
-                                                    validateParams($2, Phead);  // check name equivalence of the parameters
+                                                    total_params = validateParams($2, Phead);  // check name equivalence of the parameters
                                                     freeParamList();    // Free the unwanted paramlist formed from the Fdef block, we will use the paramlist from GST
                                                 }
                 '{' LDeclBlock Body '}'         {
-                                                    if($9->ptr3->type != $1){
+                                                    if($9->right->type != $1){
                                                         fprintf(stderr, "mismatch in return type: %s\n", $2);
                                                         exit(1);
                                                     }
+                                                    Lsymbol *temp = Lhead;
+                                                    for(int i = total_params; i > 0; i--){
+                                                        temp->binding = 0-i-2;
+                                                        temp = temp->next;
+                                                    }
+
+                                                    int addr = 1;
+                                                    while(temp != NULL){
+                                                        
+                                                        temp->binding = addr;
+                                                        addr++;
+                                                        temp = temp->next;
+                                                    }
                                                     // printLST($2);
+                                                    codeGenFunc($9, $2);
                                                     FreeLST();
                                                 }
             ;
@@ -162,11 +178,21 @@ PType       :   INT                     {ParamType = TYPE_INT; $$ = TYPE_INT;}
 /*----------------------------------------------------------------------------------------------------*/
 
 MainBlock   :   INT MAIN '('')' '{' LDeclBlock Body '}'    {
-                                                                if($7->ptr3->type != TYPE_INT){
+                                                                if($7->right->type != TYPE_INT){
                                                                     fprintf(stderr, "mismatch in return type: %s\n", "main");
                                                                     exit(1);
                                                                 }
+                                                                Lsymbol *temp = Lhead;
+
+                                                                int addr = 1;
+                                                                while(temp != NULL){
+                                                                    
+                                                                    temp->binding = addr;
+                                                                    addr++;
+                                                                    temp = temp->next;
+                                                                }
                                                                 // printLST("main");
+                                                                codeGenMain($7);
                                                                 FreeLST();
                                                             }
             ;

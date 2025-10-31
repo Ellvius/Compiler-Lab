@@ -141,7 +141,7 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 17 "abstree.y"
+#line 19 "abstree.y"
 
     struct ASTNode* node;
     int idType;

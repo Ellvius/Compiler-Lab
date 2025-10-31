@@ -148,8 +148,7 @@ void* LInstall(char *name, int type){
     temp->name = strdup(name);
     temp->type = type;
     temp->next = NULL;
-    temp->binding = relFreeAddr;
-    relFreeAddr++;
+    temp->binding = -1;
 
     if(Lhead != NULL){
         Ltail->next = temp;
@@ -216,8 +215,9 @@ char* tokenToString(int type){
     }
 }
 
-void validateParams(char *fname, Paramstruct *head) {
+int validateParams(char *fname, Paramstruct *head) {
     Gsymbol *stentry = GLookup(fname);
+    int total_params = 0;
 
     if (stentry == NULL) {
         fprintf(stderr, "Function not declared: %s\n", fname);
@@ -228,7 +228,7 @@ void validateParams(char *fname, Paramstruct *head) {
     Paramstruct *def = head;
 
     if (decl == NULL && def == NULL)
-        return;
+        return 0;
 
     if ((decl == NULL && def != NULL) || (decl != NULL && def == NULL)) {
         fprintf(stderr, "param count mismatch in function: %s.\n", fname);
@@ -248,10 +248,12 @@ void validateParams(char *fname, Paramstruct *head) {
 
         decl = decl->next;
         def = def->next;
+        total_params++;
     }
 
     if (decl != NULL || def != NULL) {
         fprintf(stderr, "param count mismatch in function: %s\n", fname);
         exit(1);
     }
+    return total_params;
 }
