@@ -38,6 +38,10 @@ string          \"(\\.|[^\\\"])*\"
 "int"       { return INT; }
 "str"       { return STR; }
 
+"OR"        { return OR; }
+"AND"       { return AND; }
+"NOT"       { return NOT; }
+
 "||"        { return OR; }
 "&&"        { return AND; }
 "!"         { return NOT; }

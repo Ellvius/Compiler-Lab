@@ -220,6 +220,7 @@ RegIndex codeGenFnCall(ASTNode* node, FILE* fp){
     }
 
     regNum = 0;     // free all registers
+    node = node->left;  // id node to separate fn(fn()) case
 
     ASTNode* args = node->arglist;
 

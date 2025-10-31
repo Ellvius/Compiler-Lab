@@ -558,7 +558,7 @@ union yyalloc
 /* YYNNTS -- Number of nonterminals.  */
 #define YYNNTS  34
 /* YYNRULES -- Number of rules.  */
-#define YYNRULES  87
+#define YYNRULES  88
 /* YYNSTATES -- Number of states.  */
 #define YYNSTATES  199
 
@@ -613,13 +613,13 @@ static const yytype_int16 yyrline[] =
 {
        0,    56,    56,    60,    61,    64,    65,    68,    69,    72,
       75,    76,    79,    82,    85,    88,    93,   100,   101,   105,
-     105,   134,   135,   136,   139,   144,   145,   148,   149,   152,
-     155,   156,   159,   164,   170,   171,   174,   175,   180,   200,
-     201,   204,   207,   208,   211,   212,   213,   214,   215,   216,
-     217,   222,   223,   226,   227,   228,   231,   234,   237,   238,
-     241,   244,   249,   250,   251,   252,   253,   254,   255,   256,
+     105,   134,   135,   136,   139,   144,   145,   146,   149,   150,
+     153,   156,   157,   160,   165,   171,   172,   175,   176,   181,
+     201,   202,   205,   208,   209,   212,   213,   214,   215,   216,
+     217,   218,   223,   224,   227,   228,   229,   232,   235,   238,
+     239,   242,   245,   250,   251,   252,   253,   254,   255,   256,
      257,   258,   259,   260,   261,   262,   263,   264,   265,   266,
-     269,   270,   271,   272,   273,   274,   277,   278
+     267,   270,   271,   272,   273,   274,   275,   278,   279
 };
 #endif
 
@@ -698,26 +698,26 @@ static const yytype_int16 yypact[] =
      means the default is an error.  */
 static const yytype_int8 yydefact[] =
 {
-       0,     0,     0,     0,     0,     4,     6,    34,    35,     0,
-       8,     0,     0,     1,    34,     0,    18,     0,     3,     5,
+       0,     0,     0,     0,     0,     4,     6,    35,    36,     0,
+       8,     0,     0,     1,    35,     0,    18,     0,     3,     5,
        7,     0,    16,     0,    11,     0,    17,     2,     0,    15,
-      23,     0,     9,     0,     0,    23,    36,    37,     0,    22,
-       0,     0,    10,     0,     0,     0,    12,    24,    14,     0,
-       0,    19,    21,     0,    26,     0,    28,     0,     0,     0,
-       0,     0,    25,    27,     0,    33,     0,    31,    40,     0,
-       0,     0,     0,     0,     0,     0,     0,     0,    84,     0,
-      43,    44,    45,    46,    47,    48,    49,    50,     0,    38,
-       0,    13,    32,    29,     0,     0,     0,     0,     0,     0,
-       0,    60,    61,    85,     0,     0,     0,     0,    42,     0,
-       0,    30,     0,     0,    78,    79,     0,     0,    77,     0,
-       0,     0,     0,    80,    87,     0,     0,     0,    39,     0,
-       0,     0,     0,    70,     0,     0,     0,     0,     0,     0,
+      23,     0,     9,     0,     0,    23,    37,    38,     0,    22,
+       0,     0,    10,    27,     0,     0,    12,    24,    14,     0,
+       0,    19,    21,     0,    26,     0,    29,     0,     0,     0,
+       0,     0,    25,    28,     0,    34,     0,    32,    41,     0,
+       0,     0,     0,     0,     0,     0,     0,     0,    85,     0,
+      44,    45,    46,    47,    48,    49,    50,    51,     0,    39,
+      27,    13,    33,    30,     0,     0,     0,     0,     0,     0,
+       0,    61,    62,    86,     0,     0,     0,     0,    43,     0,
+       0,    31,     0,     0,    79,    80,     0,     0,    78,     0,
+       0,     0,     0,    81,    88,     0,     0,     0,    40,     0,
+       0,     0,     0,    71,     0,     0,     0,     0,     0,     0,
        0,     0,     0,     0,     0,     0,     0,     0,     0,     0,
-       0,     0,     0,     0,    81,    83,    41,     0,    58,    20,
-      56,    67,    62,    63,    64,    65,    66,    71,    72,    73,
-      74,    75,    76,    68,    69,    57,     0,     0,     0,     0,
-      86,     0,    59,     0,     0,     0,     0,     0,     0,     0,
-       0,    54,    55,    82,     0,    52,    53,     0,    51
+       0,     0,     0,     0,    82,    84,    42,     0,    59,    20,
+      57,    68,    63,    64,    65,    66,    67,    72,    73,    74,
+      75,    76,    77,    69,    70,    58,     0,     0,     0,     0,
+      87,     0,    60,     0,     0,     0,     0,     0,     0,     0,
+       0,    55,    56,    83,     0,    53,    54,     0,    52
 };
 
   /* YYPGOTO[NTERM-NUM].  */
@@ -886,13 +886,13 @@ static const yytype_int8 yyr1[] =
 {
        0,    51,    52,    52,    52,    53,    53,    54,    54,    55,
       56,    56,    57,    57,    57,    57,    57,    58,    58,    60,
-      59,    61,    61,    61,    62,    63,    63,    64,    64,    65,
-      66,    66,    67,    67,    68,    68,    69,    69,    70,    71,
-      71,    72,    73,    73,    74,    74,    74,    74,    74,    74,
-      74,    75,    75,    76,    76,    76,    77,    78,    79,    79,
-      80,    81,    82,    82,    82,    82,    82,    82,    82,    82,
+      59,    61,    61,    61,    62,    63,    63,    63,    64,    64,
+      65,    66,    66,    67,    67,    68,    68,    69,    69,    70,
+      71,    71,    72,    73,    73,    74,    74,    74,    74,    74,
+      74,    74,    75,    75,    76,    76,    76,    77,    78,    79,
+      79,    80,    81,    82,    82,    82,    82,    82,    82,    82,
       82,    82,    82,    82,    82,    82,    82,    82,    82,    82,
-      83,    83,    83,    83,    83,    83,    84,    84
+      82,    83,    83,    83,    83,    83,    83,    84,    84
 };
 
   /* YYR2[YYN] -- Number of symbols on the right hand side of rule YYN.  */
@@ -900,13 +900,13 @@ static const yytype_int8 yyr2[] =
 {
        0,     2,     3,     2,     1,     3,     2,     2,     1,     3,
        3,     1,     4,     7,     4,     2,     1,     2,     1,     0,
-      10,     3,     1,     0,     2,     3,     2,     2,     1,     3,
-       3,     1,     2,     1,     1,     1,     1,     1,     8,     4,
-       2,     3,     2,     1,     1,     1,     1,     1,     1,     1,
-       1,    10,     8,     8,     7,     7,     5,     5,     4,     5,
-       2,     2,     3,     3,     3,     3,     3,     3,     3,     3,
-       2,     3,     3,     3,     3,     3,     3,     1,     1,     1,
-       3,     4,     7,     4,     1,     2,     3,     1
+      10,     3,     1,     0,     2,     3,     2,     0,     2,     1,
+       3,     3,     1,     2,     1,     1,     1,     1,     1,     8,
+       4,     2,     3,     2,     1,     1,     1,     1,     1,     1,
+       1,     1,    10,     8,     8,     7,     7,     5,     5,     4,
+       5,     2,     2,     3,     3,     3,     3,     3,     3,     3,
+       3,     2,     3,     3,     3,     3,     3,     3,     1,     1,
+       1,     3,     4,     7,     4,     1,     2,     3,     1
 };
 
 
@@ -1695,8 +1695,8 @@ yyreduce:
 #line 1696 "y.tab.c"
     break;
 
-  case 32:
-#line 159 "abstree.y"
+  case 33:
+#line 160 "abstree.y"
                                                 {
                                                     VarType ptrType = DeclType == TYPE_INT ?
                                                     TYPE_INT_PTR : TYPE_STR_PTR; 
@@ -1705,40 +1705,40 @@ yyreduce:
 #line 1706 "y.tab.c"
     break;
 
-  case 33:
-#line 164 "abstree.y"
+  case 34:
+#line 165 "abstree.y"
                                                 {
                                                     LInstall((yyvsp[0].idName), DeclType);
                                                 }
 #line 1714 "y.tab.c"
     break;
 
-  case 34:
-#line 170 "abstree.y"
+  case 35:
+#line 171 "abstree.y"
                                         {DeclType = TYPE_INT; (yyval.idType) = TYPE_INT;}
 #line 1720 "y.tab.c"
     break;
 
-  case 35:
-#line 171 "abstree.y"
+  case 36:
+#line 172 "abstree.y"
                                         {DeclType = TYPE_STR; (yyval.idType) = TYPE_STR;}
 #line 1726 "y.tab.c"
     break;
 
-  case 36:
-#line 174 "abstree.y"
+  case 37:
+#line 175 "abstree.y"
                                         {ParamType = TYPE_INT; (yyval.idType) = TYPE_INT;}
 #line 1732 "y.tab.c"
     break;
 
-  case 37:
-#line 175 "abstree.y"
+  case 38:
+#line 176 "abstree.y"
                                         {ParamType = TYPE_STR; (yyval.idType) = TYPE_STR;}
 #line 1738 "y.tab.c"
     break;
 
-  case 38:
-#line 180 "abstree.y"
+  case 39:
+#line 181 "abstree.y"
                                                            {
                                                                 if((yyvsp[-1].node)->right->type != TYPE_INT){
                                                                     fprintf(stderr, "mismatch in return type: %s\n", "main");
@@ -1760,296 +1760,296 @@ yyreduce:
 #line 1761 "y.tab.c"
     break;
 
-  case 39:
-#line 200 "abstree.y"
+  case 40:
+#line 201 "abstree.y"
                                                             {(yyval.node) = makeConnNode((yyvsp[-2].node), (yyvsp[-1].node));}
 #line 1767 "y.tab.c"
     break;
 
-  case 40:
-#line 201 "abstree.y"
+  case 41:
+#line 202 "abstree.y"
                                                             {(yyval.node) = makeConnNode(NULL, NULL);}
 #line 1773 "y.tab.c"
     break;
 
-  case 41:
-#line 204 "abstree.y"
+  case 42:
+#line 205 "abstree.y"
                                         {(yyval.node) = makeRetNode((yyvsp[-1].node));}
 #line 1779 "y.tab.c"
     break;
 
-  case 42:
-#line 207 "abstree.y"
+  case 43:
+#line 208 "abstree.y"
                                         {(yyval.node) = makeConnNode((yyvsp[-1].node), (yyvsp[0].node));}
 #line 1785 "y.tab.c"
     break;
 
-  case 43:
-#line 208 "abstree.y"
+  case 44:
+#line 209 "abstree.y"
                                         {(yyval.node) = (yyvsp[0].node);}
 #line 1791 "y.tab.c"
-    break;
-
-  case 44:
-#line 211 "abstree.y"
-                                        {(yyval.node) = (yyvsp[0].node);}
-#line 1797 "y.tab.c"
     break;
 
   case 45:
 #line 212 "abstree.y"
                                         {(yyval.node) = (yyvsp[0].node);}
-#line 1803 "y.tab.c"
+#line 1797 "y.tab.c"
     break;
 
   case 46:
 #line 213 "abstree.y"
                                         {(yyval.node) = (yyvsp[0].node);}
-#line 1809 "y.tab.c"
+#line 1803 "y.tab.c"
     break;
 
   case 47:
 #line 214 "abstree.y"
                                         {(yyval.node) = (yyvsp[0].node);}
-#line 1815 "y.tab.c"
+#line 1809 "y.tab.c"
     break;
 
   case 48:
 #line 215 "abstree.y"
                                         {(yyval.node) = (yyvsp[0].node);}
-#line 1821 "y.tab.c"
+#line 1815 "y.tab.c"
     break;
 
   case 49:
 #line 216 "abstree.y"
                                         {(yyval.node) = (yyvsp[0].node);}
-#line 1827 "y.tab.c"
+#line 1821 "y.tab.c"
     break;
 
   case 50:
 #line 217 "abstree.y"
                                         {(yyval.node) = (yyvsp[0].node);}
-#line 1833 "y.tab.c"
+#line 1827 "y.tab.c"
     break;
 
   case 51:
-#line 222 "abstree.y"
-                                                                    {(yyval.node) = makeIfElseNode((yyvsp[-7].node), (yyvsp[-4].node), (yyvsp[-2].node));}
-#line 1839 "y.tab.c"
+#line 218 "abstree.y"
+                                        {(yyval.node) = (yyvsp[0].node);}
+#line 1833 "y.tab.c"
     break;
 
   case 52:
 #line 223 "abstree.y"
+                                                                    {(yyval.node) = makeIfElseNode((yyvsp[-7].node), (yyvsp[-4].node), (yyvsp[-2].node));}
+#line 1839 "y.tab.c"
+    break;
+
+  case 53:
+#line 224 "abstree.y"
                                                                     {(yyval.node) = makeIfElseNode((yyvsp[-5].node), (yyvsp[-2].node), NULL);}
 #line 1845 "y.tab.c"
     break;
 
-  case 53:
-#line 226 "abstree.y"
+  case 54:
+#line 227 "abstree.y"
                                                                     {(yyval.node) = makeIterationNode(NODE_WHILE, (yyvsp[-5].node), (yyvsp[-2].node));}
 #line 1851 "y.tab.c"
     break;
 
-  case 54:
-#line 227 "abstree.y"
+  case 55:
+#line 228 "abstree.y"
                                                                     {(yyval.node) = makeIterationNode(NODE_DOWHILE, (yyvsp[-2].node), (yyvsp[-5].node));}
 #line 1857 "y.tab.c"
     break;
 
-  case 55:
-#line 228 "abstree.y"
+  case 56:
+#line 229 "abstree.y"
                                                                     {(yyval.node) = makeIterationNode(NODE_REPEAT, (yyvsp[-2].node), (yyvsp[-5].node));}
 #line 1863 "y.tab.c"
     break;
 
-  case 56:
-#line 231 "abstree.y"
+  case 57:
+#line 232 "abstree.y"
                                                         {(yyval.node) = makeReadNode((yyvsp[-2].node));}
 #line 1869 "y.tab.c"
     break;
 
-  case 57:
-#line 234 "abstree.y"
+  case 58:
+#line 235 "abstree.y"
                                                         {(yyval.node) = makeWriteNode((yyvsp[-2].node));}
 #line 1875 "y.tab.c"
     break;
 
-  case 58:
-#line 237 "abstree.y"
+  case 59:
+#line 238 "abstree.y"
                                                         {(yyval.node) = makeAssgnNode((yyvsp[-3].node), (yyvsp[-1].node));}
 #line 1881 "y.tab.c"
     break;
 
-  case 59:
-#line 238 "abstree.y"
+  case 60:
+#line 239 "abstree.y"
                                                         {(yyval.node) = makeAssgnNode((yyvsp[-4].node), makeAddrNode((yyvsp[-1].node)));}
 #line 1887 "y.tab.c"
     break;
 
-  case 60:
-#line 241 "abstree.y"
+  case 61:
+#line 242 "abstree.y"
                                         {(yyval.node) = makeBreakNode();}
 #line 1893 "y.tab.c"
     break;
 
-  case 61:
-#line 244 "abstree.y"
+  case 62:
+#line 245 "abstree.y"
                                         {(yyval.node) = makeContinueNode();}
 #line 1899 "y.tab.c"
     break;
 
-  case 62:
-#line 249 "abstree.y"
+  case 63:
+#line 250 "abstree.y"
                                         {(yyval.node) = makeArithOPNode(NODE_ADD, (yyvsp[-2].node), (yyvsp[0].node));}
 #line 1905 "y.tab.c"
     break;
 
-  case 63:
-#line 250 "abstree.y"
+  case 64:
+#line 251 "abstree.y"
                                         {(yyval.node) = makeArithOPNode(NODE_SUB, (yyvsp[-2].node), (yyvsp[0].node));}
 #line 1911 "y.tab.c"
     break;
 
-  case 64:
-#line 251 "abstree.y"
+  case 65:
+#line 252 "abstree.y"
                                         {(yyval.node) = makeArithOPNode(NODE_MUL, (yyvsp[-2].node), (yyvsp[0].node));}
 #line 1917 "y.tab.c"
     break;
 
-  case 65:
-#line 252 "abstree.y"
+  case 66:
+#line 253 "abstree.y"
                                         {(yyval.node) = makeArithOPNode(NODE_DIV, (yyvsp[-2].node), (yyvsp[0].node));}
 #line 1923 "y.tab.c"
     break;
 
-  case 66:
-#line 253 "abstree.y"
+  case 67:
+#line 254 "abstree.y"
                                         {(yyval.node) = makeArithOPNode(NODE_MOD, (yyvsp[-2].node), (yyvsp[0].node));}
 #line 1929 "y.tab.c"
     break;
 
-  case 67:
-#line 254 "abstree.y"
+  case 68:
+#line 255 "abstree.y"
                                         {(yyval.node) = (yyvsp[-1].node);}
 #line 1935 "y.tab.c"
     break;
 
-  case 68:
-#line 255 "abstree.y"
+  case 69:
+#line 256 "abstree.y"
                                         {(yyval.node) = makeLogicOPNode(NODE_AND, (yyvsp[-2].node), (yyvsp[0].node));}
 #line 1941 "y.tab.c"
     break;
 
-  case 69:
-#line 256 "abstree.y"
+  case 70:
+#line 257 "abstree.y"
                                         {(yyval.node) = makeLogicOPNode(NODE_OR, (yyvsp[-2].node), (yyvsp[0].node));}
 #line 1947 "y.tab.c"
     break;
 
-  case 70:
-#line 257 "abstree.y"
+  case 71:
+#line 258 "abstree.y"
                                         {(yyval.node) = makeLogicOPNode(NODE_NOT, (yyvsp[0].node), NULL);}
 #line 1953 "y.tab.c"
     break;
 
-  case 71:
-#line 258 "abstree.y"
+  case 72:
+#line 259 "abstree.y"
                                         {(yyval.node) = makeRelOPNode(NODE_LT, (yyvsp[-2].node), (yyvsp[0].node));}
 #line 1959 "y.tab.c"
     break;
 
-  case 72:
-#line 259 "abstree.y"
+  case 73:
+#line 260 "abstree.y"
                                         {(yyval.node) = makeRelOPNode(NODE_GT, (yyvsp[-2].node), (yyvsp[0].node));}
 #line 1965 "y.tab.c"
     break;
 
-  case 73:
-#line 260 "abstree.y"
+  case 74:
+#line 261 "abstree.y"
                                         {(yyval.node) = makeRelOPNode(NODE_LE, (yyvsp[-2].node), (yyvsp[0].node));}
 #line 1971 "y.tab.c"
     break;
 
-  case 74:
-#line 261 "abstree.y"
+  case 75:
+#line 262 "abstree.y"
                                         {(yyval.node) = makeRelOPNode(NODE_GE, (yyvsp[-2].node), (yyvsp[0].node));}
 #line 1977 "y.tab.c"
     break;
 
-  case 75:
-#line 262 "abstree.y"
+  case 76:
+#line 263 "abstree.y"
                                         {(yyval.node) = makeRelOPNode(NODE_NE, (yyvsp[-2].node), (yyvsp[0].node));}
 #line 1983 "y.tab.c"
     break;
 
-  case 76:
-#line 263 "abstree.y"
+  case 77:
+#line 264 "abstree.y"
                                         {(yyval.node) = makeRelOPNode(NODE_EQ, (yyvsp[-2].node), (yyvsp[0].node));}
 #line 1989 "y.tab.c"
     break;
 
-  case 77:
-#line 264 "abstree.y"
+  case 78:
+#line 265 "abstree.y"
                                         {(yyval.node) = (yyvsp[0].node);}
 #line 1995 "y.tab.c"
     break;
 
-  case 78:
-#line 265 "abstree.y"
+  case 79:
+#line 266 "abstree.y"
                                         {(yyval.node) = makeLeafNode((yyvsp[0].intVal), NULL, TYPE_INT, NULL);}
 #line 2001 "y.tab.c"
     break;
 
-  case 79:
-#line 266 "abstree.y"
+  case 80:
+#line 267 "abstree.y"
                                         {(yyval.node) = makeLeafNode(0, (yyvsp[0].strVal), TYPE_STR, NULL);}
 #line 2007 "y.tab.c"
     break;
 
-  case 80:
-#line 269 "abstree.y"
+  case 81:
+#line 270 "abstree.y"
                                             {(yyval.node) = makeFuncNode((yyvsp[-2].idName), TYPE_ID, NULL);}
 #line 2013 "y.tab.c"
     break;
 
-  case 81:
-#line 270 "abstree.y"
+  case 82:
+#line 271 "abstree.y"
                                             {(yyval.node) = makeFuncNode((yyvsp[-3].idName), TYPE_ID, (yyvsp[-1].node));}
 #line 2019 "y.tab.c"
     break;
 
-  case 82:
-#line 271 "abstree.y"
+  case 83:
+#line 272 "abstree.y"
                                             {(yyval.node) = makeArrayNode((yyvsp[-6].idName), TYPE_ID, (yyvsp[-4].node), (yyvsp[-1].node));}
 #line 2025 "y.tab.c"
     break;
 
-  case 83:
-#line 272 "abstree.y"
+  case 84:
+#line 273 "abstree.y"
                                             {(yyval.node) = makeArrayNode((yyvsp[-3].idName), TYPE_ID, (yyvsp[-1].node), NULL);}
 #line 2031 "y.tab.c"
     break;
 
-  case 84:
-#line 273 "abstree.y"
+  case 85:
+#line 274 "abstree.y"
                                             {(yyval.node) = makeLeafNode(0, NULL, TYPE_ID, (yyvsp[0].idName));}
 #line 2037 "y.tab.c"
     break;
 
-  case 85:
-#line 274 "abstree.y"
+  case 86:
+#line 275 "abstree.y"
                                             {(yyval.node) = makePtrNode(makeLeafNode(0, NULL, TYPE_ID, (yyvsp[0].idName)));}
 #line 2043 "y.tab.c"
     break;
 
-  case 86:
-#line 277 "abstree.y"
+  case 87:
+#line 278 "abstree.y"
                                             {(yyval.node) = makeArgNode((yyvsp[-2].node), (yyvsp[0].node));}
 #line 2049 "y.tab.c"
     break;
 
-  case 87:
-#line 278 "abstree.y"
+  case 88:
+#line 279 "abstree.y"
                                             {(yyval.node) = (yyvsp[0].node);}
 #line 2055 "y.tab.c"
     break;
@@ -2287,7 +2287,7 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 281 "abstree.y"
+#line 282 "abstree.y"
 
 
 int yyerror(const char *s){

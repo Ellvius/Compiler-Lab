@@ -143,6 +143,7 @@ Param       :   PType ID              {PInstall($2, ParamType);}
 
 LDeclBlock  : DECL LDecList ENDDECL         
             | DECL ENDDECL
+            |
             ;
 
 LDecList    : LDecList LDecl 

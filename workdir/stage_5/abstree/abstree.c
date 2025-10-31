@@ -189,7 +189,8 @@ ASTNode* makePtrNode(ASTNode* ptrVar){
 
 
 ASTNode* makeFuncNode(char* fname, VarType vtype, ASTNode* arglist){
-    ASTNode* funcNode = TreeCreate(NULL, vtype, fname, NODE_FUNC, NULL, NULL, NULL, arglist);
+    ASTNode* id = TreeCreate(NULL, vtype, fname, NODE_FUNC, NULL, NULL, NULL, arglist);
+    ASTNode* funcNode = TreeCreate(NULL, vtype, fname, NODE_FUNC, id, NULL, NULL, NULL);
     Gsymbol *func = GLookup(fname);
 
     if(!func){
@@ -198,7 +199,7 @@ ASTNode* makeFuncNode(char* fname, VarType vtype, ASTNode* arglist){
     }
 
     Paramstruct* param = func->paramlist;
-    ASTNode* arg = funcNode->arglist;
+    ASTNode* arg = id->arglist;
 
     while(param != NULL && arg != NULL){
         if(param->type != arg->type){
