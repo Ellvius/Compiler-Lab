@@ -1605,7 +1605,7 @@ yyreduce:
 #line 56 "abstree.y"
                                                     {
                                                         // printGST();
-                                                        fprintf(stdout,"parsing successful!\n");
+                                                        // fprintf(stdout,"parsing successful!\n");
                                                     }
 #line 1611 "y.tab.c"
     break;

@@ -55,7 +55,7 @@
 
 Program     :   GDeclBlock FDefBlock MainBlock      {
                                                         // printGST();
-                                                        fprintf(stdout,"parsing successful!\n");
+                                                        // fprintf(stdout,"parsing successful!\n");
                                                     }
             |   GDeclBlock MainBlock                
             |   MainBlock                           

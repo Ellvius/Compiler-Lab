@@ -87,7 +87,8 @@ int getLabel(void){
 void codeGenHeader(FILE* fp){
     fprintf(fp, "0\n2056\n0\n0\n0\n0\n0\n0\n");
     fprintf(fp, "MOV SP, %d\n", nextFreeAddr);
-    fprintf(fp, "JMP _MAIN\n");
+    fprintf(fp, "PUSH R0\n");
+    fprintf(fp, "CALL _MAIN\n");
     fprintf(fp, "JMP _EXIT\n");
 }
 
@@ -740,6 +741,7 @@ int codeGenMain(ASTNode* node){
         loopStack = createStack();   // stack to keep track of nested loops
 
     fprintf(fp, "_MAIN:\n");
+    fprintf(fp, "PUSH BP\n");
     fprintf(fp, "MOV BP, SP\n");
 
     Lsymbol* temp = Lhead;
