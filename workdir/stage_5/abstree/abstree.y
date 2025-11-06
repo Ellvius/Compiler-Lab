@@ -41,7 +41,7 @@
 
 %left OR
 %left AND
-%right NOT
+%right NOT ADDR
 
 %right ASSGN
 %nonassoc NE EQ
@@ -136,7 +136,12 @@ ParamList   :   ParamList COMMA Param
             | /*param can be empty*/
             ;
 
-Param       :   PType ID              {PInstall($2, ParamType);}
+Param       :   PType ID                {PInstall($2, ParamType);}
+            |   PType STAR ID           {
+                                            VarType ptrType = ParamType == TYPE_INT ?
+                                            TYPE_INT_PTR : TYPE_STR_PTR; 
+                                            PInstall($3, ptrType);
+                                        }
             ;
 
 /*----------------------------------------------------------------------------------------------------*/
@@ -236,7 +241,6 @@ OutputStmt  :   WRITE '(' Expr ')' EOS                  {$$ = makeWriteNode($3);
             ;
 
 AsgStmt     :   Identifier ASSGN Expr EOS               {$$ = makeAssgnNode($1, $3);}
-            |   Identifier ASSGN ADDR Identifier EOS    {$$ = makeAssgnNode($1, makeAddrNode($4));}
             ;
 
 BreakStmt   :   BREAK EOS               {$$ = makeBreakNode();}
@@ -256,6 +260,7 @@ Expr        :   Expr PLUS Expr          {$$ = makeArithOPNode(NODE_ADD, $1, $3);
             |   Expr AND Expr           {$$ = makeLogicOPNode(NODE_AND, $1, $3);}
             |   Expr OR Expr            {$$ = makeLogicOPNode(NODE_OR, $1, $3);}
             |   NOT Expr                {$$ = makeLogicOPNode(NODE_NOT, $2, NULL);}
+            |   ADDR Identifier         {$$ = makeAddrNode($2);}
             |   Expr LT Expr            {$$ = makeRelOPNode(NODE_LT, $1, $3);}
             |   Expr GT Expr            {$$ = makeRelOPNode(NODE_GT, $1, $3);}
             |   Expr LE Expr            {$$ = makeRelOPNode(NODE_LE, $1, $3);}
