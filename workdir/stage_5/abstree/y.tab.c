@@ -1693,8 +1693,8 @@ yyreduce:
                                                         addr+=temp->type->size;
                                                         temp = temp->next;
                                                     }
-                                                    // printLST($2);
-                                                    // codeGenFunc($9, $2);
+                                                    printLST((yyvsp[-8].idName));
+                                                    codeGenFunc((yyvsp[-1].node), (yyvsp[-8].idName));
                                                     FreeLST();
                                                 }
 #line 1701 "y.tab.c"
@@ -1817,11 +1817,11 @@ yyreduce:
                                                                 while(temp != NULL){
                                                                     
                                                                     temp->binding = addr;
-                                                                    addr++;
+                                                                    addr+=temp->type->size;
                                                                     temp = temp->next;
                                                                 }
-                                                                // printLST("main");
-                                                                // codeGenMain($7);
+                                                                printLST("main");
+                                                                codeGenMain((yyvsp[-1].node));
                                                                 FreeLST();
                                                             }
 #line 1828 "y.tab.c"

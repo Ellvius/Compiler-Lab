@@ -345,6 +345,18 @@ RegIndex codeGenAssgn(ASTNode* node, FILE* fp){
         fprintf(fp, "MOV [R%d], R%d\n", addr, expr);
         freeReg();
     }
+    else if(id->nodetype == NODE_TUP){
+        int addr = getReg();
+        if(id->Lentry != NULL){
+            fprintf(fp, "MOV R%d, BP\n", addr);
+            fprintf(fp, "ADD R%d, %d\n", addr, id->Lentry->binding + id->Fentry->fieldIndex);
+            fprintf(fp, "MOV [R%d], R%d\n", addr, expr);
+        }
+        else {
+            fprintf(fp, "MOV [%d], R%d\n", id->Gentry->binding + id->Fentry->fieldIndex, expr);
+        }
+        freeReg();
+    }
     else{
         int addr = getReg();
         if(id->Lentry != NULL){
@@ -594,6 +606,19 @@ RegIndex codeGenWrite(ASTNode* node, FILE* fp){
     return r;
 }
 
+RegIndex codeGenTup(ASTNode* node, FILE* fp){
+    int r = getReg();
+
+    if(node->Lentry != NULL){
+        fprintf(fp, "MOV R%d, BP\n", r);
+        fprintf(fp, "ADD R%d, %d\n", r, node->Lentry->binding + node->Fentry->fieldIndex);
+        fprintf(fp, "MOV R%d, [R%d]\n", r, r);
+    }
+    else {
+        fprintf(fp, "MOV R%d, [%d]\n", r, node->Gentry->binding + node->Fentry->fieldIndex);
+    }
+    return r;
+}
 
 int codeGenNODE(ASTNode* node, FILE* fp){
     switch(node->nodetype){
@@ -649,6 +674,9 @@ int codeGenNODE(ASTNode* node, FILE* fp){
 
         case NODE_RET:
             return codeGenRet(node, fp);
+
+        case NODE_TUP:
+            return codeGenTup(node, fp);
 
         default:
             return codeGenOP(node, fp);

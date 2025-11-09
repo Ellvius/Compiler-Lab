@@ -55,10 +55,11 @@ typedef struct ASTNode{
     struct ASTNode *left,*middle,*right; //Subtrees of the node. (Maximum Subtrees for IF THEN ELSE)
     struct Gsymbol *Gentry;           //pointer to GST entry for global variables and functions
     struct Lsymbol *Lentry;           //pointer to the function's LST for local variables and arguements
+    struct FieldList *Fentry;           // pointer to the field in case of tuple
 } ASTNode;
 
 /* Create a generic AST node */
-ASTNode* TreeCreate(union Constant *val, struct TypeTable* vtype, char* vname, NodeType ntype, ASTNode *l, ASTNode *m, ASTNode *r, ASTNode* arglist);
+ASTNode* TreeCreate(union Constant *val, struct TypeTable* vtype, char* vname, NodeType ntype, ASTNode *l, ASTNode *m, ASTNode *r, ASTNode* arglist, struct FieldList* field);
 
 /* Make Leaf node (NUM constant or ID variable) */
 ASTNode* makeLeafNode(int n, char* s, struct TypeTable* vtype, char* vname);

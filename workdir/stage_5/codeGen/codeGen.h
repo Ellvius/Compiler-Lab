@@ -51,6 +51,7 @@ RegIndex codeGenContinue(ASTNode* node, FILE* fp);
 RegIndex codeGenLogicOP(ASTNode* node, FILE *fp);
 RegIndex codeGenRet(ASTNode* node, FILE *fp);
 RegIndex codeGenFnCall(ASTNode* node, FILE *fp);
+RegIndex codeGenTup(ASTNode* node, FILE *fp);
 
 int codeGenNODE(ASTNode* node, FILE* fp);
 int codeGenFunc(ASTNode *node, char* fname);

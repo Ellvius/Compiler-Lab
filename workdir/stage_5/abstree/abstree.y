@@ -55,7 +55,7 @@
 
 Program     :   GDeclBlock FDefBlock MainBlock      {
                                                         // printGST();
-                                                        printTypeTable();
+                                                        // printTypeTable();
                                                         // fprintf(stdout,"parsing successful!\n");
                                                     }
             |   GDeclBlock MainBlock                
@@ -127,7 +127,7 @@ FDef        :   DType ID '(' ParamList ')'       {
                                                         temp = temp->next;
                                                     }
                                                     // printLST($2);
-                                                    // codeGenFunc($9, $2);
+                                                    codeGenFunc($9, $2);
                                                     FreeLST();
                                                 }
             ;
@@ -214,11 +214,11 @@ MainBlock   :   INT MAIN '('')' '{' LDeclBlock Body '}'    {
                                                                 while(temp != NULL){
                                                                     
                                                                     temp->binding = addr;
-                                                                    addr++;
+                                                                    addr+=temp->type->size;
                                                                     temp = temp->next;
                                                                 }
                                                                 // printLST("main");
-                                                                // codeGenMain($7);
+                                                                codeGenMain($7);
                                                                 FreeLST();
                                                             }
             ;

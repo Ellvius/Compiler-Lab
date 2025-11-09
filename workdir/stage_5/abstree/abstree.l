@@ -9,6 +9,8 @@ digit           [0-9]
 letter          [a-zA-Z]
 identifier      {letter}({letter}|{digit})*
 string          \"(\\.|[^\\\"])*\"
+SINGLE \/\/.*
+MULTILINE \/\*([^*]|\*[^\/])*\*\/
 
 %%
 
@@ -72,6 +74,9 @@ string          \"(\\.|[^\\\"])*\"
                         yylval.strVal = strndup(yytext+1, len-2);
                         return STRING;
                     }
+
+{SINGLE}            { }
+{MULTILINE}         { }
 
 "+"         { return PLUS; }
 "-"         { return MINUS; }

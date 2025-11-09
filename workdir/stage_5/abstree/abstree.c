@@ -1,6 +1,6 @@
 #include "abstree.h"
 
-ASTNode* TreeCreate(union Constant* val,struct TypeTable* vtype, char* vname, NodeType ntype, ASTNode *l, ASTNode* m, ASTNode *r, ASTNode* arglist){
+ASTNode* TreeCreate(union Constant* val,struct TypeTable* vtype, char* vname, NodeType ntype, ASTNode *l, ASTNode* m, ASTNode *r, ASTNode* arglist, struct FieldList *field){
     ASTNode* temp = (ASTNode*)malloc(sizeof(ASTNode));
     Gsymbol* gdecl = NULL;
     Lsymbol* ldecl = NULL;
@@ -15,6 +15,7 @@ ASTNode* TreeCreate(union Constant* val,struct TypeTable* vtype, char* vname, No
     temp->arglist = arglist;
     temp->Gentry = NULL;
     temp->Lentry = NULL;
+    temp->Fentry = field;
 
     if(temp->type == TLookup("dummy")){
         ldecl = LLookup(vname);
@@ -33,6 +34,10 @@ ASTNode* TreeCreate(union Constant* val,struct TypeTable* vtype, char* vname, No
         }
     }
 
+    if(ntype == NODE_TUP){
+        temp->type = field->type;
+    }
+
     return temp;
 }
 
@@ -46,7 +51,7 @@ ASTNode* makeLeafNode(int n, char* s, struct TypeTable* vtype, char* vname){
         value->strVal = strdup(s);
     }
 
-    ASTNode* temp = TreeCreate(value, vtype, vname, NODE_LEAF, NULL, NULL, NULL, NULL);    
+    ASTNode* temp = TreeCreate(value, vtype, vname, NODE_LEAF, NULL, NULL, NULL, NULL, NULL);    
     return temp;
 }
 
@@ -56,7 +61,7 @@ ASTNode* makeArithOPNode(NodeType ntype, ASTNode* l, ASTNode* r){
         exit(1);
     }
 
-    ASTNode* temp = TreeCreate(NULL, TLookup("integer"), NULL, ntype, l, NULL, r, NULL);    
+    ASTNode* temp = TreeCreate(NULL, TLookup("integer"), NULL, ntype, l, NULL, r, NULL, NULL);  
     return temp;
 }
 
@@ -70,7 +75,7 @@ ASTNode* makeRelOPNode(NodeType ntype, ASTNode* l, ASTNode* r){
         exit(1);
     }
 
-    ASTNode* temp = TreeCreate(NULL, TLookup("bool"), NULL, ntype, l, NULL, r, NULL);    
+    ASTNode* temp = TreeCreate(NULL, TLookup("bool"), NULL, ntype, l, NULL, r, NULL, NULL);  
     return temp;
 }
 
@@ -85,7 +90,7 @@ ASTNode* makeAssgnNode(ASTNode* l, ASTNode* r){
         exit(1);
     }
 
-    ASTNode* temp = TreeCreate(NULL, TLookup("void"), NULL, NODE_ASSGN, l, NULL, r, NULL);    
+    ASTNode* temp = TreeCreate(NULL, TLookup("void"), NULL, NODE_ASSGN, l, NULL, r, NULL, NULL); 
     return temp;
 }
 
@@ -95,7 +100,7 @@ ASTNode* makeReadNode(ASTNode* l){
         exit(1);
     }
 
-    ASTNode* temp = TreeCreate(NULL, TLookup("void"), NULL, NODE_READ, l, NULL, NULL, NULL);
+    ASTNode* temp = TreeCreate(NULL, TLookup("void"), NULL, NODE_READ, l, NULL, NULL, NULL, NULL);
     return temp;
 }
 
@@ -105,12 +110,12 @@ ASTNode* makeWriteNode(ASTNode* l){
         exit(1);
     }
 
-    ASTNode* temp = TreeCreate(NULL, TLookup("void"), NULL, NODE_WRITE, l, NULL, NULL, NULL);    
+    ASTNode* temp = TreeCreate(NULL, TLookup("void"), NULL, NODE_WRITE, l, NULL, NULL, NULL, NULL);  
     return temp;
 }
 
 ASTNode* makeConnNode(ASTNode* l, ASTNode* r){
-    ASTNode* temp = TreeCreate(NULL, TLookup("void"), NULL, NODE_CONN, l, NULL, r, NULL);    
+    ASTNode* temp = TreeCreate(NULL, TLookup("void"), NULL, NODE_CONN, l, NULL, r, NULL, NULL);  
     return temp;
 }
 
@@ -120,7 +125,7 @@ ASTNode* makeIterationNode(NodeType ntype, ASTNode *l, ASTNode* r){
         exit(1);
     }
     
-    ASTNode* temp = TreeCreate(NULL, TLookup("void"), NULL, ntype, l, NULL, r, NULL);
+    ASTNode* temp = TreeCreate(NULL, TLookup("void"), NULL, ntype, l, NULL, r, NULL, NULL);
     return temp;
 }
 
@@ -130,17 +135,17 @@ ASTNode* makeIfElseNode(ASTNode* l, ASTNode* m, ASTNode* r){
         exit(1);
     }
 
-    ASTNode* temp = TreeCreate(NULL, TLookup("void"), NULL, NODE_IFELSE, l, m, r, NULL);
+    ASTNode* temp = TreeCreate(NULL, TLookup("void"), NULL, NODE_IFELSE, l, m, r, NULL, NULL);
     return temp;
 }
 
 ASTNode* makeBreakNode(void){
-    ASTNode* temp = TreeCreate(NULL, TLookup("void"), NULL, NODE_BREAK, NULL, NULL, NULL, NULL);    
+    ASTNode* temp = TreeCreate(NULL, TLookup("void"), NULL, NODE_BREAK, NULL, NULL, NULL, NULL, NULL);   
     return temp;
 }
 
 ASTNode* makeContinueNode(void){
-    ASTNode* temp = TreeCreate(NULL, TLookup("void"), NULL, NODE_CONTINUE, NULL, NULL, NULL, NULL);    
+    ASTNode* temp = TreeCreate(NULL, TLookup("void"), NULL, NODE_CONTINUE, NULL, NULL, NULL, NULL, NULL);  
     return temp;
 }
 
@@ -151,7 +156,7 @@ ASTNode* makeArrayNode(char* arrName, TypeTable* type, ASTNode* l, ASTNode* r){
         fprintf(stderr, "Not an array: %s\n", arrName);
         exit(1);
     }
-    ASTNode* temp = TreeCreate(NULL, TLookup("dummy"), arrName, NODE_ARRAY, l, NULL, r, NULL);
+    ASTNode* temp = TreeCreate(NULL, TLookup("dummy"), arrName, NODE_ARRAY, l, NULL, r, NULL, NULL);
     return temp;
 }
 
@@ -165,7 +170,7 @@ ASTNode* makeAddrNode(ASTNode* var){
         vtype = TLookup("string_ptr");
     }
 
-    ASTNode* temp = TreeCreate(NULL, vtype, NULL, NODE_ADDR, var, NULL, NULL, NULL);
+    ASTNode* temp = TreeCreate(NULL, vtype, NULL, NODE_ADDR, var, NULL, NULL, NULL, NULL);
     return temp;
 }
 
@@ -180,14 +185,14 @@ ASTNode* makePtrNode(ASTNode* ptrVar){
         vtype = TLookup("string");
     }
 
-    ASTNode* temp = TreeCreate(NULL, vtype, NULL, NODE_PTR, ptrVar, NULL, NULL, NULL);
+    ASTNode* temp = TreeCreate(NULL, vtype, NULL, NODE_PTR, ptrVar, NULL, NULL, NULL, NULL);
     return temp;
 }
 
 
 ASTNode* makeFuncNode(char* fname, TypeTable* vtype, ASTNode* arglist){
-    ASTNode* id = TreeCreate(NULL, vtype, fname, NODE_FUNC, NULL, NULL, NULL, arglist);
-    ASTNode* funcNode = TreeCreate(NULL, vtype, fname, NODE_FUNC, id, NULL, NULL, NULL);
+    ASTNode* id = TreeCreate(NULL, vtype, fname, NODE_FUNC, NULL, NULL, NULL, arglist, NULL);
+    ASTNode* funcNode = TreeCreate(NULL, vtype, fname, NODE_FUNC, id, NULL, NULL, NULL, NULL);
     Gsymbol *func = GLookup(fname);
 
     if(!func){
@@ -226,7 +231,7 @@ ASTNode* makeArgNode(ASTNode* argHead, ASTNode* arg){
 
 
 ASTNode* makeRetNode(ASTNode* retnode){
-    ASTNode *temp = TreeCreate(NULL, retnode->type, NULL, NODE_RET, retnode, NULL, NULL, NULL);
+    ASTNode *temp = TreeCreate(NULL, retnode->type, NULL, NODE_RET, retnode, NULL, NULL, NULL, NULL);
     return temp;
 }
 
@@ -237,7 +242,7 @@ ASTNode* makeLogicOPNode(NodeType ntype, ASTNode* l, ASTNode* r){
         exit(1);
     }
 
-    ASTNode* temp = TreeCreate(NULL, TLookup("bool"), NULL, ntype, l, NULL, r, NULL);    
+    ASTNode* temp = TreeCreate(NULL, TLookup("bool"), NULL, ntype, l, NULL, r, NULL, NULL);  
     return temp;
 }
 
@@ -278,8 +283,6 @@ ASTNode* makeTupleNode(char *tupleName, char* fieldName){
         exit(1);
     }
 
-    ASTNode* tupleField = makeLeafNode(0, NULL, field->type, fieldName);
-
-    ASTNode* temp = TreeCreate(NULL, field->type, tupleName, NODE_TUP, tupleField, NULL, NULL, NULL);
+    ASTNode* temp = TreeCreate(NULL, TLookup("dummy"), tupleName, NODE_TUP, NULL, NULL, NULL, NULL, field);
     return temp;
 }
