@@ -30,7 +30,7 @@
 %token BREAK CONTINUE
 %token PLUS MINUS STAR DIV MOD
 %token LT GT LE GE NE EQ AND OR NOT
-%token ASSGN EOS COMMA ADDR
+%token ASSGN EOS COMMA ADDR DOT
 %token INT STR TUPLE
 %token <intVal> NUM
 %token <strVal> STRING
@@ -55,6 +55,7 @@
 
 Program     :   GDeclBlock FDefBlock MainBlock      {
                                                         // printGST();
+                                                        printTypeTable();
                                                         // fprintf(stdout,"parsing successful!\n");
                                                     }
             |   GDeclBlock MainBlock                
@@ -88,10 +89,10 @@ Gid         :   ID '(' ParamList ')'        {
             |   STAR ID                     {
                                                 struct TypeTable *ptrType = DeclType == TLookup("integer") ?
                                                 TLookup("integer_ptr") : TLookup("string_ptr"); 
-                                                GInstall($2, ptrType, 1, -1, -1, NULL);
+                                                GInstall($2, ptrType, DeclType->size, -1, -1, NULL);
                                             }              
             |   ID                          {
-                                                GInstall($1, DeclType, 1, -1, -1, NULL);
+                                                GInstall($1, DeclType, DeclType->size, -1, -1, NULL);
                                             }       
             ;
             
@@ -122,7 +123,7 @@ FDef        :   DType ID '(' ParamList ')'       {
                                                     while(temp != NULL){
                                                         
                                                         temp->binding = addr;
-                                                        addr++;
+                                                        addr+=temp->type->size;
                                                         temp = temp->next;
                                                     }
                                                     // printLST($2);
@@ -298,6 +299,7 @@ Identifier  :   ID'('')'                    {$$ = makeFuncNode($1, TLookup("dumm
             |   ID '['Expr']'               {$$ = makeArrayNode($1, TLookup("dummy"), $3, NULL);}
             |   ID                          {$$ = makeLeafNode(0, NULL, TLookup("dummy"), $1);}
             |   STAR ID                     {$$ = makePtrNode(makeLeafNode(0, NULL, TLookup("dummy"), $2));}
+            |   ID DOT ID                   {$$ = makeTupleNode($1, $3);}
             ;
 
 ArgList     :   ArgList COMMA Expr          {$$ = makeArgNode($1, $3);}

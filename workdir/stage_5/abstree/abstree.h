@@ -35,7 +35,8 @@ typedef enum {
     NODE_AND,
     NODE_OR,
     NODE_NOT,
-    NODE_RET
+    NODE_RET,
+    NODE_TUP
 } NodeType;
 
 
@@ -106,5 +107,7 @@ ASTNode* makeArgNode(ASTNode* argHead, ASTNode* arg);
 ASTNode* makeRetNode(ASTNode* ret);
 
 ASTNode* makeLogicOPNode(NodeType ntype, ASTNode* l, ASTNode* r);
+
+ASTNode* makeTupleNode(char *tupleName, char* fieldName);
 
 #endif

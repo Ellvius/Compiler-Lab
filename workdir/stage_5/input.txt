@@ -1,12 +1,13 @@
 decl
     int result,factorial(int n);
-    tuple student(str name, int rollno) st1;
+    tuple student(str name, int rollno, int class, str div) st1;
 enddecl
 
 int factorial(int n){
     decl
         int f;
-        tuple college(str name, int students) c1;
+        tuple college(str name, int students, str hee) c1;
+        int g;
     enddecl
     begin
         return n;
@@ -18,8 +19,7 @@ int main(){
         int a;
     enddecl
     begin
-        read(a);
-        result = factorial(a);
+        result = factorial(45);
         write(result);
         return 1;
     end

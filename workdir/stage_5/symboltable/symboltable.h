@@ -28,7 +28,8 @@ typedef struct TypeTable {
 
 extern TypeTable *Thead, *Ttail;
 TypeTable *TLookup(char* name);
-void TInstall(char* name, int size,struct FieldList* fields);
+void TInstall(char* name, int size,struct FieldList* fields);\
+void printTypeTable(void);
 
 
 typedef struct Paramstruct {

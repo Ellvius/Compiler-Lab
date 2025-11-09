@@ -256,11 +256,38 @@ void TInstall(char* name, int size, FieldList* fields){
         ftemp = ftemp->next;
     }
 
-    if(ftemp != NULL) 
+    if(temp->fields != NULL) 
         temp->size = fieldIndex;
 
     Fhead = NULL;
     Ftail = NULL;
+}
+
+void printTypeTable(void){
+    TypeTable *temp = Thead;
+
+    fprintf(stdout, "TYPE TABLE :\n");
+    fprintf(stdout, "%-15s %-10s\n","name", "size");
+
+    while(temp != NULL){
+        fprintf(stdout, "%-15s %-10d\n", temp->name, temp->size);
+
+        if(temp->fields != NULL){
+            FieldList *ftemp = temp->fields;
+            fprintf(stdout, "\tFIELD TABLE : %s\n", temp->name);
+            fprintf(stdout, "\t%-15s %-10s\n","name", "index");
+
+            while(ftemp){
+                fprintf(stdout, "\t%-15s %-10d\n", ftemp->name, ftemp->fieldIndex);
+                ftemp = ftemp->next;
+            }
+            
+            fprintf(stdout, "\n");
+        }
+
+        temp = temp->next;
+    }
+    fprintf(stdout, "\n");
 }
 
 //---------------------------------HELPER FUNCTIONS---------------------------------------------

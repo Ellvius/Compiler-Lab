@@ -240,3 +240,29 @@ ASTNode* makeLogicOPNode(NodeType ntype, ASTNode* l, ASTNode* r){
     ASTNode* temp = TreeCreate(NULL, TLookup("bool"), NULL, ntype, l, NULL, r, NULL);    
     return temp;
 }
+
+
+ASTNode* makeTupleNode(char *tupleName, char* fieldName){
+    TypeTable *type = TLookup(tupleName);
+
+    if(type == NULL){
+        fprintf(stderr, "tuple type not declared: %s\n", tupleName);
+        exit(1);
+    }
+
+    FieldList *field = type->fields;
+
+    while(field != NULL && strcmp(field->name, fieldName) != 0){
+        field = field->next;
+    }
+
+    if(field == NULL){
+        fprintf(stderr, "field %s does not exists for tuple %s\n", fieldName, tupleName);
+        exit(1);
+    }
+
+    ASTNode* tupleField = makeLeafNode(0, NULL, field->type, fieldName);
+
+    ASTNode* temp = TreeCreate(NULL, type, tupleName, NODE_TUP, tupleField, NULL, NULL, NULL);
+
+}

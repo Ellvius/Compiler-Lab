@@ -82,6 +82,7 @@ string          \"(\\.|[^\\\"])*\"
 ";"         { return EOS; }
 ","         { return COMMA; }
 "&"         { return ADDR; }
+"."         { return DOT; }
 
 [ \t\n]     { }
 [()\[\]{}]        { return *yytext; }

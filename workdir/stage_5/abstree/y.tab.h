@@ -86,12 +86,13 @@ extern int yydebug;
     EOS = 292,
     COMMA = 293,
     ADDR = 294,
-    INT = 295,
-    STR = 296,
-    TUPLE = 297,
-    NUM = 298,
-    STRING = 299,
-    ID = 300
+    DOT = 295,
+    INT = 296,
+    STR = 297,
+    TUPLE = 298,
+    NUM = 299,
+    STRING = 300,
+    ID = 301
   };
 #endif
 /* Tokens.  */
@@ -132,12 +133,13 @@ extern int yydebug;
 #define EOS 292
 #define COMMA 293
 #define ADDR 294
-#define INT 295
-#define STR 296
-#define TUPLE 297
-#define NUM 298
-#define STRING 299
-#define ID 300
+#define DOT 295
+#define INT 296
+#define STR 297
+#define TUPLE 298
+#define NUM 299
+#define STRING 300
+#define ID 301
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
@@ -151,7 +153,7 @@ union YYSTYPE
     int intVal;
     char* strVal;
 
-#line 155 "y.tab.h"
+#line 157 "y.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;
