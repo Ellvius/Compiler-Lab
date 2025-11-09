@@ -1,0 +1,14 @@
+int main(){
+    decl
+        tuple student(str name, int rollno) a, x;
+    enddecl
+
+    begin
+        read(a.name);
+        read(x.name);
+        if (a.name == x.name) then
+            write("They have same names");
+        endif; 
+        return 0;
+    end
+}

@@ -1614,8 +1614,8 @@ yyreduce:
   case 2:
 #line 56 "abstree.y"
                                                     {
-                                                        printGST();
-                                                        printTypeTable();
+                                                        // printGST();
+                                                        // printTypeTable();
                                                         // fprintf(stdout,"parsing successful!\n");
                                                     }
 #line 1622 "y.tab.c"
@@ -1693,7 +1693,7 @@ yyreduce:
                                                         addr+=temp->type->size;
                                                         temp = temp->next;
                                                     }
-                                                    printLST((yyvsp[-8].idName));
+                                                    // printLST($2);
                                                     codeGenFunc((yyvsp[-1].node), (yyvsp[-8].idName));
                                                     FreeLST();
                                                 }
@@ -1820,7 +1820,7 @@ yyreduce:
                                                                     addr+=temp->type->size;
                                                                     temp = temp->next;
                                                                 }
-                                                                printLST("main");
+                                                                // printLST("main");
                                                                 codeGenMain((yyvsp[-1].node));
                                                                 FreeLST();
                                                             }
