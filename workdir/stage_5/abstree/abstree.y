@@ -6,9 +6,8 @@
     #include "../codeGen/codeGen.h"
 
     extern FILE *yyin;
-    VarType DeclType = TYPE_NONE;
-    VarType ParamType = TYPE_NONE;
-    char* ExecFunction;
+    struct TypeTable* DeclType = NULL;
+    struct TypeTable* ParamType = NULL;
     int total_params = 0;
 
     int yylex(void);
@@ -18,7 +17,7 @@
 
 %union{
     struct ASTNode* node;
-    int idType;
+    struct TypeTable* idType;
     char* idName;
     int intVal;
     char* strVal;
@@ -86,8 +85,8 @@ Gid         :   ID '(' ParamList ')'        {
                                                 GInstall($1, DeclType, $3, $3, -1, NULL);
                                             }              
             |   STAR ID                     {
-                                                VarType ptrType = DeclType == TYPE_INT ?
-                                                TYPE_INT_PTR : TYPE_STR_PTR; 
+                                                struct TypeTable *ptrType = DeclType == TLookup("integer") ?
+                                                TLookup("integer_ptr") : TLookup("string_ptr"); 
                                                 GInstall($2, ptrType, 1, -1, -1, NULL);
                                             }              
             |   ID                          {
@@ -138,8 +137,8 @@ ParamList   :   ParamList COMMA Param
 
 Param       :   PType ID                {PInstall($2, ParamType);}
             |   PType STAR ID           {
-                                            VarType ptrType = ParamType == TYPE_INT ?
-                                            TYPE_INT_PTR : TYPE_STR_PTR; 
+                                            struct TypeTable *ptrType = ParamType == TLookup("integer") ?
+                                            TLookup("integer_ptr") : TLookup("string_ptr"); 
                                             PInstall($3, ptrType);
                                         }
             ;
@@ -163,8 +162,8 @@ LidList     : LidList COMMA Lid
             ;
 
 Lid         :   STAR ID                         {
-                                                    VarType ptrType = DeclType == TYPE_INT ?
-                                                    TYPE_INT_PTR : TYPE_STR_PTR; 
+                                                    struct TypeTable *ptrType = DeclType == TLookup("integer") ?
+                                                    TLookup("integer_ptr") : TLookup("string_ptr"); 
                                                     LInstall($2, ptrType);
                                                 }        
             |   ID                              {
@@ -173,18 +172,19 @@ Lid         :   STAR ID                         {
             ;
 
 
-DType       :   INT                     {DeclType = TYPE_INT; $$ = TYPE_INT;}
-            |   STR                     {DeclType = TYPE_STR; $$ = TYPE_STR;}
+DType       :   INT                             {DeclType = TLookup("integer"); $$ = TLookup("integer");}
+            |   STR                             {DeclType = TLookup("string"); $$ = TLookup("string");}
             ;
 
-PType       :   INT                     {ParamType = TYPE_INT; $$ = TYPE_INT;}
-            |   STR                     {ParamType = TYPE_STR; $$ = TYPE_STR;}
+PType       :   INT                             {ParamType = TLookup("integer"); $$ = TLookup("integer");}
+            |   STR                             {ParamType = TLookup("string"); $$ = TLookup("string");}
             ;
 
 /*----------------------------------------------------------------------------------------------------*/
 
 MainBlock   :   INT MAIN '('')' '{' LDeclBlock Body '}'    {
-                                                                if($7->right->type != TYPE_INT){
+    printGST();
+                                                                if($7->right->type != TLookup("integer")){
                                                                     fprintf(stderr, "mismatch in return type: %s\n", "main");
                                                                     exit(1);
                                                                 }
@@ -268,16 +268,16 @@ Expr        :   Expr PLUS Expr          {$$ = makeArithOPNode(NODE_ADD, $1, $3);
             |   Expr NE Expr            {$$ = makeRelOPNode(NODE_NE, $1, $3);}
             |   Expr EQ Expr            {$$ = makeRelOPNode(NODE_EQ, $1, $3);}
             |   Identifier              {$$ = $1;}
-            |   NUM                     {$$ = makeLeafNode($1, NULL, TYPE_INT, NULL);}
-            |   STRING                  {$$ = makeLeafNode(0, $1, TYPE_STR, NULL);}
+            |   NUM                     {$$ = makeLeafNode($1, NULL, TLookup("integer"), NULL);}
+            |   STRING                  {$$ = makeLeafNode(0, $1, TLookup("string"), NULL);}
             ;
 
-Identifier  :   ID'('')'                    {$$ = makeFuncNode($1, TYPE_ID, NULL);}
-            |   ID'(' ArgList ')'           {$$ = makeFuncNode($1, TYPE_ID, $3);}
-            |   ID '['Expr']' '['Expr']'    {$$ = makeArrayNode($1, TYPE_ID, $3, $6);}
-            |   ID '['Expr']'               {$$ = makeArrayNode($1, TYPE_ID, $3, NULL);}
-            |   ID                          {$$ = makeLeafNode(0, NULL, TYPE_ID, $1);}
-            |   STAR ID                     {$$ = makePtrNode(makeLeafNode(0, NULL, TYPE_ID, $2));}
+Identifier  :   ID'('')'                    {$$ = makeFuncNode($1, TLookup("dummy"), NULL);}
+            |   ID'(' ArgList ')'           {$$ = makeFuncNode($1, TLookup("dummy"), $3);}
+            |   ID '['Expr']' '['Expr']'    {$$ = makeArrayNode($1, TLookup("dummy"), $3, $6);}
+            |   ID '['Expr']'               {$$ = makeArrayNode($1, TLookup("dummy"), $3, NULL);}
+            |   ID                          {$$ = makeLeafNode(0, NULL, TLookup("dummy"), $1);}
+            |   STAR ID                     {$$ = makePtrNode(makeLeafNode(0, NULL, TLookup("dummy"), $2));}
             ;
 
 ArgList     :   ArgList COMMA Expr          {$$ = makeArgNode($1, $3);}
@@ -303,6 +303,16 @@ int main(int argc, char* argv[]){
     else {
         yyin = stdin;
     }
+
+    TInstall("integer", 1, NULL);
+    TInstall("string", 1, NULL);
+    TInstall("boolean", 1, NULL);
+    TInstall("array_integer", 1, NULL);
+    TInstall("array_string", 1, NULL);
+    TInstall("integer_ptr", 1, NULL);
+    TInstall("string_ptr", 1, NULL);
+    TInstall("void", 0, NULL);
+    TInstall("dummy", 0, NULL);
     
     yyparse();
 

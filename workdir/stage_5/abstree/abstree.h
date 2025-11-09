@@ -6,17 +6,6 @@
 #include "../symboltable/symboltable.h"
 
 typedef enum {
-    TYPE_NONE,
-    TYPE_ID,
-    TYPE_INT,
-    TYPE_CHAR,
-    TYPE_BOOL,
-    TYPE_STR,
-    TYPE_INT_PTR,
-    TYPE_STR_PTR
-} VarType;
-
-typedef enum {
     NODE_CONN,
     NODE_LEAF,
     NODE_READ,
@@ -57,7 +46,7 @@ typedef union Constant {
 } Constant;
 
 typedef struct ASTNode{
-    VarType type;           //pointer to the type table entry
+    struct TypeTable* type;           //pointer to the type table entry
     NodeType nodetype;                     //node type information,eg:NODETYPE_WHILE,NODETYPE_PLUS,NODETYPE_STMT etc
     char *name;                       //stores the variable/function name in case of variable/function nodes
     union Constant *value;             //stores the value of the constant if the node corresponds to a constant
@@ -68,10 +57,10 @@ typedef struct ASTNode{
 } ASTNode;
 
 /* Create a generic AST node */
-ASTNode* TreeCreate(union Constant *val, VarType vtype, char* vname, NodeType ntype, ASTNode *l, ASTNode *m, ASTNode *r, ASTNode* arglist);
+ASTNode* TreeCreate(union Constant *val, struct TypeTable* vtype, char* vname, NodeType ntype, ASTNode *l, ASTNode *m, ASTNode *r, ASTNode* arglist);
 
 /* Make Leaf node (NUM constant or ID variable) */
-ASTNode* makeLeafNode(int n, char* s, VarType vtype, char* vname);
+ASTNode* makeLeafNode(int n, char* s, struct TypeTable* vtype, char* vname);
 
 /* Make arithmetic operator node (+, -, *, /) */
 ASTNode* makeArithOPNode(NodeType ntype, ASTNode* l, ASTNode* r);
@@ -104,13 +93,13 @@ ASTNode* makeBreakNode(void);
 ASTNode* makeContinueNode(void);
 
 /* Make Int/String array node*/
-ASTNode* makeArrayNode(char* arrName, VarType type, ASTNode* l, ASTNode* r);
+ASTNode* makeArrayNode(char* arrName, struct TypeTable* type, ASTNode* l, ASTNode* r);
 
 ASTNode* makeAddrNode(ASTNode* node);
 
 ASTNode* makePtrNode(ASTNode* node);
 
-ASTNode* makeFuncNode(char* fname, VarType vtype, ASTNode* param);
+ASTNode* makeFuncNode(char* fname, struct TypeTable* vtype, ASTNode* param);
 
 ASTNode* makeArgNode(ASTNode* argHead, ASTNode* arg);
 

@@ -1,6 +1,6 @@
 #include "abstree.h"
 
-ASTNode* TreeCreate(union Constant* val, VarType vtype, char* vname, NodeType ntype, ASTNode *l, ASTNode* m, ASTNode *r, ASTNode* arglist){
+ASTNode* TreeCreate(union Constant* val,struct TypeTable* vtype, char* vname, NodeType ntype, ASTNode *l, ASTNode* m, ASTNode *r, ASTNode* arglist){
     ASTNode* temp = (ASTNode*)malloc(sizeof(ASTNode));
     Gsymbol* gdecl = NULL;
     Lsymbol* ldecl = NULL;
@@ -16,7 +16,7 @@ ASTNode* TreeCreate(union Constant* val, VarType vtype, char* vname, NodeType nt
     temp->Gentry = NULL;
     temp->Lentry = NULL;
 
-    if(temp->type == TYPE_ID){
+    if(temp->type == TLookup("dummy")){
         ldecl = LLookup(vname);
         temp->Lentry = ldecl;
         if(!ldecl){
@@ -36,30 +36,27 @@ ASTNode* TreeCreate(union Constant* val, VarType vtype, char* vname, NodeType nt
     return temp;
 }
 
-ASTNode* makeLeafNode(int n, char* s, VarType vtype, char* vname){
+ASTNode* makeLeafNode(int n, char* s, struct TypeTable* vtype, char* vname){
     union Constant *value = malloc(sizeof(union Constant));
 
-    switch(vtype){
-        case TYPE_INT:
-            value->intVal = n;
-            break;
-        case TYPE_STR:
-            value->strVal = strdup(s);
-            break;
-        default:
-            break;
+    if(vtype == TLookup("integer")){
+        value->intVal = n;
     }
+    else if(vtype == TLookup("string")){
+        value->strVal = strdup(s);
+    }
+
     ASTNode* temp = TreeCreate(value, vtype, vname, NODE_LEAF, NULL, NULL, NULL, NULL);    
     return temp;
 }
 
 ASTNode* makeArithOPNode(NodeType ntype, ASTNode* l, ASTNode* r){
-    if(l->type != TYPE_INT || r->type != TYPE_INT){
+    if(l->type != TLookup("integer") || r->type != TLookup("integer")){
         fprintf(stderr, "type mismatch: arith\n");
         exit(1);
     }
 
-    ASTNode* temp = TreeCreate(NULL, TYPE_INT, NULL, ntype, l, NULL, r, NULL);    
+    ASTNode* temp = TreeCreate(NULL, TLookup("integer"), NULL, ntype, l, NULL, r, NULL);    
     return temp;
 }
 
@@ -68,12 +65,12 @@ ASTNode* makeRelOPNode(NodeType ntype, ASTNode* l, ASTNode* r){
         fprintf(stderr, "type mismatch: relop\n");
         exit(1);
     }
-    if(l->type != TYPE_INT && l->type != TYPE_STR){
+    if(l->type != TLookup("integer") && l->type != TLookup("string")){
         fprintf(stderr, "type mismatch: relop (not int/str)\n");
         exit(1);
     }
 
-    ASTNode* temp = TreeCreate(NULL, TYPE_BOOL, NULL, ntype, l, NULL, r, NULL);    
+    ASTNode* temp = TreeCreate(NULL, TLookup("bool"), NULL, ntype, l, NULL, r, NULL);    
     return temp;
 }
 
@@ -84,88 +81,88 @@ ASTNode* makeAssgnNode(ASTNode* l, ASTNode* r){
     }
 
     if(l->type != r->type){
-        fprintf(stderr, "type mismatch: assign %d %d\n", l->type, r->type);
+        fprintf(stderr, "type mismatch: assign %s %s\n", l->type->name, r->type->name);
         exit(1);
     }
 
-    ASTNode* temp = TreeCreate(NULL, TYPE_NONE, NULL, NODE_ASSGN, l, NULL, r, NULL);    
+    ASTNode* temp = TreeCreate(NULL, TLookup("void"), NULL, NODE_ASSGN, l, NULL, r, NULL);    
     return temp;
 }
 
 ASTNode* makeReadNode(ASTNode* l){
-    if(l->type != TYPE_INT && l->type != TYPE_STR){
-        fprintf(stderr, "type mismatch: read %d\n", l->type);
+    if(l->type != TLookup("integer") && l->type != TLookup("string")){
+        fprintf(stderr, "type mismatch: read %s\n", l->type->name);
         exit(1);
     }
 
-    ASTNode* temp = TreeCreate(NULL, TYPE_NONE, NULL, NODE_READ, l, NULL, NULL, NULL);
+    ASTNode* temp = TreeCreate(NULL, TLookup("void"), NULL, NODE_READ, l, NULL, NULL, NULL);
     return temp;
 }
 
 ASTNode* makeWriteNode(ASTNode* l){
-    if(l->type != TYPE_INT && l->type != TYPE_BOOL && l->type != TYPE_STR && l->type != TYPE_INT_PTR && l->type != TYPE_STR_PTR){
-        fprintf(stderr, "type mismatch: write %d\n", l->type);
+    if(l->type != TLookup("integer") && l->type != TLookup("bool") && l->type != TLookup("string") && l->type != TLookup("integer_ptr") && l->type != TLookup("string_ptr")){
+        fprintf(stderr, "type mismatch: write %s\n", l->type->name);
         exit(1);
     }
 
-    ASTNode* temp = TreeCreate(NULL, TYPE_NONE, NULL, NODE_WRITE, l, NULL, NULL, NULL);    
+    ASTNode* temp = TreeCreate(NULL, TLookup("void"), NULL, NODE_WRITE, l, NULL, NULL, NULL);    
     return temp;
 }
 
 ASTNode* makeConnNode(ASTNode* l, ASTNode* r){
-    ASTNode* temp = TreeCreate(NULL, TYPE_NONE, NULL, NODE_CONN, l, NULL, r, NULL);    
+    ASTNode* temp = TreeCreate(NULL, TLookup("void"), NULL, NODE_CONN, l, NULL, r, NULL);    
     return temp;
 }
 
 ASTNode* makeIterationNode(NodeType ntype, ASTNode *l, ASTNode* r){
-    if(l->type != TYPE_BOOL){
+    if(l->type != TLookup("bool")){
         fprintf(stderr, "type mismatch: while\n");
         exit(1);
     }
     
-    ASTNode* temp = TreeCreate(NULL, TYPE_NONE, NULL, ntype, l, NULL, r, NULL);
+    ASTNode* temp = TreeCreate(NULL, TLookup("void"), NULL, ntype, l, NULL, r, NULL);
     return temp;
 }
 
 ASTNode* makeIfElseNode(ASTNode* l, ASTNode* m, ASTNode* r){
-    if(l->type != TYPE_BOOL){
+    if(l->type != TLookup("bool")){
         fprintf(stderr, "type mismatch: ifelse\n");
         exit(1);
     }
 
-    ASTNode* temp = TreeCreate(NULL, TYPE_NONE, NULL, NODE_IFELSE, l, m, r, NULL);
+    ASTNode* temp = TreeCreate(NULL, TLookup("void"), NULL, NODE_IFELSE, l, m, r, NULL);
     return temp;
 }
 
 ASTNode* makeBreakNode(void){
-    ASTNode* temp = TreeCreate(NULL, TYPE_NONE, NULL, NODE_BREAK, NULL, NULL, NULL, NULL);    
+    ASTNode* temp = TreeCreate(NULL, TLookup("void"), NULL, NODE_BREAK, NULL, NULL, NULL, NULL);    
     return temp;
 }
 
 ASTNode* makeContinueNode(void){
-    ASTNode* temp = TreeCreate(NULL, TYPE_NONE, NULL, NODE_CONTINUE, NULL, NULL, NULL, NULL);    
+    ASTNode* temp = TreeCreate(NULL, TLookup("void"), NULL, NODE_CONTINUE, NULL, NULL, NULL, NULL);    
     return temp;
 }
 
-ASTNode* makeArrayNode(char* arrName, VarType type, ASTNode* l, ASTNode* r){
+ASTNode* makeArrayNode(char* arrName, TypeTable* type, ASTNode* l, ASTNode* r){
     Gsymbol* var = GLookup(arrName);
 
     if(var->rowsize == 0){
         fprintf(stderr, "Not an array: %s\n", arrName);
         exit(1);
     }
-    ASTNode* temp = TreeCreate(NULL, TYPE_ID, arrName, NODE_ARRAY, l, NULL, r, NULL);
+    ASTNode* temp = TreeCreate(NULL, TLookup("dummy"), arrName, NODE_ARRAY, l, NULL, r, NULL);
     return temp;
 }
 
 ASTNode* makeAddrNode(ASTNode* var){
-    VarType vtype = TYPE_NONE;
+    TypeTable* vtype = NULL;
 
-    switch(var->type){
-        case TYPE_INT: vtype = TYPE_INT_PTR; break;
-        case TYPE_STR: vtype = TYPE_STR_PTR; break;
-        default: fprintf(stderr, "Address-of not supported for this type\n");
-                exit(1);
+    if(var->type == TLookup("integer")){
+        vtype = TLookup("integer_ptr");
+    }
+    else if(var->type == TLookup("string")){
+        vtype = TLookup("string_ptr");
     }
 
     ASTNode* temp = TreeCreate(NULL, vtype, NULL, NODE_ADDR, var, NULL, NULL, NULL);
@@ -174,13 +171,13 @@ ASTNode* makeAddrNode(ASTNode* var){
 
 
 ASTNode* makePtrNode(ASTNode* ptrVar){
-    VarType vtype = TYPE_NONE;
+    TypeTable* vtype = NULL;
 
-    switch(ptrVar->type){
-        case TYPE_INT_PTR: vtype = TYPE_INT; break;
-        case TYPE_STR_PTR: vtype = TYPE_STR; break;
-        default: fprintf(stderr, "Dereference not supported for this type\n");
-                exit(1);
+    if(ptrVar->type == TLookup("integer_ptr")){
+        vtype = TLookup("integer");
+    }
+    else if(ptrVar->type == TLookup("string_ptr")){
+        vtype = TLookup("string");
     }
 
     ASTNode* temp = TreeCreate(NULL, vtype, NULL, NODE_PTR, ptrVar, NULL, NULL, NULL);
@@ -188,7 +185,7 @@ ASTNode* makePtrNode(ASTNode* ptrVar){
 }
 
 
-ASTNode* makeFuncNode(char* fname, VarType vtype, ASTNode* arglist){
+ASTNode* makeFuncNode(char* fname, TypeTable* vtype, ASTNode* arglist){
     ASTNode* id = TreeCreate(NULL, vtype, fname, NODE_FUNC, NULL, NULL, NULL, arglist);
     ASTNode* funcNode = TreeCreate(NULL, vtype, fname, NODE_FUNC, id, NULL, NULL, NULL);
     Gsymbol *func = GLookup(fname);
@@ -203,7 +200,7 @@ ASTNode* makeFuncNode(char* fname, VarType vtype, ASTNode* arglist){
 
     while(param != NULL && arg != NULL){
         if(param->type != arg->type){
-            fprintf(stderr, "type mismatch: function args: %s - types %s , %s\n", fname, tokenToString(param->type), tokenToString(arg->type));
+            fprintf(stderr, "type mismatch: function args: %s - types %s , %s\n", fname, param->type->name, arg->type->name);
             exit(1);
         }
         param = param->next;
@@ -235,11 +232,11 @@ ASTNode* makeRetNode(ASTNode* retnode){
 
 
 ASTNode* makeLogicOPNode(NodeType ntype, ASTNode* l, ASTNode* r){
-    if(l->type != TYPE_BOOL || r->type != TYPE_BOOL){
+    if(l->type != TLookup("bool") || r->type != TLookup("bool")){
         fprintf(stderr, "type mismatch: boolean operation\n");
         exit(1);
     }
 
-    ASTNode* temp = TreeCreate(NULL, TYPE_BOOL, NULL, ntype, l, NULL, r, NULL);    
+    ASTNode* temp = TreeCreate(NULL, TLookup("bool"), NULL, ntype, l, NULL, r, NULL);    
     return temp;
 }

@@ -3,6 +3,8 @@
 Gsymbol *Ghead = NULL, *Gtail = NULL;
 Lsymbol *Lhead = NULL, *Ltail = NULL;
 Paramstruct *Phead = NULL, *Ptail = NULL;
+FieldList *Fhead = NULL, *Ftail = NULL;
+TypeTable *Thead = NULL, *Ttail = NULL;
 int nextFreeAddr = START_ADDR;
 int functionLabelNum = 0;
 int relFreeAddr = 1;
@@ -19,7 +21,7 @@ Paramstruct *PLookup(char* name){
     return temp;
 }   
 
-void PInstall(char *name, int type){
+void PInstall(char *name, TypeTable* type){
     Paramstruct *temp = PLookup(name);
 
     if(temp != NULL){
@@ -69,7 +71,7 @@ Gsymbol* GLookup(char * name){
     return temp;
 }
 
-void GInstall(char *name, int type, int size, int r, int c, Paramstruct *paramlist){
+void GInstall(char *name, TypeTable* type, int size, int r, int c, Paramstruct *paramlist){
     Gsymbol *temp = GLookup(name);
     
     if(temp != NULL){
@@ -117,7 +119,7 @@ void printGST(void){
     fprintf(stdout, "%-15s %-10s %-7s %-7s %-7s %-7s\n","name", "type", "size", "addr", "row", "col");
 
     while(temp != NULL){
-        fprintf(stdout, "%-15s %-10s %-7d %-7d %-7d %-7d\n", temp->name, tokenToString(temp->type), temp->size, temp->binding, temp->rowsize, temp->colsize);
+        fprintf(stdout, "%-15s %-10s %-7d %-7d %-7d %-7d\n", temp->name, temp->type->name, temp->size, temp->binding, temp->rowsize, temp->colsize);
         temp = temp->next;
     }
 
@@ -137,7 +139,7 @@ Lsymbol* LLookup(char *name){
     return temp;
 }
 
-void* LInstall(char *name, int type){
+void* LInstall(char *name, TypeTable* type){
     Lsymbol *temp = LLookup(name);
     if(temp != NULL){
         fprintf(stdout, "Local variable redeclared: %s\n", name);
@@ -183,10 +185,82 @@ void printLST(char *name){
     fprintf(stdout, "%-15s %-10s %-7s\n","name", "type", "addr");
 
     while(temp != NULL){
-        fprintf(stdout, "%-15s %-10s %-7d\n", temp->name, tokenToString(temp->type), temp->binding);
+        fprintf(stdout, "%-15s %-10s %-7d\n", temp->name, temp->type->name, temp->binding);
         temp = temp->next;
     }
     fprintf(stdout, "\n");
+}
+
+//-----------------------------------FIELD LIST-------------------------------------------------
+
+FieldList *FLookup(char* name, FieldList *list){
+    FieldList* temp = list;
+
+    while(temp != NULL && strcmp(temp->name, name) != 0)
+        temp = temp->next;
+
+    return temp;
+}
+
+void FInstall(char* name, TypeTable *type){
+    FieldList *temp = (FieldList*)malloc(sizeof(FieldList));
+
+    temp->name = strdup(name);
+    temp->type = type;
+    temp->fieldIndex = -1;
+    temp->next = NULL;
+
+    if(Fhead == NULL){
+        Fhead = temp;
+        Ftail = temp;
+    }
+    else {
+        Ftail->next = temp;
+        Ftail = temp;
+    }
+}
+
+//-----------------------------------TYPE TABLE-------------------------------------------------
+
+TypeTable *TLookup(char* name){
+    TypeTable *temp = Thead;
+
+    while(temp != NULL && strcmp(temp->name, name) != 0)
+        temp = temp->next;
+
+    return temp;
+}
+
+void TInstall(char* name, int size, FieldList* fields){
+    TypeTable *temp = (TypeTable*)malloc(sizeof(TypeTable));
+
+    temp->name = strdup(name);
+    temp->size = size;
+    temp->fields = fields;
+    temp->next = NULL;
+
+    if(Thead == NULL){
+        Thead = temp;
+        Ttail = temp;
+    }
+    else {
+        Ttail->next = temp;
+        Ttail = temp;
+    }
+
+    FieldList* ftemp = fields;
+    int fieldIndex = 0;
+
+    while(ftemp != NULL){
+        ftemp->fieldIndex = fieldIndex++;
+        ftemp = ftemp->next;
+    }
+
+    if(ftemp != NULL) 
+        temp->size = fieldIndex;
+
+    Fhead = NULL;
+    Ftail = NULL;
 }
 
 //---------------------------------HELPER FUNCTIONS---------------------------------------------
@@ -198,20 +272,6 @@ void PInstallLST(char *fname){
     while(temp != NULL){
         LInstall(temp->name, temp->type);
         temp = temp->next;
-    }
-}
-
-char* tokenToString(int type){
-    switch(type){
-        case TYPE_NONE: return "NONE";
-        case TYPE_ID: return "ID";
-        case TYPE_INT:  return "INT";
-        case TYPE_CHAR: return "CHAR";
-        case TYPE_BOOL: return "BOOL";
-        case TYPE_STR: return "STR";
-        case TYPE_INT_PTR: return "INT_PTR";
-        case TYPE_STR_PTR: return "STR_PTR";
-        default: return "UNDEFINED";
     }
 }
 

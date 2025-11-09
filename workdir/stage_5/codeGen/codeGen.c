@@ -123,19 +123,13 @@ RegIndex codeGenID(ASTNode* node, FILE* fp){
 RegIndex codeGenConst(ASTNode *node, FILE* fp){
     int r = getReg();
     
-    switch(node->type){
-        case TYPE_INT:
-            fprintf(fp, "MOV R%d, %d\n", r, node->value->intVal);
-            break;
-
-        case TYPE_STR:
-            fprintf(fp, "MOV R%d, \"%s\"\n", r, node->value->strVal);
-            break;
-
-        default:
-            fprintf(stderr, "Undefined const type: %s\n", tokenToString(node->type));
-            break;
+    if(node->type == TLookup("integer")){
+        fprintf(fp, "MOV R%d, %d\n", r, node->value->intVal);
     }
+    else if(node->type == TLookup("string")){
+        fprintf(fp, "MOV R%d, \"%s\"\n", r, node->value->strVal);
+    }
+    
     return r;
 }
 
