@@ -88,9 +88,10 @@ extern int yydebug;
     ADDR = 294,
     INT = 295,
     STR = 296,
-    NUM = 297,
-    STRING = 298,
-    ID = 299
+    TUPLE = 297,
+    NUM = 298,
+    STRING = 299,
+    ID = 300
   };
 #endif
 /* Tokens.  */
@@ -133,9 +134,10 @@ extern int yydebug;
 #define ADDR 294
 #define INT 295
 #define STR 296
-#define NUM 297
-#define STRING 298
-#define ID 299
+#define TUPLE 297
+#define NUM 298
+#define STRING 299
+#define ID 300
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
@@ -144,12 +146,12 @@ union YYSTYPE
 #line 19 "abstree.y"
 
     struct ASTNode* node;
-    int idType;
+    struct TypeTable* idType;
     char* idName;
     int intVal;
     char* strVal;
 
-#line 153 "y.tab.h"
+#line 155 "y.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;

@@ -37,6 +37,7 @@ string          \"(\\.|[^\\\"])*\"
 
 "int"       { return INT; }
 "str"       { return STR; }
+"tuple"     { return TUPLE; }
 
 "OR"        { return OR; }
 "AND"       { return AND; }

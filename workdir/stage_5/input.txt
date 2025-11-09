@@ -1,18 +1,15 @@
 decl
     int result,factorial(int n);
+    tuple student(str name, int rollno) st1;
 enddecl
 
 int factorial(int n){
     decl
         int f;
+        tuple college(str name, int students) c1;
     enddecl
     begin
-        if( n==1 || n==0 ) then
-            f = 1;
-        else
-            f = n * factorial(n-1);
-        endif;
-        return f;
+        return n;
     end
 }
 

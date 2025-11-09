@@ -699,7 +699,10 @@ int codeGenFunc(ASTNode *node, char* fname){
         lst = lst->next;
     }
 
-    codeGenNODE(node, fp);
+    if(node->left)
+        codeGenNODE(node, fp);
+    else if(node->right)
+        codeGenNODE(node->right, fp);
 
     if(loopStack) {
         freeStack(loopStack);

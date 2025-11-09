@@ -8,6 +8,7 @@
     extern FILE *yyin;
     struct TypeTable* DeclType = NULL;
     struct TypeTable* ParamType = NULL;
+    struct TypeTable* FieldType = NULL;
     int total_params = 0;
 
     int yylex(void);
@@ -30,11 +31,11 @@
 %token PLUS MINUS STAR DIV MOD
 %token LT GT LE GE NE EQ AND OR NOT
 %token ASSGN EOS COMMA ADDR
-%token INT STR
+%token INT STR TUPLE
 %token <intVal> NUM
 %token <strVal> STRING
 %token <idName> ID
-%type <idType> DType PType
+%type <idType> DType PType FType
 %type <node> SList Stmt IfStmt IterativeStmt InputStmt OutputStmt AsgStmt Body
 %type <node> BreakStmt ContinueStmt Expr Identifier ArgList RetStmt
 
@@ -174,16 +175,34 @@ Lid         :   STAR ID                         {
 
 DType       :   INT                             {DeclType = TLookup("integer"); $$ = TLookup("integer");}
             |   STR                             {DeclType = TLookup("string"); $$ = TLookup("string");}
+            |   TUPLE ID '(' FieldList ')'      {TInstall($2, -1, Fhead); DeclType = TLookup($2); $$ = TLookup($2);Fhead = NULL;}
             ;
 
-PType       :   INT                             {ParamType = TLookup("integer"); $$ = TLookup("integer");}
-            |   STR                             {ParamType = TLookup("string"); $$ = TLookup("string");}
+PType       :   INT                             {ParamType = TLookup("integer");}
+            |   STR                             {ParamType = TLookup("string");}
+            |   TUPLE ID '(' FieldList ')'      {TInstall($2, -1, Fhead); ParamType = TLookup($2);Fhead = NULL;}
+            ;
+
+FType       :   INT                 {FieldType = TLookup("integer");}
+            |   STR                 {FieldType = TLookup("string");}
+            |   ID                  {FieldType = TLookup($1);}
+            ;
+
+FieldList   :   FieldList COMMA Field       
+            |   Field
+            ;
+
+Field       :   FType ID            {FInstall($2, $1);}
+            |   FType STAR ID       {
+                                        struct TypeTable *ptrType = FieldType == TLookup("integer") ?
+                                        TLookup("integer_ptr") : TLookup("string_ptr");
+                                        FInstall($3, ptrType);
+                                    }
             ;
 
 /*----------------------------------------------------------------------------------------------------*/
 
 MainBlock   :   INT MAIN '('')' '{' LDeclBlock Body '}'    {
-    printGST();
                                                                 if($7->right->type != TLookup("integer")){
                                                                     fprintf(stderr, "mismatch in return type: %s\n", "main");
                                                                     exit(1);
@@ -204,6 +223,7 @@ MainBlock   :   INT MAIN '('')' '{' LDeclBlock Body '}'    {
             ;
 
 Body        :   START_BLOCK SList RetStmt END_BLOCK         {$$ = makeConnNode($2, $3);}
+            |   START_BLOCK RetStmt END_BLOCK               {$$ = makeConnNode(NULL, $2);}
             |   START_BLOCK END_BLOCK                       {$$ = makeConnNode(NULL, NULL);}
             ;
 
