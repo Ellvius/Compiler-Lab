@@ -75,7 +75,7 @@ ASTNode* makeRelOPNode(NodeType ntype, ASTNode* l, ASTNode* r){
 }
 
 ASTNode* makeAssgnNode(ASTNode* l, ASTNode* r){
-    if((l->nodetype != NODE_LEAF && l->nodetype != NODE_ARRAY && l->nodetype != NODE_PTR) || (l->nodetype != NODE_PTR && l->name == NULL)){
+    if((l->nodetype != NODE_LEAF && l->nodetype != NODE_ARRAY && l->nodetype != NODE_PTR && l->nodetype != NODE_TUP) || (l->nodetype != NODE_PTR && l->name == NULL)){
         fprintf(stderr, "type mismatch: assign (ID)\n");
         exit(1);
     }
@@ -243,7 +243,24 @@ ASTNode* makeLogicOPNode(NodeType ntype, ASTNode* l, ASTNode* r){
 
 
 ASTNode* makeTupleNode(char *tupleName, char* fieldName){
-    TypeTable *type = TLookup(tupleName);
+    TypeTable *type = NULL;
+
+    Lsymbol* ldecl = LLookup(tupleName);
+    
+    if(!ldecl){
+        Gsymbol* gdecl = GLookup(tupleName);
+        
+        if(!gdecl){
+            fprintf(stderr, "Undeclared variable: %s\n", tupleName);
+            exit(1);
+        }
+        else {
+            type = gdecl->type;
+        }
+    }
+    else {
+        type = ldecl->type;
+    }
 
     if(type == NULL){
         fprintf(stderr, "tuple type not declared: %s\n", tupleName);
@@ -263,6 +280,6 @@ ASTNode* makeTupleNode(char *tupleName, char* fieldName){
 
     ASTNode* tupleField = makeLeafNode(0, NULL, field->type, fieldName);
 
-    ASTNode* temp = TreeCreate(NULL, type, tupleName, NODE_TUP, tupleField, NULL, NULL, NULL);
-
+    ASTNode* temp = TreeCreate(NULL, field->type, tupleName, NODE_TUP, tupleField, NULL, NULL, NULL);
+    return temp;
 }

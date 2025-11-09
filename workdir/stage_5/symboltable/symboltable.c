@@ -275,10 +275,10 @@ void printTypeTable(void){
         if(temp->fields != NULL){
             FieldList *ftemp = temp->fields;
             fprintf(stdout, "\tFIELD TABLE : %s\n", temp->name);
-            fprintf(stdout, "\t%-15s %-10s\n","name", "index");
+            fprintf(stdout, "\t%-15s %-15s %-10s\n","name", "type", "index");
 
             while(ftemp){
-                fprintf(stdout, "\t%-15s %-10d\n", ftemp->name, ftemp->fieldIndex);
+                fprintf(stdout, "\t%-15s %-15s %-10d\n", ftemp->name, ftemp->type->name, ftemp->fieldIndex);
                 ftemp = ftemp->next;
             }
             

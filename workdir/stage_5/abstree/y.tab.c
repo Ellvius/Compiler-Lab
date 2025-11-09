@@ -1693,8 +1693,8 @@ yyreduce:
                                                         addr+=temp->type->size;
                                                         temp = temp->next;
                                                     }
-                                                    printLST((yyvsp[-8].idName));
-                                                    codeGenFunc((yyvsp[-1].node), (yyvsp[-8].idName));
+                                                    // printLST($2);
+                                                    // codeGenFunc($9, $2);
                                                     FreeLST();
                                                 }
 #line 1701 "y.tab.c"
@@ -1790,7 +1790,7 @@ yyreduce:
 
   case 47:
 #line 196 "abstree.y"
-                                    {FInstall((yyvsp[0].idName), (yyvsp[-1].idType));}
+                                    {FInstall((yyvsp[0].idName), FieldType);}
 #line 1795 "y.tab.c"
     break;
 
@@ -1820,8 +1820,8 @@ yyreduce:
                                                                     addr++;
                                                                     temp = temp->next;
                                                                 }
-                                                                printLST("main");
-                                                                codeGenMain((yyvsp[-1].node));
+                                                                // printLST("main");
+                                                                // codeGenMain($7);
                                                                 FreeLST();
                                                             }
 #line 1828 "y.tab.c"

@@ -127,7 +127,7 @@ FDef        :   DType ID '(' ParamList ')'       {
                                                         temp = temp->next;
                                                     }
                                                     // printLST($2);
-                                                    codeGenFunc($9, $2);
+                                                    // codeGenFunc($9, $2);
                                                     FreeLST();
                                                 }
             ;
@@ -193,7 +193,7 @@ FieldList   :   FieldList COMMA Field
             |   Field
             ;
 
-Field       :   FType ID            {FInstall($2, $1);}
+Field       :   FType ID            {FInstall($2, FieldType);}
             |   FType STAR ID       {
                                         struct TypeTable *ptrType = FieldType == TLookup("integer") ?
                                         TLookup("integer_ptr") : TLookup("string_ptr");
@@ -218,7 +218,7 @@ MainBlock   :   INT MAIN '('')' '{' LDeclBlock Body '}'    {
                                                                     temp = temp->next;
                                                                 }
                                                                 // printLST("main");
-                                                                codeGenMain($7);
+                                                                // codeGenMain($7);
                                                                 FreeLST();
                                                             }
             ;
