@@ -1,0 +1,66 @@
+#ifndef CODE_GEN_HEADER_FILE
+#define CODE_GEN_HEADER_FILE
+
+#include <stdio.h>
+#include <stdlib.h>
+#include "../abstree/abstree.h"
+
+#define SP 4096
+#define RegIndex int
+
+typedef struct LabelNode {
+    int start;
+    int end;
+    struct LabelNode* next;
+} LabelNode;
+
+// Stack structure
+typedef struct {
+    LabelNode* top;
+} Stack;
+
+// Stack operations
+Stack* createStack(void);
+void push(Stack* stack, int start, int end);
+LabelNode* pop(Stack* stack);
+LabelNode* peek(Stack* stack);
+void freeStack(Stack* stack);
+
+RegIndex getReg(void);
+int freeReg(void);
+int header;
+
+void codeGenHeader(FILE* fp);
+void codeGenExit(FILE* fp);
+
+RegIndex codeGenID(ASTNode *node, FILE* fp);
+RegIndex codeGenConst(ASTNode *node, FILE* fp);
+RegIndex codeGenArray(ASTNode * node, FILE* fp);
+RegIndex codeGenAddress(ASTNode * node, FILE* fp);
+RegIndex codeGenPtr(ASTNode * node, FILE* fp);
+RegIndex codeGenOP(ASTNode *node, FILE* fp);
+RegIndex codeGenAssgn(ASTNode* node, FILE* fp);
+RegIndex codeGenRead(ASTNode* node, FILE* fp);
+RegIndex codeGenWrite(ASTNode* node, FILE* fp);
+
+RegIndex codeGenIfElse(ASTNode* node, FILE* fp);
+RegIndex codeGenIteration(ASTNode* node, FILE* fp);
+RegIndex codeGenBreak(ASTNode* node, FILE* fp);
+RegIndex codeGenContinue(ASTNode* node, FILE* fp);
+
+RegIndex codeGenLogicOP(ASTNode* node, FILE *fp);
+RegIndex codeGenRet(ASTNode* node, FILE *fp);
+RegIndex codeGenFnCall(ASTNode* node, FILE *fp);
+
+RegIndex codeGenNull(ASTNode* node, FILE* fp);
+RegIndex codeGenFree(ASTNode* node, FILE* fp);
+RegIndex codeGenInit(ASTNode* node, FILE* fp);
+RegIndex codeGenAlloc(ASTNode* node, FILE* fp);
+RegIndex codeGenField(ASTNode* node, FILE* fp);
+
+int getFieldAddr(ASTNode* node, FILE *fp);
+int codeGenNODE(ASTNode* node, FILE* fp);
+int codeGenFunc(ASTNode *node, char* fname);
+int codeGenMain(ASTNode* node);
+
+#endif

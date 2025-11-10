@@ -72,7 +72,7 @@
     #include <stdio.h>
     #include "abstree.h"
     #include "../symboltable/symboltable.h"
-    // #include "../codeGen/codeGen.h"
+    #include "../codeGen/codeGen.h"
 
     extern FILE *yyin;
     struct TypeTable* DeclType = NULL;
@@ -1805,7 +1805,7 @@ yyreduce:
                                                         temp = temp->next;
                                                     }
                                                     printLST((yyvsp[-8].idName));
-                                                    // codeGenFunc($9, $2);
+                                                    codeGenFunc((yyvsp[-1].node), (yyvsp[-8].idName));
                                                     FreeLST();
                                                 }
 #line 1812 "y.tab.c"
@@ -1868,7 +1868,7 @@ yyreduce:
                                                                     temp = temp->next;
                                                                 }
                                                                 printLST("main");
-                                                                // codeGenMain($7);
+                                                                codeGenMain((yyvsp[-1].node));
                                                                 FreeLST();
                                                             }
 #line 1875 "y.tab.c"

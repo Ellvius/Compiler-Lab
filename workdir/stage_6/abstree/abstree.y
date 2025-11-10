@@ -3,7 +3,7 @@
     #include <stdio.h>
     #include "abstree.h"
     #include "../symboltable/symboltable.h"
-    // #include "../codeGen/codeGen.h"
+    #include "../codeGen/codeGen.h"
 
     extern FILE *yyin;
     struct TypeTable* DeclType = NULL;
@@ -170,7 +170,7 @@ FDef        :   DType ID '(' ParamList ')'       {
                                                         temp = temp->next;
                                                     }
                                                     printLST($2);
-                                                    // codeGenFunc($9, $2);
+                                                    codeGenFunc($9, $2);
                                                     FreeLST();
                                                 }
             ;
@@ -228,7 +228,7 @@ MainBlock   :   INT MAIN '('')' '{' LDeclBlock Body '}'    {
                                                                     temp = temp->next;
                                                                 }
                                                                 printLST("main");
-                                                                // codeGenMain($7);
+                                                                codeGenMain($7);
                                                                 FreeLST();
                                                             }
             ;
