@@ -199,8 +199,15 @@ Lid         :   STAR ID                         {
             ;
 
 
-PType       :   INT                             {ParamType = TLookup("integer");}
-            |   STR                             {ParamType = TLookup("string");}
+PType       :   INT                 {ParamType = TLookup("integer");}
+            |   STR                 {ParamType = TLookup("string");}
+            |   ID                  {
+                                        ParamType = TLookup($1); 
+                                        $$ = TLookup($1);
+                                        if(ParamType == NULL){
+                                            ParamType = TLookup("dummy");
+                                        }
+                                    }
             ;
 
 
