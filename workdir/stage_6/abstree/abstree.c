@@ -61,7 +61,7 @@ ASTNode* makeArithOPNode(NodeType ntype, ASTNode* l, ASTNode* r){
 }
 
 ASTNode* makeRelOPNode(NodeType ntype, ASTNode* l, ASTNode* r){
-    if(l->type != r->type && r->type != TLookup("void")){
+    if(l->type != r->type && (l->type->fields != NULL && r->type != TLookup("void"))){
         fprintf(stderr, "type mismatch: relop\n");
         exit(1);
     }
@@ -80,7 +80,7 @@ ASTNode* makeAssgnNode(ASTNode* l, ASTNode* r){
         exit(1);
     }
 
-    if(l->type != r->type && r->type != TLookup("void")){
+    if(l->type != r->type && (l->type->fields != NULL && r->type != TLookup("void"))){
         fprintf(stderr, "type mismatch: assign %s %s\n", l->type->name, r->type->name);
         exit(1);
     }

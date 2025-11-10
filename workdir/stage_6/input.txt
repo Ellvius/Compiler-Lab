@@ -1,13 +1,21 @@
 type
-  List
-  {
-    int data;
-    List next;
-  }
+List
+{
+int data;
+List next;
+}
+linkedList {
+int data;
+linkedList next;
+}
+markList{
+str name;
+linkedList marks;
+}
 endtype
-
 decl
-    List head;
+markList mList,temp;
+List head;
 enddecl
 
 int main()

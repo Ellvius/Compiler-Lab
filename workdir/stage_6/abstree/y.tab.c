@@ -626,18 +626,18 @@ static const yytype_int8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_int16 yyrline[] =
 {
-       0,    59,    59,    63,    66,    67,    70,    71,    74,    77,
-      78,    81,    82,    89,    90,    91,   101,   102,   105,   106,
-     109,   112,   113,   116,   117,   118,   119,   124,   127,   128,
-     129,   132,   133,   142,   143,   147,   147,   176,   177,   180,
-     181,   184,   187,   188,   191,   196,   200,   201,   207,   227,
-     228,   229,   232,   235,   236,   239,   240,   241,   242,   243,
-     244,   245,   246,   247,   248,   253,   254,   257,   258,   259,
-     262,   265,   268,   269,   270,   271,   272,   275,   278,   281,
-     284,   287,   291,   296,   297,   298,   299,   300,   301,   302,
-     303,   304,   305,   306,   307,   308,   309,   310,   311,   312,
-     313,   314,   315,   316,   319,   320,   321,   322,   323,   326,
-     329,   334,   337,   338
+       0,    59,    59,    63,    68,    69,    72,    73,    76,    79,
+      80,    83,    84,    91,    92,    93,   103,   104,   107,   108,
+     111,   114,   115,   118,   119,   120,   121,   126,   129,   130,
+     131,   134,   135,   144,   145,   149,   149,   178,   179,   182,
+     183,   186,   189,   190,   193,   198,   202,   203,   209,   229,
+     230,   231,   234,   237,   238,   241,   242,   243,   244,   245,
+     246,   247,   248,   249,   250,   255,   256,   259,   260,   261,
+     264,   267,   270,   271,   272,   273,   274,   277,   280,   283,
+     286,   289,   293,   298,   299,   300,   301,   302,   303,   304,
+     305,   306,   307,   308,   309,   310,   311,   312,   313,   314,
+     315,   316,   317,   318,   321,   322,   323,   324,   325,   328,
+     331,   336,   339,   340
 };
 #endif
 
@@ -1664,48 +1664,56 @@ yyreduce:
 #line 1665 "y.tab.c"
     break;
 
+  case 3:
+#line 63 "abstree.y"
+                                                                {
+                                                                    printGST();
+                                                                }
+#line 1673 "y.tab.c"
+    break;
+
   case 4:
-#line 66 "abstree.y"
+#line 68 "abstree.y"
                                                 {  printTypeTable();}
-#line 1671 "y.tab.c"
+#line 1679 "y.tab.c"
     break;
 
   case 8:
-#line 74 "abstree.y"
+#line 76 "abstree.y"
                                                 {TInstall((yyvsp[-3].idName), -1, Fhead); Fhead = NULL;}
-#line 1677 "y.tab.c"
+#line 1685 "y.tab.c"
     break;
 
   case 11:
-#line 81 "abstree.y"
+#line 83 "abstree.y"
                                         {FInstall((yyvsp[-1].idName), DeclType);}
-#line 1683 "y.tab.c"
+#line 1691 "y.tab.c"
     break;
 
   case 12:
-#line 82 "abstree.y"
+#line 84 "abstree.y"
                                         {
                                             struct TypeTable *ptrType = DeclType == TLookup("integer") ?
                                             TLookup("integer_ptr") : TLookup("string_ptr");
                                             FInstall((yyvsp[-1].idName), ptrType);
                                         }
-#line 1693 "y.tab.c"
+#line 1701 "y.tab.c"
     break;
 
   case 13:
-#line 89 "abstree.y"
+#line 91 "abstree.y"
                                     {DeclType = TLookup("integer"); (yyval.idType) = TLookup("integer");}
-#line 1699 "y.tab.c"
+#line 1707 "y.tab.c"
     break;
 
   case 14:
-#line 90 "abstree.y"
+#line 92 "abstree.y"
                                     {DeclType = TLookup("string"); (yyval.idType) = TLookup("string");}
-#line 1705 "y.tab.c"
+#line 1713 "y.tab.c"
     break;
 
   case 15:
-#line 91 "abstree.y"
+#line 93 "abstree.y"
                                     {
                                         DeclType = TLookup((yyvsp[0].idName)); 
                                         (yyval.idType) = TLookup((yyvsp[0].idName));
@@ -1713,71 +1721,71 @@ yyreduce:
                                             DeclType = TLookup("dummy");
                                         }
                                     }
-#line 1717 "y.tab.c"
+#line 1725 "y.tab.c"
     break;
 
   case 23:
-#line 116 "abstree.y"
+#line 118 "abstree.y"
                                             {GInstall((yyvsp[-3].idName), DeclType, -1, -1, -1, Phead);}
-#line 1723 "y.tab.c"
+#line 1731 "y.tab.c"
     break;
 
   case 24:
-#line 117 "abstree.y"
+#line 119 "abstree.y"
                                             {GInstall((yyvsp[-6].idName), DeclType, (yyvsp[-4].intVal)*(yyvsp[-1].intVal), (yyvsp[-4].intVal), (yyvsp[-1].intVal), NULL);}
-#line 1729 "y.tab.c"
+#line 1737 "y.tab.c"
     break;
 
   case 25:
-#line 118 "abstree.y"
+#line 120 "abstree.y"
                                             {GInstall((yyvsp[-3].idName), DeclType, (yyvsp[-1].intVal), (yyvsp[-1].intVal), -1, NULL);}
-#line 1735 "y.tab.c"
+#line 1743 "y.tab.c"
     break;
 
   case 26:
-#line 119 "abstree.y"
+#line 121 "abstree.y"
                                             {
                                                 struct TypeTable *ptrType = DeclType == TLookup("integer") ?
                                                 TLookup("integer_ptr") : TLookup("string_ptr"); 
                                                 GInstall((yyvsp[0].idName), ptrType, DeclType->size, -1, -1, NULL);
                                             }
-#line 1745 "y.tab.c"
+#line 1753 "y.tab.c"
     break;
 
   case 27:
-#line 124 "abstree.y"
+#line 126 "abstree.y"
                                             {GInstall((yyvsp[0].idName), DeclType, DeclType->size, -1, -1, NULL);}
-#line 1751 "y.tab.c"
+#line 1759 "y.tab.c"
     break;
 
   case 31:
-#line 132 "abstree.y"
+#line 134 "abstree.y"
                                         {PInstall((yyvsp[0].idName), ParamType);}
-#line 1757 "y.tab.c"
+#line 1765 "y.tab.c"
     break;
 
   case 32:
-#line 133 "abstree.y"
+#line 135 "abstree.y"
                                         {
                                             struct TypeTable *ptrType = ParamType == TLookup("integer") ?
                                             TLookup("integer_ptr") : TLookup("string_ptr"); 
                                             PInstall((yyvsp[0].idName), ptrType);
                                         }
-#line 1767 "y.tab.c"
+#line 1775 "y.tab.c"
     break;
 
   case 35:
-#line 147 "abstree.y"
+#line 149 "abstree.y"
                                                  {
                                                     PInstallLST((yyvsp[-3].idName));    // Insert params to Local symbol Table
                                                     total_params = validateParams((yyvsp[-3].idName), Phead);  // check name equivalence of the parameters
                                                     freeParamList();    // Free the unwanted paramlist formed from the Fdef block, we will use the paramlist from GST
                                                 }
-#line 1777 "y.tab.c"
+#line 1785 "y.tab.c"
     break;
 
   case 36:
-#line 152 "abstree.y"
+#line 154 "abstree.y"
                                                 {
                                                     if((yyvsp[-1].node)->right->type != (yyvsp[-9].idType)){
                                                         fprintf(stderr, "mismatch in return type: %s\n", (yyvsp[-8].idName));
@@ -1800,39 +1808,39 @@ yyreduce:
                                                     // codeGenFunc($9, $2);
                                                     FreeLST();
                                                 }
-#line 1804 "y.tab.c"
+#line 1812 "y.tab.c"
     break;
 
   case 44:
-#line 191 "abstree.y"
+#line 193 "abstree.y"
                                                 {
                                                     struct TypeTable *ptrType = DeclType == TLookup("integer") ?
                                                     TLookup("integer_ptr") : TLookup("string_ptr"); 
                                                     LInstall((yyvsp[0].idName), ptrType);
                                                 }
-#line 1814 "y.tab.c"
+#line 1822 "y.tab.c"
     break;
 
   case 45:
-#line 196 "abstree.y"
+#line 198 "abstree.y"
                                                 {LInstall((yyvsp[0].idName), DeclType);}
-#line 1820 "y.tab.c"
+#line 1828 "y.tab.c"
     break;
 
   case 46:
-#line 200 "abstree.y"
+#line 202 "abstree.y"
                                                 {ParamType = TLookup("integer");}
-#line 1826 "y.tab.c"
+#line 1834 "y.tab.c"
     break;
 
   case 47:
-#line 201 "abstree.y"
+#line 203 "abstree.y"
                                                 {ParamType = TLookup("string");}
-#line 1832 "y.tab.c"
+#line 1840 "y.tab.c"
     break;
 
   case 48:
-#line 207 "abstree.y"
+#line 209 "abstree.y"
                                                            {
                                                                 if((yyvsp[-1].node)->right->type != TLookup("integer")){
                                                                     fprintf(stderr, "mismatch in return type: %s\n", "main");
@@ -1851,410 +1859,410 @@ yyreduce:
                                                                 // codeGenMain($7);
                                                                 FreeLST();
                                                             }
-#line 1855 "y.tab.c"
+#line 1863 "y.tab.c"
     break;
 
   case 49:
-#line 227 "abstree.y"
+#line 229 "abstree.y"
                                                             {(yyval.node) = makeConnNode((yyvsp[-2].node), (yyvsp[-1].node));}
-#line 1861 "y.tab.c"
+#line 1869 "y.tab.c"
     break;
 
   case 50:
-#line 228 "abstree.y"
+#line 230 "abstree.y"
                                                             {(yyval.node) = makeConnNode(NULL, (yyvsp[-1].node));}
-#line 1867 "y.tab.c"
+#line 1875 "y.tab.c"
     break;
 
   case 51:
-#line 229 "abstree.y"
+#line 231 "abstree.y"
                                                             {(yyval.node) = makeConnNode(NULL, NULL);}
-#line 1873 "y.tab.c"
+#line 1881 "y.tab.c"
     break;
 
   case 52:
-#line 232 "abstree.y"
+#line 234 "abstree.y"
                                         {(yyval.node) = makeRetNode((yyvsp[-1].node));}
-#line 1879 "y.tab.c"
+#line 1887 "y.tab.c"
     break;
 
   case 53:
-#line 235 "abstree.y"
+#line 237 "abstree.y"
                                         {(yyval.node) = makeConnNode((yyvsp[-1].node), (yyvsp[0].node));}
-#line 1885 "y.tab.c"
+#line 1893 "y.tab.c"
     break;
 
   case 54:
-#line 236 "abstree.y"
+#line 238 "abstree.y"
                                         {(yyval.node) = (yyvsp[0].node);}
-#line 1891 "y.tab.c"
+#line 1899 "y.tab.c"
     break;
 
   case 55:
-#line 239 "abstree.y"
+#line 241 "abstree.y"
                                         {(yyval.node) = (yyvsp[-1].node);}
-#line 1897 "y.tab.c"
+#line 1905 "y.tab.c"
     break;
 
   case 56:
-#line 240 "abstree.y"
+#line 242 "abstree.y"
                                         {(yyval.node) = (yyvsp[-1].node);}
-#line 1903 "y.tab.c"
+#line 1911 "y.tab.c"
     break;
 
   case 57:
-#line 241 "abstree.y"
+#line 243 "abstree.y"
                                         {(yyval.node) = (yyvsp[-1].node);}
-#line 1909 "y.tab.c"
+#line 1917 "y.tab.c"
     break;
 
   case 58:
-#line 242 "abstree.y"
+#line 244 "abstree.y"
                                         {(yyval.node) = (yyvsp[-1].node);}
-#line 1915 "y.tab.c"
+#line 1923 "y.tab.c"
     break;
 
   case 59:
-#line 243 "abstree.y"
+#line 245 "abstree.y"
                                         {(yyval.node) = (yyvsp[-1].node);}
-#line 1921 "y.tab.c"
+#line 1929 "y.tab.c"
     break;
 
   case 60:
-#line 244 "abstree.y"
+#line 246 "abstree.y"
                                         {(yyval.node) = (yyvsp[-1].node);}
-#line 1927 "y.tab.c"
+#line 1935 "y.tab.c"
     break;
 
   case 61:
-#line 245 "abstree.y"
+#line 247 "abstree.y"
                                         {(yyval.node) = (yyvsp[-1].node);}
-#line 1933 "y.tab.c"
+#line 1941 "y.tab.c"
     break;
 
   case 62:
-#line 246 "abstree.y"
+#line 248 "abstree.y"
                                         {(yyval.node) = (yyvsp[-1].node);}
-#line 1939 "y.tab.c"
+#line 1947 "y.tab.c"
     break;
 
   case 63:
-#line 247 "abstree.y"
+#line 249 "abstree.y"
                                         {(yyval.node) = (yyvsp[-1].node);}
-#line 1945 "y.tab.c"
+#line 1953 "y.tab.c"
     break;
 
   case 64:
-#line 248 "abstree.y"
+#line 250 "abstree.y"
                                         {(yyval.node) = (yyvsp[-1].node);}
-#line 1951 "y.tab.c"
+#line 1959 "y.tab.c"
     break;
 
   case 65:
-#line 253 "abstree.y"
+#line 255 "abstree.y"
                                                                 {(yyval.node) = makeIfElseNode((yyvsp[-6].node), (yyvsp[-3].node), (yyvsp[-1].node));}
-#line 1957 "y.tab.c"
+#line 1965 "y.tab.c"
     break;
 
   case 66:
-#line 254 "abstree.y"
+#line 256 "abstree.y"
                                                                 {(yyval.node) = makeIfElseNode((yyvsp[-4].node), (yyvsp[-1].node), NULL);}
-#line 1963 "y.tab.c"
+#line 1971 "y.tab.c"
     break;
 
   case 67:
-#line 257 "abstree.y"
+#line 259 "abstree.y"
                                                                 {(yyval.node) = makeIterationNode(NODE_WHILE, (yyvsp[-4].node), (yyvsp[-1].node));}
-#line 1969 "y.tab.c"
+#line 1977 "y.tab.c"
     break;
 
   case 68:
-#line 258 "abstree.y"
+#line 260 "abstree.y"
                                                                 {(yyval.node) = makeIterationNode(NODE_DOWHILE, (yyvsp[-1].node), (yyvsp[-4].node));}
-#line 1975 "y.tab.c"
+#line 1983 "y.tab.c"
     break;
 
   case 69:
-#line 259 "abstree.y"
+#line 261 "abstree.y"
                                                                 {(yyval.node) = makeIterationNode(NODE_REPEAT, (yyvsp[-1].node), (yyvsp[-4].node));}
-#line 1981 "y.tab.c"
+#line 1989 "y.tab.c"
     break;
 
   case 70:
-#line 262 "abstree.y"
+#line 264 "abstree.y"
                                                     {(yyval.node) = makeReadNode((yyvsp[-1].node));}
-#line 1987 "y.tab.c"
+#line 1995 "y.tab.c"
     break;
 
   case 71:
-#line 265 "abstree.y"
+#line 267 "abstree.y"
                                                     {(yyval.node) = makeWriteNode((yyvsp[-1].node));}
-#line 1993 "y.tab.c"
+#line 2001 "y.tab.c"
     break;
 
   case 72:
-#line 268 "abstree.y"
+#line 270 "abstree.y"
                                                     {(yyval.node) = makeAssgnNode((yyvsp[-2].node), (yyvsp[0].node));}
-#line 1999 "y.tab.c"
+#line 2007 "y.tab.c"
     break;
 
   case 73:
-#line 269 "abstree.y"
+#line 271 "abstree.y"
                                                     {(yyval.node) = makeAssgnNode((yyvsp[-2].node), (yyvsp[0].node));}
-#line 2005 "y.tab.c"
+#line 2013 "y.tab.c"
     break;
 
   case 74:
-#line 270 "abstree.y"
+#line 272 "abstree.y"
                                                     {(yyval.node) = makeAssgnNode((yyvsp[-2].node), (yyvsp[0].node));}
-#line 2011 "y.tab.c"
+#line 2019 "y.tab.c"
     break;
 
   case 75:
-#line 271 "abstree.y"
+#line 273 "abstree.y"
                                                     {(yyval.node) = makeAssgnNode((yyvsp[-2].node), (yyvsp[0].node));}
-#line 2017 "y.tab.c"
+#line 2025 "y.tab.c"
     break;
 
   case 76:
-#line 272 "abstree.y"
+#line 274 "abstree.y"
                                                     {(yyval.node) = makeAssgnNode((yyvsp[-2].node), (yyvsp[0].node));}
-#line 2023 "y.tab.c"
+#line 2031 "y.tab.c"
     break;
 
   case 77:
-#line 275 "abstree.y"
+#line 277 "abstree.y"
                                         {(yyval.node) = makeBreakNode();}
-#line 2029 "y.tab.c"
+#line 2037 "y.tab.c"
     break;
 
   case 78:
-#line 278 "abstree.y"
+#line 280 "abstree.y"
                                         {(yyval.node) = makeContinueNode();}
-#line 2035 "y.tab.c"
+#line 2043 "y.tab.c"
     break;
 
   case 79:
-#line 281 "abstree.y"
+#line 283 "abstree.y"
                                         {(yyval.node) = makeInitNode();}
-#line 2041 "y.tab.c"
+#line 2049 "y.tab.c"
     break;
 
   case 80:
-#line 284 "abstree.y"
+#line 286 "abstree.y"
                                         {(yyval.node) = makeAllocNode();}
-#line 2047 "y.tab.c"
+#line 2055 "y.tab.c"
     break;
 
   case 81:
-#line 287 "abstree.y"
+#line 289 "abstree.y"
                                         {
                                             ASTNode* id = makeLeafNode(0, NULL, TLookup("dummy"), (yyvsp[-1].idName));
                                             (yyval.node) = makeFreeNode(id);
                                         }
-#line 2056 "y.tab.c"
+#line 2064 "y.tab.c"
     break;
 
   case 82:
-#line 291 "abstree.y"
+#line 293 "abstree.y"
                                         {(yyval.node) = makeFreeNode((yyvsp[-1].node));}
-#line 2062 "y.tab.c"
+#line 2070 "y.tab.c"
     break;
 
   case 83:
-#line 296 "abstree.y"
+#line 298 "abstree.y"
                                         {(yyval.node) = makeArithOPNode(NODE_ADD, (yyvsp[-2].node), (yyvsp[0].node));}
-#line 2068 "y.tab.c"
+#line 2076 "y.tab.c"
     break;
 
   case 84:
-#line 297 "abstree.y"
+#line 299 "abstree.y"
                                         {(yyval.node) = makeArithOPNode(NODE_SUB, (yyvsp[-2].node), (yyvsp[0].node));}
-#line 2074 "y.tab.c"
+#line 2082 "y.tab.c"
     break;
 
   case 85:
-#line 298 "abstree.y"
+#line 300 "abstree.y"
                                         {(yyval.node) = makeArithOPNode(NODE_MUL, (yyvsp[-2].node), (yyvsp[0].node));}
-#line 2080 "y.tab.c"
+#line 2088 "y.tab.c"
     break;
 
   case 86:
-#line 299 "abstree.y"
+#line 301 "abstree.y"
                                         {(yyval.node) = makeArithOPNode(NODE_DIV, (yyvsp[-2].node), (yyvsp[0].node));}
-#line 2086 "y.tab.c"
+#line 2094 "y.tab.c"
     break;
 
   case 87:
-#line 300 "abstree.y"
+#line 302 "abstree.y"
                                         {(yyval.node) = makeArithOPNode(NODE_MOD, (yyvsp[-2].node), (yyvsp[0].node));}
-#line 2092 "y.tab.c"
+#line 2100 "y.tab.c"
     break;
 
   case 88:
-#line 301 "abstree.y"
+#line 303 "abstree.y"
                                         {(yyval.node) = (yyvsp[-1].node);}
-#line 2098 "y.tab.c"
+#line 2106 "y.tab.c"
     break;
 
   case 89:
-#line 302 "abstree.y"
+#line 304 "abstree.y"
                                         {(yyval.node) = makeLogicOPNode(NODE_AND, (yyvsp[-2].node), (yyvsp[0].node));}
-#line 2104 "y.tab.c"
+#line 2112 "y.tab.c"
     break;
 
   case 90:
-#line 303 "abstree.y"
+#line 305 "abstree.y"
                                         {(yyval.node) = makeLogicOPNode(NODE_OR, (yyvsp[-2].node), (yyvsp[0].node));}
-#line 2110 "y.tab.c"
+#line 2118 "y.tab.c"
     break;
 
   case 91:
-#line 304 "abstree.y"
+#line 306 "abstree.y"
                                         {(yyval.node) = makeLogicOPNode(NODE_NOT, (yyvsp[0].node), NULL);}
-#line 2116 "y.tab.c"
+#line 2124 "y.tab.c"
     break;
 
   case 92:
-#line 305 "abstree.y"
+#line 307 "abstree.y"
                                         {(yyval.node) = makeAddrNode((yyvsp[0].node));}
-#line 2122 "y.tab.c"
+#line 2130 "y.tab.c"
     break;
 
   case 93:
-#line 306 "abstree.y"
+#line 308 "abstree.y"
                                         {(yyval.node) = makeRelOPNode(NODE_LT, (yyvsp[-2].node), (yyvsp[0].node));}
-#line 2128 "y.tab.c"
+#line 2136 "y.tab.c"
     break;
 
   case 94:
-#line 307 "abstree.y"
+#line 309 "abstree.y"
                                         {(yyval.node) = makeRelOPNode(NODE_GT, (yyvsp[-2].node), (yyvsp[0].node));}
-#line 2134 "y.tab.c"
+#line 2142 "y.tab.c"
     break;
 
   case 95:
-#line 308 "abstree.y"
+#line 310 "abstree.y"
                                         {(yyval.node) = makeRelOPNode(NODE_LE, (yyvsp[-2].node), (yyvsp[0].node));}
-#line 2140 "y.tab.c"
+#line 2148 "y.tab.c"
     break;
 
   case 96:
-#line 309 "abstree.y"
+#line 311 "abstree.y"
                                         {(yyval.node) = makeRelOPNode(NODE_GE, (yyvsp[-2].node), (yyvsp[0].node));}
-#line 2146 "y.tab.c"
+#line 2154 "y.tab.c"
     break;
 
   case 97:
-#line 310 "abstree.y"
+#line 312 "abstree.y"
                                         {(yyval.node) = makeRelOPNode(NODE_NE, (yyvsp[-2].node), (yyvsp[0].node));}
-#line 2152 "y.tab.c"
+#line 2160 "y.tab.c"
     break;
 
   case 98:
-#line 311 "abstree.y"
+#line 313 "abstree.y"
                                         {(yyval.node) = makeRelOPNode(NODE_EQ, (yyvsp[-2].node), (yyvsp[0].node));}
-#line 2158 "y.tab.c"
+#line 2166 "y.tab.c"
     break;
 
   case 99:
-#line 312 "abstree.y"
+#line 314 "abstree.y"
                                         {(yyval.node) = (yyvsp[0].node);}
-#line 2164 "y.tab.c"
+#line 2172 "y.tab.c"
     break;
 
   case 100:
-#line 313 "abstree.y"
+#line 315 "abstree.y"
                                         {(yyval.node) = (yyvsp[0].node);}
-#line 2170 "y.tab.c"
+#line 2178 "y.tab.c"
     break;
 
   case 101:
-#line 314 "abstree.y"
+#line 316 "abstree.y"
                                         {(yyval.node) = makeLeafNode((yyvsp[0].intVal), NULL, TLookup("integer"), NULL);}
-#line 2176 "y.tab.c"
+#line 2184 "y.tab.c"
     break;
 
   case 102:
-#line 315 "abstree.y"
+#line 317 "abstree.y"
                                         {(yyval.node) = makeLeafNode(0, (yyvsp[0].strVal), TLookup("string"), NULL);}
-#line 2182 "y.tab.c"
+#line 2190 "y.tab.c"
     break;
 
   case 103:
-#line 316 "abstree.y"
+#line 318 "abstree.y"
                                         {(yyval.node) = makeNullNode();}
-#line 2188 "y.tab.c"
+#line 2196 "y.tab.c"
     break;
 
   case 104:
-#line 319 "abstree.y"
+#line 321 "abstree.y"
                                             {(yyval.node) = makeFuncNode((yyvsp[-2].idName), TLookup("dummy"), NULL);}
-#line 2194 "y.tab.c"
+#line 2202 "y.tab.c"
     break;
 
   case 105:
-#line 320 "abstree.y"
+#line 322 "abstree.y"
                                             {(yyval.node) = makeFuncNode((yyvsp[-3].idName), TLookup("dummy"), (yyvsp[-1].node));}
-#line 2200 "y.tab.c"
+#line 2208 "y.tab.c"
     break;
 
   case 106:
-#line 321 "abstree.y"
+#line 323 "abstree.y"
                                             {(yyval.node) = makeArrayNode((yyvsp[-6].idName), TLookup("dummy"), (yyvsp[-4].node), (yyvsp[-1].node));}
-#line 2206 "y.tab.c"
+#line 2214 "y.tab.c"
     break;
 
   case 107:
-#line 322 "abstree.y"
+#line 324 "abstree.y"
                                             {(yyval.node) = makeArrayNode((yyvsp[-3].idName), TLookup("dummy"), (yyvsp[-1].node), NULL);}
-#line 2212 "y.tab.c"
-    break;
-
-  case 108:
-#line 323 "abstree.y"
-                                            {
-                                                ASTNode *id = makeLeafNode(0, NULL, TLookup("dummy"), (yyvsp[0].idName));
-                                                (yyval.node) = makePtrNode(id);}
 #line 2220 "y.tab.c"
     break;
 
+  case 108:
+#line 325 "abstree.y"
+                                            {
+                                                ASTNode *id = makeLeafNode(0, NULL, TLookup("dummy"), (yyvsp[0].idName));
+                                                (yyval.node) = makePtrNode(id);}
+#line 2228 "y.tab.c"
+    break;
+
   case 109:
-#line 326 "abstree.y"
+#line 328 "abstree.y"
                                             {(yyval.node) = makeLeafNode(0, NULL, TLookup("dummy"), (yyvsp[0].idName));}
-#line 2226 "y.tab.c"
+#line 2234 "y.tab.c"
     break;
 
   case 110:
-#line 329 "abstree.y"
+#line 331 "abstree.y"
                                             {
                                                 ASTNode *id = makeLeafNode(0, NULL, TLookup("dummy"), (yyvsp[-2].idName));
                                                 (yyval.node) = makeFieldNode(id, (yyvsp[0].idName));
                                                 
                                             }
-#line 2236 "y.tab.c"
+#line 2244 "y.tab.c"
     break;
 
   case 111:
-#line 334 "abstree.y"
+#line 336 "abstree.y"
                                             {(yyval.node) = makeFieldNode((yyvsp[-2].node), (yyvsp[0].idName));}
-#line 2242 "y.tab.c"
+#line 2250 "y.tab.c"
     break;
 
   case 112:
-#line 337 "abstree.y"
+#line 339 "abstree.y"
                                             {(yyval.node) = makeArgNode((yyvsp[-2].node), (yyvsp[0].node));}
-#line 2248 "y.tab.c"
+#line 2256 "y.tab.c"
     break;
 
   case 113:
-#line 338 "abstree.y"
+#line 340 "abstree.y"
                                             {(yyval.node) = (yyvsp[0].node);}
-#line 2254 "y.tab.c"
+#line 2262 "y.tab.c"
     break;
 
 
-#line 2258 "y.tab.c"
+#line 2266 "y.tab.c"
 
       default: break;
     }
@@ -2486,7 +2494,7 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 341 "abstree.y"
+#line 343 "abstree.y"
 
 
 int yyerror(const char *s){

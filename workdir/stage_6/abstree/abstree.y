@@ -60,7 +60,9 @@ Program     :   TypeDefBlock GDeclBlock FDefBlock MainBlock     {
                                                                     printGST();
                                                                     // fprintf(stdout,"parsing successful!\n");
                                                                 }
-            |   TypeDefBlock GDeclBlock MainBlock
+            |   TypeDefBlock GDeclBlock MainBlock               {
+                                                                    printGST();
+                                                                }
             ;
 
 TypeDefBlock    :   TYPE TypeDefList ENDTYPE    {  printTypeTable();}
