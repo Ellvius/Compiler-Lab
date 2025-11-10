@@ -263,6 +263,11 @@ void TInstall(char* name, int size, FieldList* fields){
         ftemp = ftemp->next;
     }
 
+    if(fieldIndex >= 8){
+        fprintf(stderr, "Maximum 8 members are allowed for a user defined type\n");
+        exit(1);
+    }
+
     Fhead = NULL;
     Ftail = NULL;
 }
