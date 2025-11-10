@@ -1680,7 +1680,7 @@ yyreduce:
 
   case 8:
 #line 76 "abstree.y"
-                                                {TInstall((yyvsp[-3].idName), -1, Fhead); Fhead = NULL;}
+                                                {TInstall((yyvsp[-3].idName), 1, Fhead); Fhead = NULL;}
 #line 1685 "y.tab.c"
     break;
 
@@ -1801,7 +1801,7 @@ yyreduce:
                                                     while(temp != NULL){
                                                         
                                                         temp->binding = addr;
-                                                        addr+=temp->type->size;
+                                                        addr++;
                                                         temp = temp->next;
                                                     }
                                                     printLST((yyvsp[-8].idName));
@@ -1864,7 +1864,7 @@ yyreduce:
                                                                 while(temp != NULL){
                                                                     
                                                                     temp->binding = addr;
-                                                                    addr+=temp->type->size;
+                                                                    addr++;
                                                                     temp = temp->next;
                                                                 }
                                                                 printLST("main");

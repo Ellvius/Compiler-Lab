@@ -73,7 +73,7 @@ TypeDefList     :   TypeDefList TypeDef
                 |   TypeDef
                 ;
 
-TypeDef         :   ID '{' FieldDeclList '}'    {TInstall($1, -1, Fhead); Fhead = NULL;}
+TypeDef         :   ID '{' FieldDeclList '}'    {TInstall($1, 1, Fhead); Fhead = NULL;}
                 ;
 
 FieldDeclList   :   FieldDeclList FieldDecl
@@ -166,7 +166,7 @@ FDef        :   DType ID '(' ParamList ')'       {
                                                     while(temp != NULL){
                                                         
                                                         temp->binding = addr;
-                                                        addr+=temp->type->size;
+                                                        addr++;
                                                         temp = temp->next;
                                                     }
                                                     printLST($2);
@@ -224,7 +224,7 @@ MainBlock   :   INT MAIN '('')' '{' LDeclBlock Body '}'    {
                                                                 while(temp != NULL){
                                                                     
                                                                     temp->binding = addr;
-                                                                    addr+=temp->type->size;
+                                                                    addr++;
                                                                     temp = temp->next;
                                                                 }
                                                                 printLST("main");

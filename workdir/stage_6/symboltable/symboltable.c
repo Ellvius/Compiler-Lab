@@ -263,9 +263,6 @@ void TInstall(char* name, int size, FieldList* fields){
         ftemp = ftemp->next;
     }
 
-    if(temp->fields != NULL) 
-        temp->size = fieldIndex;
-
     Fhead = NULL;
     Ftail = NULL;
 }
