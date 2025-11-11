@@ -342,6 +342,11 @@ Field       :   ID DOT ID                   {
                                                 $$ = makeFieldNode(id, $3);
                                                 
                                             }
+            |   ID '['Expr']' DOT ID        {
+                                                ASTNode *id = makeArrayNode($1, TLookup("dummy"), $3, NULL);
+                                                $$ = makeFieldNode(id, $6);
+                                                
+                                            }
             |   Field DOT ID                {$$ = makeFieldNode($1, $3);}
             ;
 

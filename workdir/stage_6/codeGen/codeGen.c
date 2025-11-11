@@ -623,6 +623,21 @@ int getFieldAddr(ASTNode* node, FILE* fp){
             fprintf(fp, "ADD R%d, %d\n", addr, addrOffset);
             break;
         }
+
+        case NODE_ARRAY: {
+            int addr = codeGenNODE(node->left, fp);
+
+            if(node->right != NULL){
+                int offsetCol = codeGenNODE(node->right, fp);
+
+                fprintf(fp, "MUL R%d, %d\n", addr, node->Gentry->rowsize);     // i*rowsize
+                fprintf(fp, "ADD R%d, R%d\n", addr, offsetCol);                // i*rowsize + j
+                freeReg();      // free offsetCol
+            }
+
+            fprintf(fp, "ADD R%d, %d\n", addr, node->Gentry->binding);
+            return addr;
+        }
         default: {
             int addr = getReg();
             if (node->Lentry) {
