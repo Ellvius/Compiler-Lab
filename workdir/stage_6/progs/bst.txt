@@ -100,9 +100,17 @@ int main()
       read(val);
     endwhile;
 
+    write("inorder");
     in = inOrder(Root);
+    write(" ");
+
+    write("preorder");
     in = preOrder(Root);
+    write(" ");
+
+    write("postorder");
     in = postOrder(Root);
+    write(" ");
   
   return 9;
   end

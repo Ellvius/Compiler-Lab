@@ -207,6 +207,7 @@ RegIndex codeGenRet(ASTNode* node, FILE* fp){
 
 RegIndex codeGenFnCall(ASTNode* node, FILE* fp){
     int r = getReg();
+    int dummy = getReg();
     int val = -1;
 
     for(int i = 0; i < r; i++){
@@ -232,19 +233,19 @@ RegIndex codeGenFnCall(ASTNode* node, FILE* fp){
 
     fprintf(fp, "POP R%d\n", r);        // Store return value
 
-    int dummy = getReg();
+    
     args = node->arglist;
     while(args != NULL){
-        fprintf(fp, "POP R%d\n", val);     // Discard arguments
+        fprintf(fp, "POP R%d\n", dummy);     // Discard arguments
         args = args->arglist;
     }
-    freeReg();
-
+    
     for(int i = r-1; i >= 0; i--){
         fprintf(fp, "POP R%d\n", i);        // Restore registers
     }
-
-    regNum = r + 1;
+    
+    regNum = dummy + 1;
+    freeReg();
     return r;
 }
 
@@ -645,19 +646,22 @@ RegIndex codeGenInit(ASTNode* node, FILE* fp){
         fprintf(fp, "PUSH R%d\n", i);
     }
 
+    int i = getReg();
 
-    fprintf(fp, "MOV R%d,\"Heapset\"\n", r);
-    fprintf(fp, "PUSH R%d\n", r);
-    fprintf(fp, "PUSH R%d\n", r);
-    fprintf(fp, "PUSH R%d\n", r);
-    fprintf(fp, "PUSH R%d\n", r);
-    fprintf(fp, "PUSH R%d\n", r);
+    fprintf(fp, "MOV R%d,\"Heapset\"\n", i);
+    fprintf(fp, "PUSH R%d\n", i);
+    fprintf(fp, "PUSH R%d\n", i);
+    fprintf(fp, "PUSH R%d\n", i);
+    fprintf(fp, "PUSH R%d\n", i);
+    fprintf(fp, "PUSH R%d\n", i);
     fprintf(fp, "CALL 0\n");
     fprintf(fp, "POP R%d\n", r);
-    fprintf(fp, "POP R%d\n", r);
-    fprintf(fp, "POP R%d\n", r);
-    fprintf(fp, "POP R%d\n", r);
-    fprintf(fp, "POP R%d\n", r);
+    fprintf(fp, "POP R%d\n", i);
+    fprintf(fp, "POP R%d\n", i);
+    fprintf(fp, "POP R%d\n", i);
+    fprintf(fp, "POP R%d\n", i);
+
+    freeReg();
 
     for(int i = r-1; i >= 0; i--){
         fprintf(fp, "POP R%d\n", i);
@@ -673,20 +677,23 @@ RegIndex codeGenAlloc(ASTNode* node, FILE* fp){
         fprintf(fp, "PUSH R%d\n", i);
     }
 
+    int i = getReg();
 
-    fprintf(fp, "MOV R%d,\"Alloc\"\n", r);
-    fprintf(fp, "PUSH R%d\n", r);
-    fprintf(fp, "MOV R%d, 8\n", r);
-    fprintf(fp, "PUSH R%d\n", r);
-    fprintf(fp, "PUSH R%d\n", r);
-    fprintf(fp, "PUSH R%d\n", r);
-    fprintf(fp, "PUSH R%d\n", r);
+    fprintf(fp, "MOV R%d,\"Alloc\"\n", i);
+    fprintf(fp, "PUSH R%d\n", i);
+    fprintf(fp, "MOV R%d, 8\n", i);
+    fprintf(fp, "PUSH R%d\n", i);
+    fprintf(fp, "PUSH R%d\n", i);
+    fprintf(fp, "PUSH R%d\n", i);
+    fprintf(fp, "PUSH R%d\n", i);
     fprintf(fp, "CALL 0\n");
     fprintf(fp, "POP R%d\n", r);
-    fprintf(fp, "POP R%d\n", r);
-    fprintf(fp, "POP R%d\n", r);
-    fprintf(fp, "POP R%d\n", r);
-    fprintf(fp, "POP R%d\n", r);
+    fprintf(fp, "POP R%d\n", i);
+    fprintf(fp, "POP R%d\n", i);
+    fprintf(fp, "POP R%d\n", i);
+    fprintf(fp, "POP R%d\n", i);
+
+    freeReg();
 
     for(int i = r-1; i >= 0; i--){
         fprintf(fp, "POP R%d\n", i);

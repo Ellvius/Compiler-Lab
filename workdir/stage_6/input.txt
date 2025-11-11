@@ -4,14 +4,6 @@ List
 int data;
 List next;
 }
-linkedList {
-int data;
-linkedList next;
-}
-markList{
-str name;
-linkedList marks;
-}
 endtype
 decl
 markList mList,temp;
@@ -28,33 +20,12 @@ int main()
   begin
     x = initialize();
     
-    head=null;
-    read(length); 
-
-    q=head;
-    while (length!=0)  do
-      read(x);
-      p=alloc();
-      p.data=x;
-      p.next=null;
-
-      if (head==null) then
-      head=p;
-      q=p;
-      else
-      q.next=p;
-      q=q.next;
-      endif;
-      
-      length=length-1;
-    endwhile;
-
-    p=head;
-    while(p!=null)  do
-      write(p.data);
-      p=p.next;
-    endwhile;
-
+    x = 5;
+    p = alloc();
+    read(length);
+    p.data = length;
+    length = x*p.data;
+    write(length);
     return 1;
   end
 }
