@@ -1,40 +1,46 @@
 type
-List
-{
-int data;
-List next;
-}
+    Student{
+        str name;
+        int rollno;
+        int age;
+    }
 endtype
 decl
-List head[5];
+    Student st[3];
 enddecl
 
 int main()
 {
   decl
-    int num, x;
+    int num, x, stage;
+    str stname;
   enddecl
 
   begin
     x = initialize();
     
     x = 0;
-    while(x < 5) do
+    while(x < 3) do
+        read(stname);
         read(num);
-        head[x] = alloc();
-        head[x].data = num;
-        head[x].next = null;
+        read(stage);
+        st[x] = alloc();
+        st[x].name = stname;
+        st[x].rollno = num;
+        st[x].age = stage;
         x = x + 1;
     endwhile;
 
-    head[0].next = head[4];
+    write(" ");
+    write("enter:");
+    read(num);
 
     x = 0;
-    while(x < 5) do
-        while(head[x] != null) do
-            write(head[x].data);
-            head[x] = head[x].next;
-        endwhile;
+    while(x < 3) do
+        if(st[x].rollno == num) then
+            write(st[x].name);
+            write(st[x].age);
+        endif;
         x = x + 1;
     endwhile;
 
