@@ -36,7 +36,7 @@
 %token <intVal> NUM
 %token <strVal> STRING
 %token <idName> ID
-%type <idType> DType PType
+%type <idType> DType PType Ftype
 %type <node> SList Stmt IfStmt IterativeStmt InputStmt OutputStmt AsgStmt Body
 %type <node> BreakStmt ContinueStmt Expr Identifier ArgList RetStmt
 %type <node> InitializeStmt AllocStmt FreeStmt Field
@@ -82,21 +82,21 @@ FieldDeclList   :   FieldDeclList FieldDecl
                 |   FieldDecl       
                 ;
 
-FieldDecl       :   DType ID EOS        {FInstall($2, DeclType);}
-                |   DType STAR ID EOS   {
-                                            struct TypeTable *ptrType = DeclType == TLookup("integer") ?
+FieldDecl       :   Ftype ID EOS        {FInstall($2, FieldType);}
+                |   Ftype STAR ID EOS   {
+                                            struct TypeTable *ptrType = FieldType == TLookup("integer") ?
                                             TLookup("integer_ptr") : TLookup("string_ptr");
                                             FInstall($3, ptrType);
                                         }
                 ;
 
-DType       :   INT                 {DeclType = TLookup("integer"); $$ = TLookup("integer");}
-            |   STR                 {DeclType = TLookup("string"); $$ = TLookup("string");}
+Ftype       :   INT                 {FieldType = TLookup("integer"); $$ = TLookup("integer");}
+            |   STR                 {FieldType = TLookup("string"); $$ = TLookup("string");}
             |   ID                  {
-                                        DeclType = TLookup($1); 
+                                        FieldType = TLookup($1); 
                                         $$ = TLookup($1);
-                                        if(DeclType == NULL){
-                                            DeclType = TLookup("dummy");
+                                        if(FieldType == NULL){
+                                            FieldType = TLookup("dummy");
                                         }
                                     }
             ;
@@ -139,6 +139,18 @@ Param       :   PType ID                {PInstall($2, ParamType);}
                                             TLookup("integer_ptr") : TLookup("string_ptr"); 
                                             PInstall($3, ptrType);
                                         }
+            ;
+
+DType       :   INT                 {DeclType = TLookup("integer");$$ = TLookup("integer");}
+            |   STR                 {DeclType = TLookup("string");$$ = TLookup("string");}
+            |   ID                  {
+                                        DeclType = TLookup($1); 
+                                        if(DeclType == NULL){
+                                            fprintf(stderr, "Type not declared: %s\n", $1);
+                                            exit(1);
+                                        }
+                                        $$ = TLookup($1);
+                                    }
             ;
             
 /*----------------------------------------------------------------------------------------------------*/
@@ -205,10 +217,11 @@ PType       :   INT                 {ParamType = TLookup("integer");}
             |   STR                 {ParamType = TLookup("string");}
             |   ID                  {
                                         ParamType = TLookup($1); 
-                                        $$ = TLookup($1);
                                         if(ParamType == NULL){
-                                            ParamType = TLookup("dummy");
+                                            fprintf(stderr, "Type not declared: %s\n", $1);
+                                            exit(1);
                                         }
+                                        $$ = TLookup($1);
                                     }
             ;
 
