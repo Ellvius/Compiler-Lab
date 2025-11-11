@@ -604,9 +604,42 @@ RegIndex codeGenWrite(ASTNode* node, FILE* fp){
 RegIndex codeGenNull(ASTNode* node, FILE* fp){
     int r = getReg();
 
-    fprintf(fp, "MOV R%d, 6000\n", r);
+    fprintf(fp, "MOV R%d, -6000\n", r);
     return r;
 }
+
+
+int getFieldAddr(ASTNode* node, FILE* fp){
+    int addr;
+
+    switch(node->nodetype){
+        case NODE_FIELD: {
+            addr = getFieldAddr(node->left, fp);
+            
+            fprintf(fp, "MOV R%d, [R%d]\n", addr, addr);
+
+            int addrOffset = FLookup(node->right->name, node->left->type->fields)->fieldIndex;
+
+            fprintf(fp, "ADD R%d, %d\n", addr, addrOffset);
+            break;
+        }
+        default: {
+            int addr = getReg();
+            if (node->Lentry) {
+                fprintf(fp, "MOV R%d, BP\n", addr);
+                fprintf(fp, "ADD R%d, %d\n", addr, node->Lentry->binding);
+            } 
+            else {
+                fprintf(fp, "MOV R%d, %d\n", addr, node->Gentry->binding);
+            }
+
+            return addr;
+        }
+    }
+
+    return addr;
+}
+
 
 RegIndex codeGenFree(ASTNode* node, FILE* fp){
     int r = codeGenNODE(node->left, fp);
@@ -629,6 +662,10 @@ RegIndex codeGenFree(ASTNode* node, FILE* fp){
     fprintf(fp, "POP R%d\n", i);
     fprintf(fp, "POP R%d\n", i);
     fprintf(fp, "POP R%d\n", i);
+
+    int addr = getFieldAddr(node->left, fp);
+    fprintf(fp, "MOV [R%d], -6000\n", addr);
+    freeReg();
 
     freeReg();
 
@@ -701,38 +738,6 @@ RegIndex codeGenAlloc(ASTNode* node, FILE* fp){
 
     return r;
 }
-
-int getFieldAddr(ASTNode* node, FILE* fp){
-    int addr;
-
-    switch(node->nodetype){
-        case NODE_FIELD: {
-            addr = getFieldAddr(node->left, fp);
-            
-            fprintf(fp, "MOV R%d, [R%d]\n", addr, addr);
-
-            int addrOffset = FLookup(node->right->name, node->left->type->fields)->fieldIndex;
-
-            fprintf(fp, "ADD R%d, %d\n", addr, addrOffset);
-            break;
-        }
-        default: {
-            int addr = getReg();
-            if (node->Lentry) {
-                fprintf(fp, "MOV R%d, BP\n", addr);
-                fprintf(fp, "ADD R%d, %d\n", addr, node->Lentry->binding);
-            } 
-            else {
-                fprintf(fp, "MOV R%d, %d\n", addr, node->Gentry->binding);
-            }
-
-            return addr;
-        }
-    }
-
-    return addr;
-}
-
 
 
 RegIndex codeGenField(ASTNode* node, FILE* fp){

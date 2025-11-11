@@ -57,15 +57,17 @@
 /*----------------------------------------------------------------------------------------------------*/
 
 Program     :   TypeDefBlock GDeclBlock FDefBlock MainBlock     {
-                                                                    printGST();
+                                                                    // printGST();
                                                                     // fprintf(stdout,"parsing successful!\n");
                                                                 }
             |   TypeDefBlock GDeclBlock MainBlock               {
-                                                                    printGST();
+                                                                    // printGST();
                                                                 }
             ;
 
-TypeDefBlock    :   TYPE TypeDefList ENDTYPE    {  printTypeTable();}
+TypeDefBlock    :   TYPE TypeDefList ENDTYPE    { 
+                                                    // printTypeTable();
+                                                }
                 |
                 ;
 
@@ -169,7 +171,7 @@ FDef        :   DType ID '(' ParamList ')'       {
                                                         addr++;
                                                         temp = temp->next;
                                                     }
-                                                    printLST($2);
+                                                    // printLST($2);
                                                     codeGenFunc($9, $2);
                                                     FreeLST();
                                                 }
@@ -227,7 +229,7 @@ MainBlock   :   INT MAIN '('')' '{' LDeclBlock Body '}'    {
                                                                     addr++;
                                                                     temp = temp->next;
                                                                 }
-                                                                printLST("main");
+                                                                // printLST("main");
                                                                 codeGenMain($7);
                                                                 FreeLST();
                                                             }
