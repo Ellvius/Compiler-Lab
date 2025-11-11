@@ -5,9 +5,11 @@ Lsymbol *Lhead = NULL, *Ltail = NULL;
 Paramstruct *Phead = NULL, *Ptail = NULL;
 FieldList *Fhead = NULL, *Ftail = NULL;
 TypeTable *Thead = NULL, *Ttail = NULL;
+Classtable *Chead = NULL, *Ctail = NULL;
 int nextFreeAddr = START_ADDR;
 int functionLabelNum = 0;
 int relFreeAddr = 1;
+int fieldIndex = 0;
 
 
 //-----------------------------PARAMETER TABLE------------------------------------
@@ -58,6 +60,171 @@ void freeParamList(void){
     Phead = NULL;
     Ptail = NULL;
 }
+
+
+
+//--------------------------CLASS TABLE------------------------------------------
+
+Classtable* CLookup(char *name){
+    Classtable *temp = Chead;
+
+    while(temp != NULL && strcmp(temp->name, name) != 0){
+        temp = temp->next;
+    }
+
+    return temp;
+}
+
+FieldList* ClassFlookup(Classtable* ctype,char* name){
+    FieldList *temp = ctype->methods;
+
+    while(temp != NULL && strcmp(temp->name, name) != 0){
+        temp = temp->next;
+    }
+    return temp;
+}
+
+MethodList* ClassMlookup(Classtable* ctype,char* name){
+    MethodList *temp = ctype->methods;
+
+    while(temp != NULL && strcmp(temp->name, name) != 0){
+        temp = temp->next;
+    }
+    return temp;
+}
+
+Classtable* CInstall(char *name,char *parentname){
+    if(CLookup(name);){
+        fprintf(stderr, "Class redeclared: %s\n", name);
+        exit(1);
+    }
+
+    if(TLookup(name)){
+        fprintf(stderr, "User defined type already exists: %s\n", name);
+        exit(1);
+    }
+
+    Classtable *classnode = (Classtable *)malloc(sizeof(Classtable));
+    classnode->name = name;
+    classnode->fields = NULL;
+    classnode->methods = NULL;
+    classnode->parent =  CLookup(parentname);
+    classnode->classindex = -1;
+    classnode->fieldcount = 0;
+    classnode->methodcount = 0;
+    classnode->next = NULL;
+
+    if(Chead == NULL){
+        Chead = classnode;
+        Ctail = classnode;
+    }
+    else {
+        Ctail->next = classnode;
+        Ctail = classnode;
+    }
+    return classnode;
+}
+
+void ClassFinstall(Classtable *cptr, char *typename, char *name){
+    if(ClassFlookup(cptr, name)){
+        fprintf(stderr, "Member field already declared: %s\n", name);
+        exit(1);
+    }
+
+    if(cptr->fieldcount == 8){
+        fprintf(stderr, "Maximum of 8 members are allowed in a class: %s\n", cptr->name);
+        exit(1);
+    }
+
+    FieldList *fieldnode = (FieldList *)malloc(sizeof(FieldList));
+    fieldnode->name = name;
+    fieldnode->fieldIndex = fieldIndex++;
+    fieldnode->type = TLookup(typename);
+    fieldnode->ctype = CLookup(typename);
+    fieldnode->next = NULL;
+
+    if(cptr->fields == NULL){
+        cptr->fields = fieldnode;
+        cptr->fieldcount++;
+    }
+    else {
+        FieldList *temp = cptr->fields;
+
+        while(temp->next){
+            temp = temp->next;
+        }
+        temp->next = fieldnode;
+        cptr->fieldcount++;
+    }
+}
+
+void ClassMinstall(Classtable *cptr, char *name, TypeTable *type, Paramstruct *Paramlist){
+    if(ClassMlookup(cptr, name)){
+        fprintf(stderr, "Method already declared in class: %s %s\n", cptr->name, name);
+        exit(1);
+    }
+
+    if(cptr->methodcount == 8){
+        fprintf(stderr, "Maximum of 8 methods are allowed in a class: %s\n", cptr->name);
+        exit(1);
+    }
+
+    MethodList *methodnode = (MethodList *)malloc(sizeof(MethodList));
+    methodnode->name = name;
+    methodnode->type = type;
+    methodnode->paramlist = Paramlist;
+    methodnode->position = cptr->methodcount;
+    methodnode->flabel = functionLabelNum++;
+    methodnode->next = NULL;
+
+    if(cptr->methods == NULL){
+        cptr->methods = methodnode;
+        cptr->methodcount++;
+    }
+    else {
+        MethodList *temp = cptr->methods;
+
+        while(temp->next){
+            temp = temp->next;
+        }
+        temp->next = methodnode;
+        cptr->methodcount++;
+    }
+}
+
+void printClassTable(void){
+    Classtable *node = Chead;
+    
+    while(node != NULL){
+        fprintf(stdout, "CLASS TABLE: %s\n", node->name);
+        fprintf(stdout, "%-15s %-7s %-7s %-7s\n","parent", "index", "fcount", "mcount");
+        fprintf(stdout, "%-15s %-7d %-7d %-7d\n",node->parent ? node->parent : "null", node->classindex, node->fieldcount, node->membercount);
+        fprintf(stdout, "\n");
+
+        fprintf(stdout, "\tMEMBERS:\n");
+        fprintf(stdout, "%-15s %-7s %-7s\n","name", "index", "type");
+        FieldList *ftemp = node->fields;
+        while(ftemp){
+            fprintf(stdout, "%-15s %-7d %-7s\n",ftemp->name, ftemp->fieldIndex, ftemp->type ? ftemp->type->name : ftemp->ctype->name);
+            ftemp = ftemp->next;
+        }
+        
+        fprintf(stdout, "\tMETHODS:\n");
+        fprintf(stdout, "%-15s %-7s %-7s %-7s\n","name", "type", "position", "flabel");
+        MethodList *mtemp = node->methods;
+        while(mtemp){
+            fprintf(stdout, "%-15s %-7s %-7d %-7d\n",mtemp->name, mtemp->type->name, mtemp->position, mtemp->flabel);
+            mtemp = mtemp->next;
+        }
+
+        node = node->next;
+    }
+
+    fprintf(stdout,"\n");
+
+}
+
+
 
 //--------------------------GLOBAL SYMBOL TABLE-----------------------------------
 
@@ -127,6 +294,7 @@ void printGST(void){
 }
 
 
+
 //------------------------------LOCAL SYMBOL TABLE---------------------------------------
 
 Lsymbol* LLookup(char *name){
@@ -191,6 +359,8 @@ void printLST(char *name){
     fprintf(stdout, "\n");
 }
 
+
+
 //-----------------------------------FIELD LIST-------------------------------------------------
 
 FieldList *FLookup(char* name, FieldList *list){
@@ -211,6 +381,7 @@ void FInstall(char* name, TypeTable *type){
 
     temp->name = strdup(name);
     temp->type = type;
+    temp->ctype = NULL;
     temp->fieldIndex = -1;
     temp->next = NULL;
 
@@ -223,6 +394,8 @@ void FInstall(char* name, TypeTable *type){
         Ftail = temp;
     }
 }
+
+
 
 //-----------------------------------TYPE TABLE-------------------------------------------------
 
@@ -298,6 +471,8 @@ void printTypeTable(void){
     }
     fprintf(stdout, "\n");
 }
+
+
 
 //---------------------------------HELPER FUNCTIONS---------------------------------------------
 
