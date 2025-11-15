@@ -95,14 +95,11 @@ extern int yydebug;
     ASSGN = 301,
     EOS = 302,
     COMMA = 303,
-    ADDR = 304,
-    DOT = 305,
-    INT = 306,
-    STR = 307,
-    NULL_T = 308,
-    NUM = 309,
-    STRING = 310,
-    ID = 311
+    DOT = 304,
+    NULL_T = 305,
+    NUM = 306,
+    STRING = 307,
+    ID = 308
   };
 #endif
 /* Tokens.  */
@@ -152,28 +149,24 @@ extern int yydebug;
 #define ASSGN 301
 #define EOS 302
 #define COMMA 303
-#define ADDR 304
-#define DOT 305
-#define INT 306
-#define STR 307
-#define NULL_T 308
-#define NUM 309
-#define STRING 310
-#define ID 311
+#define DOT 304
+#define NULL_T 305
+#define NUM 306
+#define STRING 307
+#define ID 308
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 19 "abstree.y"
+#line 18 "abstree.y"
 
     struct ASTNode* node;
-    struct TypeTable* idType;
     char* idName;
     int intVal;
     char* strVal;
 
-#line 177 "y.tab.h"
+#line 170 "y.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;

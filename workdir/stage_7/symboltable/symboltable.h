@@ -40,11 +40,26 @@ void printTypeTable(void);
 
 
 
+// FUNCTION PARAMETER LIST
+
+typedef struct Paramstruct {
+    char *name;                 // name of the parameter
+    TypeTable *type;                   // type of the parameter
+    struct Paramstruct *next;   // points to the next parameter to the function
+} Paramstruct;
+
+extern Paramstruct *Phead, *Ptail;
+Paramstruct *PLookup(char* name);           // Lookup for function identifier
+void PInstall(char *name, TypeTable* type);        // Creates a param node
+void freeParamList(void);                   // Free the ParamList for a new set of Params
+
+
+
 // CLASS METHODS LIST
 
 typedef struct MethodList {
     char *name;                      //name of the member function in the class
-    struct Typetable *type;          //pointer to typetable
+    struct TypeTable *type;          //pointer to typetable
     struct Paramstruct *paramlist;   //pointer to the head of the formal parameter list
     int position;                //position of the function in the class table
     int flabel;                      //A label for identifying the starting address of the function's code in the memory
@@ -74,21 +89,6 @@ void ClassMinstall(Classtable *cptr, char *name, TypeTable *type, Paramstruct *P
 MethodList* ClassMlookup(Classtable* ctype,char* name);
 FieldList* ClassFlookup(Classtable* ctype,char* name);
 void printClassTable(void);
-
-
-
-// FUNCTION PARAMETER LIST
-
-typedef struct Paramstruct {
-    char *name;                 // name of the parameter
-    TypeTable *type;                   // type of the parameter
-    struct Paramstruct *next;   // points to the next parameter to the function
-} Paramstruct;
-
-extern Paramstruct *Phead, *Ptail;
-Paramstruct *PLookup(char* name);           // Lookup for function identifier
-void PInstall(char *name, TypeTable* type);        // Creates a param node
-void freeParamList(void);                   // Free the ParamList for a new set of Params
 
 
 

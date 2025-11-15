@@ -351,8 +351,8 @@ static void yynoreturn yy_fatal_error ( const char* msg  );
 	(yy_hold_char) = *yy_cp; \
 	*yy_cp = '\0'; \
 	(yy_c_buf_p) = yy_cp;
-#define YY_NUM_RULES 63
-#define YY_END_OF_BUFFER 64
+#define YY_NUM_RULES 62
+#define YY_END_OF_BUFFER 63
 /* This struct is not used in this scanner,
    but its presence is necessary. */
 struct yy_trans_info
@@ -362,11 +362,11 @@ struct yy_trans_info
 	};
 static const flex_int16_t yy_accept[177] =
     {   0,
-        0,    0,   64,   62,   60,   60,   38,   62,   54,   58,
-       61,   52,   50,   57,   51,   59,   53,   45,   56,   43,
+        0,    0,   63,   61,   59,   59,   38,   61,   54,   61,
+       60,   52,   50,   57,   51,   58,   53,   45,   56,   43,
        55,   44,   46,   46,   46,   46,   46,   46,   46,   46,
        46,   46,   46,   46,   46,   46,   46,   46,   46,   46,
-       62,   41,    0,   47,    0,   37,    0,   48,   45,   39,
+       61,   41,    0,   47,    0,   37,    0,   48,   45,   39,
        42,   40,   46,   46,   46,   33,   46,   46,   46,   46,
        46,   46,   25,   46,   46,   46,   20,   46,   46,   46,
        46,   46,   46,   46,   46,   46,   46,   46,   46,   36,
@@ -983,12 +983,12 @@ YY_RULE_SETUP
 case 31:
 YY_RULE_SETUP
 #line 51 "abstree.l"
-{ return INT; }
+{ yylval.idName = strdup("integer"); return ID; }
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
 #line 52 "abstree.l"
-{ return STR; }
+{ yylval.idName = strdup("string"); return ID; }
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
@@ -1133,38 +1133,33 @@ YY_RULE_SETUP
 case 58:
 YY_RULE_SETUP
 #line 99 "abstree.l"
-{ return ADDR; }
-	YY_BREAK
-case 59:
-YY_RULE_SETUP
-#line 100 "abstree.l"
 { return DOT; }
 	YY_BREAK
+case 59:
+/* rule 59 can match eol */
+YY_RULE_SETUP
+#line 101 "abstree.l"
+{ }
+	YY_BREAK
 case 60:
-/* rule 60 can match eol */
 YY_RULE_SETUP
 #line 102 "abstree.l"
-{ }
+{ return *yytext; }
 	YY_BREAK
 case 61:
 YY_RULE_SETUP
 #line 103 "abstree.l"
-{ return *yytext; }
-	YY_BREAK
-case 62:
-YY_RULE_SETUP
-#line 104 "abstree.l"
 { 
                 fprintf(stderr, "Unknown character: %c\n", *yytext);
                 exit(1);
             }
 	YY_BREAK
-case 63:
+case 62:
 YY_RULE_SETUP
-#line 109 "abstree.l"
+#line 108 "abstree.l"
 ECHO;
 	YY_BREAK
-#line 1168 "lex.yy.c"
+#line 1163 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -2169,7 +2164,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 109 "abstree.l"
+#line 108 "abstree.l"
 
 
 int yywrap(void) {

@@ -48,8 +48,8 @@ MULTILINE \/\*([^*]|\*[^\/])*\*\/
 "break"         { return BREAK; }
 "continue"      { return CONTINUE; }
 
-"int"           { return INT; }
-"str"           { return STR; }
+"int"           { yylval.idName = strdup("integer"); return ID; }
+"str"           { yylval.idName = strdup("string"); return ID; }
 
 "OR"            { return OR; }
 "AND"           { return AND; }
@@ -96,7 +96,6 @@ MULTILINE \/\*([^*]|\*[^\/])*\*\/
 "="         { return ASSGN; }
 ";"         { return EOS; }
 ","         { return COMMA; }
-"&"         { return ADDR; }
 "."         { return DOT; }
 
 [ \t\n]     { }

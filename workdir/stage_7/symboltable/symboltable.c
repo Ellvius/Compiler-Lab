@@ -76,7 +76,7 @@ Classtable* CLookup(char *name){
 }
 
 FieldList* ClassFlookup(Classtable* ctype,char* name){
-    FieldList *temp = ctype->methods;
+    FieldList *temp = ctype->fields;
 
     while(temp != NULL && strcmp(temp->name, name) != 0){
         temp = temp->next;
@@ -94,7 +94,7 @@ MethodList* ClassMlookup(Classtable* ctype,char* name){
 }
 
 Classtable* CInstall(char *name,char *parentname){
-    if(CLookup(name);){
+    if(CLookup(name)){
         fprintf(stderr, "Class redeclared: %s\n", name);
         exit(1);
     }
@@ -198,7 +198,7 @@ void printClassTable(void){
     while(node != NULL){
         fprintf(stdout, "CLASS TABLE: %s\n", node->name);
         fprintf(stdout, "%-15s %-7s %-7s %-7s\n","parent", "index", "fcount", "mcount");
-        fprintf(stdout, "%-15s %-7d %-7d %-7d\n",node->parent ? node->parent : "null", node->classindex, node->fieldcount, node->membercount);
+        fprintf(stdout, "%-15s %-7d %-7d %-7d\n",node->parent ? node->parent->name : "null", node->classindex, node->fieldcount, node->methodcount);
         fprintf(stdout, "\n");
 
         fprintf(stdout, "\tMEMBERS:\n");

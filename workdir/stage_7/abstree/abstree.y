@@ -7,8 +7,7 @@
 
     extern FILE *yyin;
     struct TypeTable* DeclType = NULL;
-    struct TypeTable* ParamType = NULL;
-    struct TypeTable* FieldType = NULL;
+    struct Classtable* Ctableptr = NULL;
     int total_params = 0;
 
     int yylex(void);
@@ -18,7 +17,6 @@
 
 %union{
     struct ASTNode* node;
-    struct TypeTable* idType;
     char* idName;
     int intVal;
     char* strVal;
@@ -32,12 +30,10 @@
 %token BREAK CONTINUE
 %token PLUS MINUS STAR DIV MOD
 %token LT GT LE GE NE EQ AND OR NOT
-%token ASSGN EOS COMMA ADDR DOT
-%token INT STR NULL_T
+%token ASSGN EOS COMMA DOT NULL_T
 %token <intVal> NUM
 %token <strVal> STRING
 %token <idName> ID
-%type <idType> DType PType Ftype
 %type <node> SList Stmt IfStmt IterativeStmt InputStmt OutputStmt AsgStmt Body
 %type <node> BreakStmt ContinueStmt Expr Identifier ArgList RetStmt
 %type <node> InitializeStmt AllocStmt FreeStmt Field
@@ -45,7 +41,7 @@
 
 %left OR
 %left AND
-%right NOT ADDR
+%right NOT
 %left DOT
 
 %right ASSGN
@@ -88,24 +84,24 @@ FieldDeclList   :   FieldDeclList FieldDecl
                 |   FieldDecl       
                 ;
 
-FieldDecl       :   Ftype ID EOS        {FInstall($2, FieldType);}
-                |   Ftype STAR ID EOS   {
-                                            struct TypeTable *ptrType = FieldType == TLookup("integer") ?
-                                            TLookup("integer_ptr") : TLookup("string_ptr");
-                                            FInstall($3, ptrType);
+FieldDecl       :   ID ID EOS           {
+                                            struct TypeTable *ftype = TLookup($1);
+                                            if(ftype == NULL){
+                                                ftype = TLookup("dummy");
+                                            }
+                                            FInstall($2, ftype);
                                         }
                 ;
 
-Ftype       :   INT                 {FieldType = TLookup("integer"); $$ = TLookup("integer");}
-            |   STR                 {FieldType = TLookup("string"); $$ = TLookup("string");}
-            |   ID                  {
-                                        FieldType = TLookup($1); 
-                                        $$ = TLookup($1);
-                                        if(FieldType == NULL){
-                                            FieldType = TLookup("dummy");
+Typename    :   ID                  {
+                                        DeclType = TLookup($1); 
+                                        if(DeclType == NULL){
+                                            fprintf(stderr, "Type not declared: %s\n", $1);
+                                            exit(1);
                                         }
                                     }
             ;
+
 /*----------------------------------------------------------------------------------------------------*/
 
 CDeclBlock  :   CLASS ClassDefList ENDCLASS
@@ -118,31 +114,26 @@ ClassDefList    :   ClassDefList ClassDef
 ClassDef        :   Cname '{' DECL MemberList MethodDecl ENDDECL MethodDefns '}'
                 ;
 
-Cname   :   ID
+Cname   :   ID              {Ctableptr = CInstall($1, NULL);}
         ;
 
 MemberList  :   MemberList Member
             |
             ;
 
-Member      :   CType ID EOS
+Member      :   ID ID EOS
             ;
 
 MethodDecl  :   MethodDecl MDecl
             |   MDecl
             ;
 
-MDecl       :   CType ID '(' ParamList ')' EOS
+MDecl       :   ID ID '(' ParamList ')' EOS
             ;
 
 MethodDefns     :   MethodDefns FDef
                 |   FDef
                 ;
-
-CType       :   INT
-            |   STR
-            |   ID
-            ;
 
 /*----------------------------------------------------------------------------------------------------*/
 
@@ -154,7 +145,7 @@ GDeclList   :   GDeclList GDecl
             |   GDecl
             ;
 
-GDecl       :   DType GidList EOS
+GDecl       :   Typename GidList EOS
             ;
 
 GidList     :   GidList COMMA Gid
@@ -162,13 +153,7 @@ GidList     :   GidList COMMA Gid
             ;
 
 Gid         :   ID '(' ParamList ')'        {GInstall($1, DeclType, -1, -1, -1, Phead);}
-            |   ID '['NUM']' '['NUM']'      {GInstall($1, DeclType, $3*$6, $3, $6, NULL);}               
             |   ID '['NUM']'                {GInstall($1, DeclType, $3, $3, -1, NULL);}              
-            |   STAR ID                     {
-                                                struct TypeTable *ptrType = DeclType == TLookup("integer") ?
-                                                TLookup("integer_ptr") : TLookup("string_ptr"); 
-                                                GInstall($2, ptrType, DeclType->size, -1, -1, NULL);
-                                            }              
             |   ID                          {GInstall($1, DeclType, DeclType->size, -1, -1, NULL);}       
             ;
 
@@ -177,23 +162,13 @@ ParamList   :   ParamList COMMA Param
             | /*param can be empty*/
             ;
 
-Param       :   PType ID                {PInstall($2, ParamType);}
-            |   PType STAR ID           {
-                                            struct TypeTable *ptrType = ParamType == TLookup("integer") ?
-                                            TLookup("integer_ptr") : TLookup("string_ptr"); 
-                                            PInstall($3, ptrType);
-                                        }
-            ;
-
-DType       :   INT                 {DeclType = TLookup("integer");$$ = TLookup("integer");}
-            |   STR                 {DeclType = TLookup("string");$$ = TLookup("string");}
-            |   ID                  {
-                                        DeclType = TLookup($1); 
-                                        if(DeclType == NULL){
+Param       :   ID ID               {
+                                        struct TypeTable *paramtype = TLookup($1); 
+                                        if(paramtype == NULL){
                                             fprintf(stderr, "Type not declared: %s\n", $1);
                                             exit(1);
                                         }
-                                        $$ = TLookup($1);
+                                        PInstall($2, paramtype);
                                     }
             ;
             
@@ -204,75 +179,57 @@ FDefBlock   :   FDef
             ;
 
 
-FDef        :   DType ID '(' ParamList ')'       {
-                                                    PInstallLST($2);    // Insert params to Local symbol Table
-                                                    total_params = validateParams($2, Phead);  // check name equivalence of the parameters
-                                                    freeParamList();    // Free the unwanted paramlist formed from the Fdef block, we will use the paramlist from GST
+FDef        :   ID ID '(' ParamList ')'     {
+                                                PInstallLST($2, Ctableptr);    // Insert params to Local symbol Table
+                                                total_params = validateParams($2, Phead);  // check name equivalence of the parameters
+                                                freeParamList();    // Free the unwanted paramlist formed from the Fdef block, we will use the paramlist from GST
+                                            }
+                '{' LDeclBlock Body '}'     {
+                                                if($9->right->type != TLookup($1)){
+                                                    fprintf(stderr, "mismatch in return type: %s\n", $2);
+                                                    exit(1);
                                                 }
-                '{' LDeclBlock Body '}'         {
-                                                    if($9->right->type != $1){
-                                                        fprintf(stderr, "mismatch in return type: %s\n", $2);
-                                                        exit(1);
-                                                    }
-                                                    Lsymbol *temp = Lhead;
-                                                    for(int i = total_params; i > 0; i--){
-                                                        temp->binding = 0-i-2;
-                                                        temp = temp->next;
-                                                    }
+                                                Lsymbol *temp = Lhead;
+                                                for(int i = total_params; i > 0; i--){
+                                                    temp->binding = 0-i-2;
+                                                    temp = temp->next;
+                                                }
 
-                                                    int addr = 1;
-                                                    while(temp != NULL){
-                                                        
-                                                        temp->binding = addr;
-                                                        addr++;
-                                                        temp = temp->next;
-                                                    }
-                                                    // printLST($2);
-                                                    // codeGenFunc($9, $2);
-                                                    FreeLST();
+                                                int addr = 1;
+                                                while(temp != NULL){
+                                                    
+                                                    temp->binding = addr;
+                                                    addr++;
+                                                    temp = temp->next;
                                                 }
+                                                // printLST($2);
+                                                // codeGenFunc($9, $2);
+                                                FreeLST();
+                                            }
             ;
 
-LDeclBlock  : DECL LDecList ENDDECL         
+LDeclBlock  :   DECL LDecList ENDDECL         
             |
             ;
 
-LDecList    : LDecList LDecl 
-            | LDecl
+LDecList    :   LDecList LDecl 
+            |   LDecl
             ;
 
-LDecl       : DType LidList EOS
+LDecl       :   Typename LidList EOS
             ;
 
-LidList     : LidList COMMA Lid
-            | Lid
+LidList     :   LidList COMMA Lid
+            |   Lid
             ;
 
-Lid         :   STAR ID                         {
-                                                    struct TypeTable *ptrType = DeclType == TLookup("integer") ?
-                                                    TLookup("integer_ptr") : TLookup("string_ptr"); 
-                                                    LInstall($2, ptrType);
-                                                }        
-            |   ID                              {LInstall($1, DeclType);}        
-            ;
-
-
-PType       :   INT                 {ParamType = TLookup("integer");}
-            |   STR                 {ParamType = TLookup("string");}
-            |   ID                  {
-                                        ParamType = TLookup($1); 
-                                        if(ParamType == NULL){
-                                            fprintf(stderr, "Type not declared: %s\n", $1);
-                                            exit(1);
-                                        }
-                                        $$ = TLookup($1);
-                                    }
+Lid         :   ID                          {LInstall($1, DeclType);}        
             ;
 
 
 /*----------------------------------------------------------------------------------------------------*/
 
-MainBlock   :   INT MAIN '('')' '{' LDeclBlock Body '}'    {
+MainBlock   :   ID MAIN '('')' '{' LDeclBlock Body '}'    {
                                                                 if($7->right->type != TLookup("integer")){
                                                                     fprintf(stderr, "mismatch in return type: %s\n", "main");
                                                                     exit(1);
@@ -328,19 +285,20 @@ IterativeStmt   :   WHILE '(' Expr ')' DO SList ENDWHILE        {$$ = makeIterat
                 |   REPEAT SList UNTIL '(' Expr ')'             {$$ = makeIterationNode(NODE_REPEAT, $5, $2);}
                 ;
 
-InputStmt   :   READ '(' Identifier ')'             {$$ = makeReadNode($3);}
+InputStmt   :   READ '(' Identifier ')'     {$$ = makeReadNode($3);}
+            |   READ '(' Field ')'          {$$ = makeReadNode($3);}
             ;
 
 OutputStmt  :   WRITE '(' Expr ')'                  {$$ = makeWriteNode($3);}
             ;
 
 AsgStmt     :   Identifier ASSGN Expr               {$$ = makeAssgnNode($1, $3);}
-            |   Field ASSGN AllocStmt               {$$ = makeAssgnNode($1, $3);}
-            |   Field ASSGN Expr                    {$$ = makeAssgnNode($1, $3);}
-            |   Field ASSGN NewStmt
             |   Identifier ASSGN AllocStmt          {$$ = makeAssgnNode($1, $3);}
             |   Identifier ASSGN InitializeStmt     {$$ = makeAssgnNode($1, $3);}
             |   Identifier ASSGN NewStmt
+            |   Field ASSGN Expr                    {$$ = makeAssgnNode($1, $3);}
+            |   Field ASSGN AllocStmt               {$$ = makeAssgnNode($1, $3);}
+            |   Field ASSGN NewStmt
             ;
 
 BreakStmt       :   BREAK               {$$ = makeBreakNode();}
@@ -379,7 +337,6 @@ Expr        :   Expr PLUS Expr          {$$ = makeArithOPNode(NODE_ADD, $1, $3);
             |   Expr AND Expr           {$$ = makeLogicOPNode(NODE_AND, $1, $3);}
             |   Expr OR Expr            {$$ = makeLogicOPNode(NODE_OR, $1, $3);}
             |   NOT Expr                {$$ = makeLogicOPNode(NODE_NOT, $2, NULL);}
-            |   ADDR Identifier         {$$ = makeAddrNode($2);}
             |   Expr LT Expr            {$$ = makeRelOPNode(NODE_LT, $1, $3);}
             |   Expr GT Expr            {$$ = makeRelOPNode(NODE_GT, $1, $3);}
             |   Expr LE Expr            {$$ = makeRelOPNode(NODE_LE, $1, $3);}
@@ -387,6 +344,7 @@ Expr        :   Expr PLUS Expr          {$$ = makeArithOPNode(NODE_ADD, $1, $3);
             |   Expr NE Expr            {$$ = makeRelOPNode(NODE_NE, $1, $3);}
             |   Expr EQ Expr            {$$ = makeRelOPNode(NODE_EQ, $1, $3);}
             |   Identifier              {$$ = $1;}
+            |   ID'(' ArgList ')'       {$$ = makeFuncNode($1, TLookup("dummy"), $3);}
             |   Field                   {$$ = $1;}
             |   FieldFunction           {$$ = NULL;}
             |   NUM                     {$$ = makeLeafNode($1, NULL, TLookup("integer"), NULL);}
@@ -394,13 +352,7 @@ Expr        :   Expr PLUS Expr          {$$ = makeArithOPNode(NODE_ADD, $1, $3);
             |   NULL_T                  {$$ = makeNullNode();}
             ;
 
-Identifier  :   ID'('')'                    {$$ = makeFuncNode($1, TLookup("dummy"), NULL);}
-            |   ID'(' ArgList ')'           {$$ = makeFuncNode($1, TLookup("dummy"), $3);}
-            |   ID '['Expr']' '['Expr']'    {$$ = makeArrayNode($1, TLookup("dummy"), $3, $6);}
-            |   ID '['Expr']'               {$$ = makeArrayNode($1, TLookup("dummy"), $3, NULL);}
-            |   STAR ID                     {
-                                                ASTNode *id = makeLeafNode(0, NULL, TLookup("dummy"), $2);
-                                                $$ = makePtrNode(id);}
+Identifier  :   ID '['Expr']'               {$$ = makeArrayNode($1, TLookup("dummy"), $3, NULL);}
             |   ID                          {$$ = makeLeafNode(0, NULL, TLookup("dummy"), $1);}
             ;
 
@@ -418,13 +370,14 @@ Field       :   SELF DOT ID                 {$$ = NULL;}
             |   Field DOT ID                {$$ = makeFieldNode($1, $3);}
             ;
 
-FieldFunction   : SELF DOT ID '(' ArgList ')'
-                | ID DOT ID '(' ArgList ')'   //This will not occur inside a class.
-                | Field DOT ID '(' ArgList ')'
+FieldFunction   :   SELF DOT ID '(' ArgList ')'
+                |   ID DOT ID '(' ArgList ')'   //This will not occur inside a class.
+                |   Field DOT ID '(' ArgList ')'
                 ;  
 
 ArgList     :   ArgList COMMA Expr          {$$ = makeArgNode($1, $3);}
             |   Expr                        {$$ = $1;}
+            |                               {$$ = NULL;}
             ;
 
 %%
